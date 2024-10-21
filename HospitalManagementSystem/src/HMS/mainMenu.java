@@ -1,11 +1,43 @@
 package HMS;
 
 import java.util.*;
+import java.io.*;
 
 
 public class mainMenu {
+	static Scanner sc = new Scanner(System.in);
+	static ArrayList<Staff> staffList = new ArrayList<Staff>();
 	
 	public static void main(String[] args) throws Exception {
+		
+        String csvFile = "src/HMS/Staff_List.csv";  // Replace with your file path
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            while ((line = br.readLine()) != null) {
+            	if(isFirstLine) {
+            		isFirstLine = false;
+            		continue;
+            	}
+                // Use comma as separator
+                String[] values = line.split(csvSplitBy);
+                
+                // Example: Print the values
+                for (String value : values) {
+                    System.out.print(value + " ");
+                }
+                staffList.add(new Staff(values[0],"Password",values[2]));
+                
+                
+                System.out.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+   
 		WelcomePage();
 	}
 	
@@ -13,7 +45,6 @@ public class mainMenu {
     public static void WelcomePage() throws Exception{
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
-        Scanner sc = new Scanner(System.in);
         int choice = 0;
         do{
             try {
@@ -22,6 +53,7 @@ public class mainMenu {
                 System.out.println("(2) Exit");
                 System.out.println("========================================");
                 choice = sc.nextInt();
+                sc.nextLine();
                 if (choice == 1) {
                     LoginUI();
                 }
@@ -43,17 +75,16 @@ public class mainMenu {
 
 
     public static void LoginUI() throws Exception{
-        Scanner sc = new Scanner(System.in);
         String username;
         String password;
         int success;
         int exitChoice=-3;
         do{
             System.out.println("========================================");
-            System.out.println("Please enter username");
-            username = sc.next();
+            System.out.println("Please enter ID");
+            username = sc.nextLine();
             System.out.println("Please enter password");
-            password = sc.next();
+            password = sc.nextLine();
 
             success = Login(username, password);
             switch (success){
@@ -63,18 +94,24 @@ public class mainMenu {
                     System.out.println("(1) Try again");
                     System.out.println("(2) Exit");
                     exitChoice = sc.nextInt();
+                    sc.nextLine();
                     break;
                 case 1:
                     //Administrator
+                	System.out.println("Administrator logged in");
+                	
                     break;
                 case 2:
                 	//Patient
+                	System.out.println("Patient logged in");
                     break;
                 case 3:
                 	//Doctor
+                	System.out.println("Doctor logged in");
                     break;
                 case 4:
                     //Pharmacist
+                	System.out.println("Pharmacist logged in");
                     break;
                 default:
                     mainMenu.WelcomePage();
@@ -86,24 +123,38 @@ public class mainMenu {
             mainMenu.WelcomePage();
     }
 
-    /**
-     * Checks if the user is an admin, if not check if user is customer, else user is guest. 
-     * Proceeds to validate if password matches that of the username.
-     * @param username entered username
-     * @param password entered password
-     * @return 0 if password is wrong, 1 if log in successfully as admin, 
-     * 2 if log in successfully as customer, 3 if user is guest, and 4 if username is not found
-     */
     private static int Login(String username, String password){
-        //Check from CSV
-    	//System.out.println("Logged in successfully");
-    	Administrator admin = new Administrator("admin01","password","Admin");
-    	
-        //If does not exist
-    	System.out.println("Sorry, this username does not exist");
-    	
-    	return 0;
+    	System.out.println("Login as staff/patient?");
+    	String userType = sc.nextLine().toLowerCase();
+    	int result =0;
+    	switch(userType) {
+    	case "patient":
+    		break;
+    	case "staff":
+    		for(Staff staff : staffList) {
+    			//System.out.println("Test: " + staff.getID() + " ; " + staff.getPassword() + " ; " + staff.getRole());
+    			if(staff.getID().equals(username) && staff.getPassword().equals(password)) {
+    				System.out.println("Success");
+    				switch(staff.getRole()) {
+    				case "Administrator":
+    					result = 1;
+    					break;
+    				case "Doctor":
+    					result = 3;
+    					break;
+    				case "Pharmacist":
+    					result = 4;
+    					break;
+    				}
+    			}
+    		}
+    		break;
+    	default:
+    		System.out.println("Invalid user type. Please enter 'staff' or 'patient'.");
+    	}
+    	return result;
     }
+  
 }
 
 

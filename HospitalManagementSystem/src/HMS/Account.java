@@ -2,7 +2,7 @@ package HMS;
 
 public abstract class Account {
 	private String userID;
-	protected String password;
+	private String password;
 	private String role;
 	
 	public Account() {
@@ -19,7 +19,17 @@ public abstract class Account {
 	
 	public void displayMenu() {}
 	
+	public String getID() {
+		return this.userID;
+	}
+	
+	public String getRole() {
+		return this.role;
+	}
+	
 	public void setPassword(String pass) {}
 	
-	public abstract String getPassword();
+	public String getPassword() {
+		return this.password;
+	}
 }

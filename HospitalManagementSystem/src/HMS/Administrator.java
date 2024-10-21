@@ -1,6 +1,6 @@
 package HMS;
 
-public class Administrator extends Account {
+public class Administrator extends Staff {
 	
 	public Administrator() {
 		super();
@@ -11,12 +11,12 @@ public class Administrator extends Account {
 	}
 	
 	public String getPassword() {
-		return this.password;
+		return super.getPassword();
 	}
 	
 	
 	public void setPassword(String pass) {
-		this.password = pass;
+		super.setPassword(pass);
 	}
 	
 	public void displayMenu() {
