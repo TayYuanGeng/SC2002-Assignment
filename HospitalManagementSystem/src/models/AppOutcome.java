@@ -1,19 +1,20 @@
 package models;
 
 import interfaces.Outcome;
-import interfaces.PrescriptionDetails;
 import java.time.LocalDate;
 
-public class AppOutcome implements Outcome, PrescriptionDetails {
+public class AppOutcome implements Outcome {
     private LocalDate dateOfApp;
     private String serviceType;
     private String prescriptionStatus = "pending";
     private String[] medicationNames;
     private String consultationNotes;
 
-    public AppOutcome(LocalDate dateOfApp, String serviceType) {
+    public AppOutcome(LocalDate dateOfApp, String serviceType, String[] medications, String notes) {
         this.dateOfApp = dateOfApp;
         this.serviceType = serviceType;
+        this.medicationNames = medications;
+        this.consultationNotes = notes;
     }
 
     public LocalDate getDateOfApp() {
@@ -34,6 +35,15 @@ public class AppOutcome implements Outcome, PrescriptionDetails {
         this.serviceType = service;
     }
 
+    public String[] getMedications() {
+        return medicationNames;
+    }
+
+    @Override
+    public void setMedications(String[] medicines) {
+        this.medicationNames = medicines;
+    }
+
     public String getConsultationNotes() {
         return consultationNotes;
     }
@@ -47,17 +57,7 @@ public class AppOutcome implements Outcome, PrescriptionDetails {
         return prescriptionStatus;
     }
 
-    @Override
     public void setPrescriptionStatus(String status) {
         this.prescriptionStatus = status;
-    }
-
-    public String[] getMedications() {
-        return medicationNames;
-    }
-
-    @Override
-    public void setMedications(String[] medicines) {
-        this.medicationNames = medicines;
     }
 }
