@@ -10,7 +10,7 @@ public class mainMenu {
 	
 	public static void main(String[] args) throws Exception {
 		
-        String csvFile = "src/HMS/Staff_List.csv";  // Replace with your file path
+        String csvFile = "src/data/Staff_List.csv";  // Replace with your file path
         String line;
         String csvSplitBy = ",";
         boolean isFirstLine = true;
