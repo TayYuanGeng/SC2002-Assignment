@@ -1,5 +1,7 @@
 package models;
 
+import controllers.PasswordUtilsController;
+
 public abstract class Account {
 	private String userID;
 	private String name;
@@ -9,7 +11,7 @@ public abstract class Account {
 	public Account() {
 		userID ="";
 		name = "";
-		password = "password";
+		password = PasswordUtilsController.hashPassword("password");
 		role = "";
 	}
 	
