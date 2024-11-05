@@ -1,4 +1,4 @@
-package HMS;
+package models;
 
 public abstract class Account {
 	private String userID;

@@ -1,4 +1,4 @@
-package HMS;
+package models;
 
 public class Administrator extends Staff {
 	

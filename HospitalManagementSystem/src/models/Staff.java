@@ -1,4 +1,4 @@
-package HMS;
+package models;
 
 public class Staff extends Account{
 	private String staffID;
