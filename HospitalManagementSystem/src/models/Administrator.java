@@ -6,8 +6,8 @@ public class Administrator extends Staff {
 		super();
 	}
 	
-	public Administrator(String uID,String pass , String r) {
-		super(uID,pass,r);
+	public Administrator(String uID,String name, String pass , String r) {
+		super(uID,name,pass,r);
 	}
 	
 	public String getPassword() {

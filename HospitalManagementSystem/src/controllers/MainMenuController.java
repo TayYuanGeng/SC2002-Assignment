@@ -1,22 +1,26 @@
 package controllers;
 
 import models.*;
-import views.*;
 import java.util.*;
 import java.io.*;
 
-public class mainMenu {
+public class MainMenuController {
 	static Scanner sc = new Scanner(System.in);
 	static ArrayList<Staff> staffList = new ArrayList<Staff>();
+    static Account loggedInUser;
 	
 	public static void main(String[] args) throws Exception {
-		
-        String csvFile = "src/data/Staff_List.csv";
+        DataInit("SC2002-Assignment\\HospitalManagementSystem\\src\\data\\Staff_List.csv"); //Initialize Staff_List.csv into ArrayList
+		WelcomePage();
+	}
+
+    private static void DataInit(String filePath){
         String line;
         String csvSplitBy = ",";
         boolean isFirstLine = true;
+
         
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             while ((line = br.readLine()) != null) {
             	if(isFirstLine) {
             		isFirstLine = false;
@@ -29,31 +33,30 @@ public class mainMenu {
                 for (String value : values) {
                     System.out.print(value + " ");
                 }
-                staffList.add(new Staff(values[0],"Password",values[2]));
-                
+                staffList.add(new Staff(values[0], values[1],"Password",values[2]));
                 
                 System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-   
-		WelcomePage();
-	}
+    }
 	
     private static int Login(String username, String password){
-    	System.out.println("Login as staff/patient?");
-    	String userType = sc.nextLine().toLowerCase();
+        System.out.println("========================================");
+        System.out.println("(1) Staff Login");
+        System.out.println("(2) Patient Login");
+        System.out.println("========================================");
+    	int userType = sc.nextInt();
     	int result =0;
     	switch(userType) {
-    	case "patient":
-    		break;
-    	case "staff":
+            case 1:
     		for(Staff staff : staffList) {
     			//System.out.println("Test: " + staff.getID() + " ; " + staff.getPassword() + " ; " + staff.getRole());
-    			if(staff.getID().equals(username) && staff.getPassword().equals(password)) {
+    			if(staff.getID().equals(username) && 
+                PasswordUtilsController.hashPassword(staff.getPassword()).equals(PasswordUtilsController.hashPassword(password))) {
     				System.out.println("Success");
+                    loggedInUser = staff; // Store logged in user here
     				switch(staff.getRole()) {
     				case "Administrator":
     					result = 1;
@@ -68,8 +71,10 @@ public class mainMenu {
     			}
     		}
     		break;
+            case 2:
+                break;
     	default:
-    		System.out.println("Invalid user type. Please enter 'staff' or 'patient'.");
+    		System.out.println("Invalid user type. Please enter '1' for staff or '2' for patient.");
     	}
     	return result;
     }
@@ -78,7 +83,7 @@ public class mainMenu {
         String username;
         String password;
         int success;
-        int exitChoice=-3;
+        int exitChoice=-1;
         do{
             System.out.println("========================================");
             System.out.println("Please enter ID");
@@ -99,7 +104,7 @@ public class mainMenu {
                 case 1:
                     //Administrator
                     System.out.println("Administrator logged in");
-                    
+                    AdministratorController.main(loggedInUser);
                     break;
                 case 2:
                     //Patient
