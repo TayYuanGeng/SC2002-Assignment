@@ -29,13 +29,13 @@ public class Appointment {
         //showDoctorUnavailability();
         //showDoctorSchedule("D001");
         //showAppointmentRequests("D001");
-        //respondToRequest("D001", "P1001", "12-01-2025 11:00", true);
+        respondToRequest("D002", "P1001", "13-01-2025 15:00", true);
         //respondToRequest("D002", "P1003", "12-01-2025 11:00", true);
         //showUpcomingAppointment("D001");
         //scheduleAppointment("23-01-2025 11:00", "P1001", "Emily Clarke");
-        rescheduleAppointment("P1001", "12-01-2025 14:00", "13-01-2025 14:00");
+        //rescheduleAppointment("P1001", "12-01-2025 14:00", "13-01-2025 14:00");
         //cancelAppointment("P1001", "12-01-2025 11:00");
-        showPatientAppointment("P1001");
+        //showPatientAppointment("P1001");
 		//WelcomePage();
 	}
 
