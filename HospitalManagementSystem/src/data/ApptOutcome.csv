@@ -1,0 +1,3 @@
+DateTime,PatientID,ServiceType,PrescribedMedications,ConsultationNotes,PrescriptionStatus
+13-01-2025 14:00,P1001,consultation,Pills Antibiotics,Sick,Dispensed
+12-01-2025 11:00,P1003,consultation,Calcium Pills,Bones brittle,Dispensed

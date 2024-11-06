@@ -11,46 +11,43 @@ public class Appointment {
     private String patientID;
     private String doctorID;
     private AppointmentStatus appointmentStatus;
+    private AppOutcome outcome;
     private String appointmentDateTime;
     private static Map<String, String> patientIdToNameMap = new HashMap<>();
     private static Map<String, String> doctorIdToNameMap = new HashMap<>();
     private static List<Appointment> appointments = new ArrayList<Appointment>();
     private static List<Unavailability> unavailabilities = new ArrayList<Unavailability>();
+    private static List<AppOutcome> appOutcomes = new ArrayList<AppOutcome>();
     private static final String STAFF_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv";
     private static final String PATIENT_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv";
     private static final String UNAVAIL_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Unavailability.csv";
     private static final String APPTREQ_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptRequest.csv";
+    private static final String APPTOUTCOME_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptOutcome.csv";
     public static void main(String[] args) throws Exception {
         DataInitApptReq(APPTREQ_CSV_FILE);
         DataInitUnavail(UNAVAIL_CSV_FILE);
         DataInitPatient(PATIENT_CSV_FILE);
         DataInitStaff(STAFF_CSV_FILE);
+        DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
         //updateDoctorUnavailability("19-10-2025 23:00", "D002");
         //showDoctorUnavailability();
         //showDoctorSchedule("D001");
         //showAppointmentRequests("D001");
-        respondToRequest("D002", "P1001", "13-01-2025 15:00", true);
+        //respondToRequest("D002", "P1001", "13-01-2025 15:00", true);
         //respondToRequest("D002", "P1003", "12-01-2025 11:00", true);
         //showUpcomingAppointment("D001");
         //scheduleAppointment("23-01-2025 11:00", "P1001", "Emily Clarke");
         //rescheduleAppointment("P1001", "12-01-2025 14:00", "13-01-2025 14:00");
         //cancelAppointment("P1001", "12-01-2025 11:00");
         //showPatientAppointment("P1001");
+        //completeAppointment("D001", "P1001", "13-01-2025 14:00");
+        //completeAppointment("D002", "P1003", "12-01-2025 11:00");
+        readApptOutcome("P1002");
+        //setPrescriptionStatus("P1003");
+        //readApptOutcome("P1003");
 		//WelcomePage();
 	}
 
-    //[MAPPING TESTER]
-    // public static void printHashMapContents() {
-    //     System.out.println("Patient ID to Name Map:");
-    //     for (Map.Entry<String, String> entry : patientIdToNameMap.entrySet()) {
-    //         System.out.println("Patient ID: " + entry.getKey() + ", Patient Name: " + entry.getValue());
-    //     }
-    //     System.out.println("\nDoctor ID to Name Map:");
-    //     for (Map.Entry<String, String> entry : doctorIdToNameMap.entrySet()) {
-    //         System.out.println("Doctor ID: " + entry.getKey() + ", Doctor Name: " + entry.getValue());
-    //     }
-    // }
-    
     public static void writeToCSV(String fileName, List<?> dataList) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             // Write headers based on whether it's appointments or unavailability
@@ -60,7 +57,7 @@ public class Appointment {
                     Unavailability unavailability = (Unavailability) data;
                     bw.write("\n" + unavailability.getDateTime() + "," + unavailability.getDoctorID());
                 }
-            } else {
+            } else if (dataList.equals(appointments)) {
                 bw.write("DateTime Slot,DoctorID,PatientID,Status");
                 for (Object data : dataList) {
                     Appointment appt = (Appointment) data;
@@ -68,6 +65,18 @@ public class Appointment {
                             appt.getDoctorID() + "," +
                             appt.getPatientID() + "," +
                             appt.getAppointmentStatus());
+                }
+            } else if (dataList.equals(appOutcomes)){
+                bw.write("DateTime,PatientID,ServiceType,PrescribedMedications,ConsultationNotes,PrescriptionStatus");
+                for (Object data : dataList) {
+                    AppOutcome apptOut = (AppOutcome) data;
+                    String medications = String.join(" ", apptOut.getPrescribedMedications());
+                    bw.write("\n" + apptOut.getDateTime() + "," +
+                    apptOut.getPatientID() + "," +
+                    apptOut.getServiceType() + "," +
+                    medications + "," + 
+                    apptOut.getConsultationNotes() + "," + 
+                    apptOut.getPrescriptionStatus());
                 }
             }
         } catch (IOException e) {
@@ -165,6 +174,40 @@ public class Appointment {
             e.printStackTrace();
         }
     }
+    // Init Appt Outcome
+    private static void DataInitApptOutcome(String filePath){
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+            	if(isFirstLine) {
+            		isFirstLine = false;
+            		continue;
+            	}
+                // Use comma as separator
+                String[] values = line.split(csvSplitBy);
+
+            // Extract data and create AppOutcome
+            String dateTime = values[0];
+            String patientID = values[1];
+            String serviceType = values[2];
+            String medications = values[3];
+            String notes = values[4];
+            String status = values[5];
+
+            // Convert medications from a single string to a list
+            List<String> medicationsList = new ArrayList<>(Arrays.asList(medications.split(" ")));
+
+            // Create an AppOutcome object and add it to the list
+            appOutcomes.add(new AppOutcome(dateTime, patientID, serviceType, medicationsList, notes, status));
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error reading from CSV file.");
+        }
+    }
+
 
     public enum AppointmentStatus {
         PENDING,
@@ -299,6 +342,112 @@ public class Appointment {
         }
         System.out.println("No matching appointment found.");
     }
+
+    // Mark appointment as completed and update outcome (Doctor)
+    public static void completeAppointment(String doctorID, String patientID, String dateTime){
+        // Find the appointment to complete
+        Appointment appointmentToComplete = null;
+        
+        for (Appointment appt : appointments) {
+            if (appt.getDoctorID().equals(doctorID) && appt.getPatientID().equals(patientID) 
+                    && appt.getAppointmentDateTime().equals(dateTime)) {
+                        if (appt.getAppointmentStatus().equals(AppointmentStatus.COMPLETED)){
+                            System.out.println("Appointment has been marked completed!");
+                            return;
+                        }
+                appointmentToComplete = appt;
+                break;
+            }
+        }
+        
+        // Check if the appointment exists
+        if (appointmentToComplete == null) {
+            System.out.println("Appointment not found.");
+            return;
+        }
+
+        // Gather details for the outcome
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter type of service provided (e.g., consultation, X-ray): ");
+        String serviceType = scanner.nextLine();
+
+        System.out.println("Enter consultation notes: ");
+        String notes = scanner.nextLine();
+
+        // Add prescribed medications
+        List<String> medications = new ArrayList<>();
+        String medication;
+        System.out.println("Enter medication name (or type 'done' to finish): ");
+        do {
+            medication = scanner.nextLine();
+            if (!medication.equalsIgnoreCase("done")) {
+                medications.add(medication);
+            }
+        } while (!medication.equalsIgnoreCase("done"));
+        String prescriptionStatus = "Pending";
+        appOutcomes.add(new AppOutcome(dateTime, patientID, serviceType, medications, notes, prescriptionStatus));
+
+        // Update the status to COMPLETED
+        appointmentToComplete.appointmentStatus = AppointmentStatus.COMPLETED;
+
+        // Save to CSV or database if needed
+        writeToCSV(APPTREQ_CSV_FILE, appointments);  // Updating appointments CSV with "COMPLETED" status
+        writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
+        // Write the outcome data to CSV
+        // try (BufferedWriter bw = new BufferedWriter(new FileWriter(APPTOUTCOME_CSV_FILE, true))) {
+        //     bw.write("\n" + outcome.getDateTime() + "," + patientID + "," + outcome.getServiceType() + "," + 
+        //     String.join(" ", outcome.getPrescribedMedications()) + "," + outcome.getConsultationNotes() + "," + prescriptionStatus);
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        //     System.out.println("Error writing to CSV file.");
+        // }
+        System.out.println("Appointment marked as completed and outcome recorded.");
+    }
+
+    // Read appointment outcome
+    public static void readApptOutcome(String patientID) {
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(APPTOUTCOME_CSV_FILE))) {
+            // Read the header
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false; // Skip header line
+                    continue;
+                }
+    
+                // Split the line by commas
+                String[] values = line.split(csvSplitBy);
+    
+                // Check if this appointment belongs to the given patient
+                String patientColumn = values[1];
+    
+                if (patientColumn.equals(patientID)) {
+                    // Extract appointment outcome details
+                    String dateTime = values[0];
+                    String serviceType = values[2];
+                    String medications = values[3];
+                    String notes = values[4];
+                    String status = values[5];
+    
+                    // Print the appointment details for the patient
+                    System.out.println("Appointment Date/Time: " + dateTime);
+                    System.out.println("Service Type: " + serviceType);
+                    System.out.println("Medications: " + String.join(", ", medications).replace(" ", ", "));
+                    System.out.println("Consultation Notes: " + notes);
+                    System.out.println("Prescription Status: " + status);
+                    System.out.println("-------------------------------");
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error reading from CSV file.");
+        }
+        System.out.println("No Appointment Outcome yet!");
+    }    
 
     // Show upcoming appointment from CSV (Doctor)
     public static void showUpcomingAppointment(String doctorID){
@@ -462,7 +611,8 @@ public class Appointment {
             System.out.println("No appointments at the moment.");
         }
     }
-    // Getters
+    
+    // Getters & Setters
     public String getPatientID() {
         return patientID;
     }
@@ -485,5 +635,33 @@ public class Appointment {
 
     public void setAppointmentDateTime(String dateTime){
         this.appointmentDateTime = dateTime;
+    }
+
+    public AppOutcome getOutcome() {
+        return outcome;
+    }
+
+    public void setOutcome(AppOutcome outcome) {
+        this.outcome = outcome;
+    }
+    // Update medication status dispensed (Pharmacist)
+    public static void setPrescriptionStatus(String patientID){
+        for (Appointment appointment : appointments) {
+            if (appointment.getPatientID().equals(patientID) && appointment.getAppointmentStatus() == AppointmentStatus.COMPLETED) {
+                for (AppOutcome appOutcome : appOutcomes){
+                    if (appointment.getAppointmentDateTime().equals(appOutcome.getDateTime())){
+                        if (appOutcome.getPrescriptionStatus().equals("Dispensed")){
+                            System.out.println("Medications already dispensed!");
+                            return;
+                        }
+                        appOutcome.setPrescriptionStatus();
+                    }
+                }
+                writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
+                System.out.println("Medications dispensed!");
+                return;
+            }
+        }
+        System.out.println("No medications pending dispensed!");
     }
 }
