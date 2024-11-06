@@ -29,12 +29,13 @@ public class Appointment {
         //showDoctorUnavailability();
         //showDoctorSchedule("D001");
         //showAppointmentRequests("D001");
-        //respondToRequest("D001", "P1001", "12-01-2025 11:00", true);
+        respondToRequest("D002", "P1001", "13-01-2025 15:00", true);
         //respondToRequest("D002", "P1003", "12-01-2025 11:00", true);
         //showUpcomingAppointment("D001");
         //scheduleAppointment("23-01-2025 11:00", "P1001", "Emily Clarke");
-        rescheduleAppointment("P1001", "12-01-2025 14:00", "13-01-2025 14:00");
+        //rescheduleAppointment("P1001", "12-01-2025 14:00", "13-01-2025 14:00");
         //cancelAppointment("P1001", "12-01-2025 11:00");
+        //showPatientAppointment("P1001");
 		//WelcomePage();
 	}
 
@@ -258,7 +259,7 @@ public class Appointment {
         return pendingAppointments;
     }
 
-    // Doctor accepts or declines a request
+    // Accepts or declines a request (Doctor)
     public static void respondToRequest(String doctorID, String patientID, String dateTime, boolean accept) {
         // Iterate through the appointments to find the matching request
         for (Appointment appt : appointments) {
@@ -314,7 +315,7 @@ public class Appointment {
         }
     }
 
-    // Cancel appointment requests in CSV
+    // Cancel appointment requests in CSV (Doctor)
     public static void cancelAppointmentRequests(String doctorID, String dateTime) {
         for (Appointment appt : appointments) {
             if (appt.getDoctorID().equals(doctorID) && appt.getAppointmentDateTime().equals(dateTime) && appt.getAppointmentStatus().equals(AppointmentStatus.CONFIRMED)){
@@ -447,6 +448,20 @@ public class Appointment {
         System.out.println("Appointment cancelled successfully! The time slot has been made available.");
     }
 
+    // Show appointment status (Patient)
+    public static void showPatientAppointment(String patientID){
+        boolean hasAppt = false;
+        System.out.println("Upcoming appointments:");
+        for (Appointment appt : appointments){
+            if (appt.getPatientID().equals(patientID)) {
+                System.out.println("Time Slot: " + appt.getAppointmentDateTime() + ", Doctor Name: " + doctorIdToNameMap.get(appt.getDoctorID()) + ", Status: " + appt.getAppointmentStatus());
+                hasAppt = true;
+            }
+        }
+        if (!hasAppt){
+            System.out.println("No appointments at the moment.");
+        }
+    }
     // Getters
     public String getPatientID() {
         return patientID;
