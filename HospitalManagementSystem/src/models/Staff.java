@@ -1,7 +1,5 @@
 package models;
 
-import controllers.PasswordUtilsController;
-
 public class Staff extends Account{
 	private String staffID;
 	private String name;
@@ -33,7 +31,7 @@ public class Staff extends Account{
 	}
 	
 	public void setPassword(String pass) {
-		this.password = PasswordUtilsController.hashPassword(pass);
+		super.setPassword(pass);
 	};
 	
 	public String getPassword() {

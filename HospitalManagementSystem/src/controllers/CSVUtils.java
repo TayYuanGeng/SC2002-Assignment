@@ -5,13 +5,14 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 import models.Staff;
 
 public class CSVUtils {
     
-    private static void saveUserToCSV(String filePath, String username, String password, String role) {
-        String hashedPassword = PasswordUtilsController.hashPassword(password);
+    public static void saveUserToCSV(String filePath, String username, String password, String role) {
+        String hashedPassword = password;
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(username + "," + hashedPassword + "," + role);
             bw.newLine();
@@ -19,6 +20,58 @@ public class CSVUtils {
             e.printStackTrace();
         }
         
+    }
+
+    public static void saveStaffToCSV(String filePath, Staff staff) {
+        String hashedPassword = staff.getPassword();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            bw.write(staff.getID() + "," + staff.getName() + "," + hashedPassword + "," + staff.getRole()+ "," + staff.getGender()+ "," + staff.getAge());
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+    public static void updateStaffInCSV(String filePath, Staff updatedStaff) {
+        List<String> lines = new ArrayList<>();
+        String staffID = updatedStaff.getID();
+        String hashedPassword = updatedStaff.getPassword();
+        boolean found = false;
+
+        // Read all lines and modify the matching line
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                
+                if (fields.length > 0 && fields[0].equals(staffID)) { // Check if the ID matches
+                    // Replace with updated staff information
+                    line = staffID + "," + updatedStaff.getName() + "," + hashedPassword + "," +
+                           updatedStaff.getRole() + "," + updatedStaff.getGender() + "," + updatedStaff.getAge();
+                    found = true;
+                }
+                
+                lines.add(line); // Add each line (modified or not) to the list
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Rewrite the file with updated lines
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                for (String l : lines) {
+                    bw.write(l);
+                    bw.newLine();
+                }
+                System.out.println("Staff record updated successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Staff with ID " + staffID + " not found.");
+        }
     }
     // private static void DataInit(String filePath){
     //     String line;

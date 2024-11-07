@@ -40,7 +40,8 @@ public abstract class Account {
 		return this.role;
 	}
 	
-	public void setPassword() {
+	public void setPassword(String pass) {
+		this.password = PasswordUtilsController.hashPassword(pass);
 	}
 	
 	public String getPassword() {

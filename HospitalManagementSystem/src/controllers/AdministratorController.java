@@ -16,7 +16,7 @@ public class AdministratorController {
     public static void AdminPage() throws Exception{
         System.out.println("========================================");
         System.out.println("Welcome to Administrator Menu");
-        int choice = 0;
+        int choice;
         do{
             try {
                 System.out.println("========================================");

@@ -10,11 +10,11 @@ public class MainMenuController {
     static Account loggedInUser;
 	
 	public static void main(String[] args) throws Exception {
-        //"SC2002-Assignment\\HospitalManagementSystem\\src\\data\\Staff_List.csv"
-        DataInit("data\\Staff_List.csv"); //Initialize Staff_List.csv into ArrayList
+        //DataInit("data\\Staff_List.csv"); //Initialize Staff_List.csv into ArrayList
 		WelcomePage();
 	}
 
+        @SuppressWarnings({"CallToPrintStackTrace", "UnnecessaryTemporaryOnConversionFromString"})
     private static void DataInit(String filePath){
         String line;
         String csvSplitBy = ",";
@@ -46,12 +46,17 @@ public class MainMenuController {
 	
     private static int Login(String username, String password, int userType){
     	int result =0;
+        boolean loggedIn = false;
     	switch(userType) {
             case 1:
     		for(Staff staff : staffList) {
-    			System.out.println("Test: " + staff.getID() + " ; " + staff.getPassword() + " ; " + staff.getRole());
-    			if(staff.getID().equals(username) && 
-                PasswordUtilsController.hashPassword(staff.getPassword()).equals(PasswordUtilsController.hashPassword(password))) {
+    			//System.out.println("Test: " + staff.getID() + " ; " + staff.getPassword() + " ; " + staff.getRole());
+                if(staff.getID().equals(username) &&  !password.equals("Password")){ //Not first-time users
+                    System.out.println("Login Success!");
+                    loggedIn = true;
+                }
+    			else if(staff.getID().equals(username) && 
+                PasswordUtilsController.hashPassword(staff.getPassword()).equals(PasswordUtilsController.hashPassword(password))) { //First-time users
     				System.out.println("Login Success!");
                     if(PasswordUtilsController.hashPassword(staff.getPassword()).equals(PasswordUtilsController.hashPassword("Password"))){
                         System.out.println("First-Time login. Please change password.");
@@ -59,6 +64,7 @@ public class MainMenuController {
                         while(!passChangedSuccess){
                             System.out.println("Please enter new password:");
                             String newPassword = sc.nextLine();
+                            System.out.println(PasswordUtilsController.hashPassword(newPassword));
                             if(PasswordUtilsController.hashPassword(newPassword).equals(PasswordUtilsController.hashPassword("Password"))){
                                 System.out.println("Invalid Password. Please try again!");
                             }
@@ -68,7 +74,10 @@ public class MainMenuController {
                                 if(PasswordUtilsController.hashPassword(newPassword).equals(PasswordUtilsController.hashPassword(cfmPassword))){
                                     passChangedSuccess = true;
                                     staff.setPassword(newPassword);
+                                    System.out.println(PasswordUtilsController.hashPassword(cfmPassword));
                                     System.out.println("Password changed successfully!");
+                                    CSVUtils.updateStaffInCSV("data/Staff_List.csv", staff);
+                                    loggedIn = true;
                                 }
                                 else{
                                     System.out.println("Password does not match. Please try again.");
@@ -76,20 +85,21 @@ public class MainMenuController {
                             }
                         }
                     }
+                }
+                if(loggedIn){
                     loggedInUser = staff; // Store logged in user here
-                    System.out.println(staff.getRole());
-    				switch(staff.getRole()) {
-    				case "Administrator":
-    					result = 1;
-    					break;
-    				case "Doctor":
-    					result = 3;
-    					break;
-    				case "Pharmacist":
-    					result = 4;
-    					break;
-    				}
-    			}
+                    switch(staff.getRole()) {
+                    case "Administrator":
+                        result = 1;
+                        break;
+                    case "Doctor":
+                        result = 3;
+                        break;
+                    case "Pharmacist":
+                        result = 4;
+                        break;
+                    }
+                }
     		}
     		break;
             case 2:
@@ -155,9 +165,10 @@ public class MainMenuController {
     }
 
     public static void WelcomePage() throws Exception{
+        DataInit("data\\Staff_List.csv"); //Initialize Staff_List.csv into ArrayList
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
-        int choice = 0;
+        int choice;
         do{
             try {
                 System.out.println("========================================");
@@ -166,15 +177,16 @@ public class MainMenuController {
                 System.out.println("========================================");
                 choice = sc.nextInt();
                 sc.nextLine();
-                if (choice == 1) {
-                    LoginPage();
-                }
-                else if (choice == 2){
-                    System.out.println("Thank you for using HMS");
-                    System.exit(0);
-                }
-                else{
-                    System.out.println("Invalid Input. Please enter an integer (1-3):");
+                switch (choice) {
+                    case 1:
+                        LoginPage();
+                        break;
+                    case 2:
+                        System.out.println("Thank you for using HMS");
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid Input. Please enter an integer (1-3):");
+                        break;
                 }
             }
             catch (Exception e) {
