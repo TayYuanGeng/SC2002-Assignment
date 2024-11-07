@@ -242,6 +242,7 @@ public class Appointment {
     
     // Update doctor unavailability in CSV (Doctor)
     public static void updateDoctorUnavailability(String dateTime, String doctorID) {
+        DataInitUnavail(UNAVAIL_CSV_FILE);
         for (Unavailability unavail : unavailabilities){
             if (unavail.getDateTime().equals(dateTime) && unavail.getDoctorID().equals(doctorID)){
                 System.out.println("Duplicate records!");
@@ -273,6 +274,7 @@ public class Appointment {
 
     // Show doctor unavailability in CSV (Doctor)
     public static void showDoctorSchedule(String doctorID){
+        DataInitUnavail(UNAVAIL_CSV_FILE);
         System.out.println("Time slots you are not available: ");
         boolean hasUnavailability = false;
         
@@ -290,6 +292,7 @@ public class Appointment {
     // Show appointment requests from CSV (Doctor)
     public static List<Appointment> showAppointmentRequests(String doctorID) {
         DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitPatient(PATIENT_CSV_FILE);
         System.out.println("Pending bookings from patient:");
         List<Appointment> pendingAppointments = new ArrayList<>();
         boolean hasPendingAppointments = false;
@@ -353,6 +356,7 @@ public class Appointment {
     // Mark appointment as completed and update outcome (Doctor)
     public static void completeAppointment(String doctorID, String patientID, String dateTime){
         DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
         // Find the appointment to complete
         Appointment appointmentToComplete = null;
         
@@ -460,6 +464,7 @@ public class Appointment {
     // Show upcoming appointment from CSV (Doctor)
     public static void showUpcomingAppointment(String doctorID){
         DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitPatient(PATIENT_CSV_FILE);
         boolean hasUpcomingAppt = false;
         System.out.println("Upcoming appointments:");
         for (Appointment appt : appointments){
@@ -476,6 +481,7 @@ public class Appointment {
     // Cancel appointment requests in CSV (Doctor)
     public static void cancelAppointmentRequests(String doctorID, String dateTime) {
         DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitUnavail(UNAVAIL_CSV_FILE);
         for (Appointment appt : appointments) {
             if (appt.getDoctorID().equals(doctorID) && appt.getAppointmentDateTime().equals(dateTime) && appt.getAppointmentStatus().equals(AppointmentStatus.CONFIRMED)){
                 appt.setAppointmentStatus(AppointmentStatus.CANCELLED);
@@ -490,6 +496,7 @@ public class Appointment {
 
     // Check if slot is available for booking
     public static boolean isSlotAvailable(String dateTime, String doctorID) {
+        DataInitUnavail(UNAVAIL_CSV_FILE);
         for (Unavailability unavail : unavailabilities) {
             if (unavail.getDoctorID().equals(doctorID) && unavail.getDateTime().equals(dateTime)) {
                 return false;
@@ -542,6 +549,7 @@ public class Appointment {
     // Reschedule Appointment (Patient)
     public static void rescheduleAppointment(String patientID, String dateTime, String newDateTime) {
         DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitUnavail(UNAVAIL_CSV_FILE);
         Appointment appointmentToUpdate = appointments.stream()
             .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
             .findFirst()
@@ -583,6 +591,7 @@ public class Appointment {
     // Cancel Appointment (Patient)
     public static void cancelAppointment(String patientID, String dateTime){
         DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitUnavail(UNAVAIL_CSV_FILE);
         // Find the appointment to cancel
         Appointment appointmentToCancel = appointments.stream()
         .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
@@ -662,6 +671,8 @@ public class Appointment {
     }
     // Update medication status dispensed (Pharmacist)
     public static void setPrescriptionStatus(String patientID){
+        DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
         for (Appointment appointment : appointments) {
             if (appointment.getPatientID().equals(patientID) && appointment.getAppointmentStatus() == AppointmentStatus.COMPLETED) {
                 for (AppOutcome appOutcome : appOutcomes){
