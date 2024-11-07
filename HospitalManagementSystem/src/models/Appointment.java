@@ -24,13 +24,12 @@ public class Appointment {
     private static final String APPTREQ_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptRequest.csv";
     private static final String APPTOUTCOME_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptOutcome.csv";
     public static void main(String[] args) throws Exception {
-        DataInitApptReq(APPTREQ_CSV_FILE);
         DataInitUnavail(UNAVAIL_CSV_FILE);
         DataInitPatient(PATIENT_CSV_FILE);
         DataInitStaff(STAFF_CSV_FILE);
         DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
         //updateDoctorUnavailability("19-10-2025 23:00", "D002");
-        //showDoctorUnavailability();
+        Appointment.showDoctorUnavailability();
         //showDoctorSchedule("D001");
         //showAppointmentRequests("D001");
         //respondToRequest("D002", "P1001", "13-01-2025 15:00", true);
@@ -42,13 +41,16 @@ public class Appointment {
         //showPatientAppointment("P1001");
         //completeAppointment("D001", "P1001", "13-01-2025 14:00");
         //completeAppointment("D002", "P1003", "12-01-2025 11:00");
-        readApptOutcome("P1002");
+        //readApptOutcome("P1002");
         //setPrescriptionStatus("P1003");
         //readApptOutcome("P1003");
 		//WelcomePage();
 	}
 
     public static void writeToCSV(String fileName, List<?> dataList) {
+        DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitUnavail(UNAVAIL_CSV_FILE);
+        DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             // Write headers based on whether it's appointments or unavailability
             if (dataList.equals(unavailabilities)){
@@ -255,6 +257,8 @@ public class Appointment {
 
     // Show doctor unavailability in CSV (Patient)
     public static void showDoctorUnavailability() {
+        DataInitUnavail(UNAVAIL_CSV_FILE);
+        DataInitStaff(STAFF_CSV_FILE);
         System.out.println("Time slots of doctors not available: ");
         boolean hasUnavailability = false;
         
@@ -285,6 +289,7 @@ public class Appointment {
 
     // Show appointment requests from CSV (Doctor)
     public static List<Appointment> showAppointmentRequests(String doctorID) {
+        DataInitApptReq(APPTREQ_CSV_FILE);
         System.out.println("Pending bookings from patient:");
         List<Appointment> pendingAppointments = new ArrayList<>();
         boolean hasPendingAppointments = false;
@@ -304,6 +309,8 @@ public class Appointment {
 
     // Accepts or declines a request (Doctor)
     public static void respondToRequest(String doctorID, String patientID, String dateTime, boolean accept) {
+        DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitUnavail(UNAVAIL_CSV_FILE);
         // Iterate through the appointments to find the matching request
         for (Appointment appt : appointments) {
             for (Unavailability unavail : unavailabilities) {
@@ -345,6 +352,7 @@ public class Appointment {
 
     // Mark appointment as completed and update outcome (Doctor)
     public static void completeAppointment(String doctorID, String patientID, String dateTime){
+        DataInitApptReq(APPTREQ_CSV_FILE);
         // Find the appointment to complete
         Appointment appointmentToComplete = null;
         
@@ -451,6 +459,7 @@ public class Appointment {
 
     // Show upcoming appointment from CSV (Doctor)
     public static void showUpcomingAppointment(String doctorID){
+        DataInitApptReq(APPTREQ_CSV_FILE);
         boolean hasUpcomingAppt = false;
         System.out.println("Upcoming appointments:");
         for (Appointment appt : appointments){
@@ -466,6 +475,7 @@ public class Appointment {
 
     // Cancel appointment requests in CSV (Doctor)
     public static void cancelAppointmentRequests(String doctorID, String dateTime) {
+        DataInitApptReq(APPTREQ_CSV_FILE);
         for (Appointment appt : appointments) {
             if (appt.getDoctorID().equals(doctorID) && appt.getAppointmentDateTime().equals(dateTime) && appt.getAppointmentStatus().equals(AppointmentStatus.CONFIRMED)){
                 appt.setAppointmentStatus(AppointmentStatus.CANCELLED);
@@ -490,6 +500,8 @@ public class Appointment {
 
     // Schedule Appointment (Patient)
     public static void scheduleAppointment(String dateTime, String patientID, String doctorName){
+        DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitStaff(STAFF_CSV_FILE);
         String doctorID = doctorIdToNameMap.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().equals(doctorName))
@@ -529,6 +541,7 @@ public class Appointment {
 
     // Reschedule Appointment (Patient)
     public static void rescheduleAppointment(String patientID, String dateTime, String newDateTime) {
+        DataInitApptReq(APPTREQ_CSV_FILE);
         Appointment appointmentToUpdate = appointments.stream()
             .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
             .findFirst()
@@ -569,6 +582,7 @@ public class Appointment {
     
     // Cancel Appointment (Patient)
     public static void cancelAppointment(String patientID, String dateTime){
+        DataInitApptReq(APPTREQ_CSV_FILE);
         // Find the appointment to cancel
         Appointment appointmentToCancel = appointments.stream()
         .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
@@ -599,6 +613,8 @@ public class Appointment {
 
     // Show appointment status (Patient)
     public static void showPatientAppointment(String patientID){
+        DataInitApptReq(APPTREQ_CSV_FILE);
+        DataInitStaff(STAFF_CSV_FILE);
         boolean hasAppt = false;
         System.out.println("Upcoming appointments:");
         for (Appointment appt : appointments){
