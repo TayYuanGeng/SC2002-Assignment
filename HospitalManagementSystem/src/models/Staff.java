@@ -1,10 +1,14 @@
 package models;
 
+import controllers.PasswordUtilsController;
+
 public class Staff extends Account{
 	private String staffID;
 	private String name;
 	private String password;
 	private String role;
+	private String gender;
+	private int age;
 	
 	public Staff() {
 		super();
@@ -28,9 +32,27 @@ public class Staff extends Account{
 		return super.getRole();
 	}
 	
-	public void setPassword() {};
+	public void setPassword(String pass) {
+		this.password = PasswordUtilsController.hashPassword(pass);
+	};
 	
 	public String getPassword() {
 		return super.getPassword();
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	};
+	
+	public String getGender() {
+		return this.gender;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	};
+	
+	public int getAge() {
+		return this.age;
 	}
 }

@@ -40,7 +40,8 @@ public abstract class Account {
 		return this.role;
 	}
 	
-	public void setPassword(String pass) {}
+	public void setPassword() {
+	}
 	
 	public String getPassword() {
 		return this.password;

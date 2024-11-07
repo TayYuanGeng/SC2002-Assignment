@@ -10,7 +10,8 @@ public class MainMenuController {
     static Account loggedInUser;
 	
 	public static void main(String[] args) throws Exception {
-        DataInit("SC2002-Assignment\\HospitalManagementSystem\\src\\data\\Staff_List.csv"); //Initialize Staff_List.csv into ArrayList
+        //"SC2002-Assignment\\HospitalManagementSystem\\src\\data\\Staff_List.csv"
+        DataInit("data\\Staff_List.csv"); //Initialize Staff_List.csv into ArrayList
 		WelcomePage();
 	}
 
@@ -33,8 +34,9 @@ public class MainMenuController {
                 for (String value : values) {
                     System.out.print(value + " ");
                 }
-                staffList.add(new Staff(values[0], values[1],"Password",values[2]));
-                
+                staffList.add(new Staff(values[0], values[1],values[2],values[3]));
+                staffList.get(staffList.size()-1).setGender(values[4]);
+                staffList.get(staffList.size()-1).setAge(Integer.valueOf(values[5]));
                 System.out.println();
             }
         } catch (IOException e) {
@@ -42,21 +44,40 @@ public class MainMenuController {
         }
     }
 	
-    private static int Login(String username, String password){
-        System.out.println("========================================");
-        System.out.println("(1) Staff Login");
-        System.out.println("(2) Patient Login");
-        System.out.println("========================================");
-    	int userType = sc.nextInt();
+    private static int Login(String username, String password, int userType){
     	int result =0;
     	switch(userType) {
             case 1:
     		for(Staff staff : staffList) {
-    			//System.out.println("Test: " + staff.getID() + " ; " + staff.getPassword() + " ; " + staff.getRole());
+    			System.out.println("Test: " + staff.getID() + " ; " + staff.getPassword() + " ; " + staff.getRole());
     			if(staff.getID().equals(username) && 
                 PasswordUtilsController.hashPassword(staff.getPassword()).equals(PasswordUtilsController.hashPassword(password))) {
-    				System.out.println("Success");
+    				System.out.println("Login Success!");
+                    if(PasswordUtilsController.hashPassword(staff.getPassword()).equals(PasswordUtilsController.hashPassword("Password"))){
+                        System.out.println("First-Time login. Please change password.");
+                        boolean passChangedSuccess = false;
+                        while(!passChangedSuccess){
+                            System.out.println("Please enter new password:");
+                            String newPassword = sc.nextLine();
+                            if(PasswordUtilsController.hashPassword(newPassword).equals(PasswordUtilsController.hashPassword("Password"))){
+                                System.out.println("Invalid Password. Please try again!");
+                            }
+                            else{
+                                System.out.println("Confirm new password:");
+                                String cfmPassword = sc.nextLine();
+                                if(PasswordUtilsController.hashPassword(newPassword).equals(PasswordUtilsController.hashPassword(cfmPassword))){
+                                    passChangedSuccess = true;
+                                    staff.setPassword(newPassword);
+                                    System.out.println("Password changed successfully!");
+                                }
+                                else{
+                                    System.out.println("Password does not match. Please try again.");
+                                }
+                            }
+                        }
+                    }
                     loggedInUser = staff; // Store logged in user here
+                    System.out.println(staff.getRole());
     				switch(staff.getRole()) {
     				case "Administrator":
     					result = 1;
@@ -86,12 +107,17 @@ public class MainMenuController {
         int exitChoice=-1;
         do{
             System.out.println("========================================");
+            System.out.println("(1) Staff Login");
+            System.out.println("(2) Patient Login");
+            System.out.println("========================================");
+            int userType = sc.nextInt();
+            sc.nextLine();
+            System.out.println("========================================");
             System.out.println("Please enter ID");
             username = sc.nextLine();
             System.out.println("Please enter password");
             password = sc.nextLine();
-    
-            success = Login(username, password);
+            success = Login(username, password,userType);
             switch (success){
                 case 0:
                     System.out.println("Username or password is incorrect");
