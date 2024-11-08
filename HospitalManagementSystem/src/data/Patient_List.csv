@@ -1,4 +1,4 @@
-﻿Patient ID,Name,Date of Birth,Gender,Blood Type,email,phone,diagnosis and treatment
-P1001,Alice Brown,1980-05-14,Female,A+,testing@gmail.com,9991,Cold:Sleep|Flu:Rest|FEVER:CRY
-P1002,Bob Stone,1975-11-22,Male,B+,bob.stone@example.com,12345678,cough:sleep|fever:panadol
-P1003,Charlie White,1990-07-08,Male,O-,charlie.white@example.com,12345678,injury:firstaid|fever:haha
+﻿Patient ID,Name,Date of Birth,Gender,Blood Type,email,phone,diagnosis and treatment,Password
+P1001,Alice Brown,1980-05-14,Female,A+,testing@gmail.com,9991,Cold:Sleep|Flu:Rest|FEVER:CRY,Password
+P1002,Bob Stone,1975-11-22,Male,B+,bob.stone@example.com,12345678,cough:sleep|fever:panadol,Password
+P1003,Charlie White,1990-07-08,Male,O-,charlie.white@example.com,12345678,injury:firstaid|fever:haha,Password

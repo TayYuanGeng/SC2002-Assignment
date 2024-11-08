@@ -1,7 +1,6 @@
 package models;
-import java.util.Scanner;
 import java.util.ArrayList;
-import models.Appointment;
+import java.util.Scanner;
 
 
 public class Patient extends Account {
@@ -115,4 +114,17 @@ public class Patient extends Account {
     // {
 
     // }
+    
+    public String getID() {
+		return super.getID();
+	}
+
+    public void setPassword(String pass) {
+		super.setPassword(pass);
+	};
+	
+	public String getPassword() {
+		return super.getPassword();
+	}
+
 }
