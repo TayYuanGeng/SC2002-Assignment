@@ -3,7 +3,9 @@ package models;
 import java.util.Scanner;
 
 public class Docter extends Staff {
-    //private MedicalRecord medicalRecord;
+    private Patient[] patientList = new Patient[100];
+    private int patientListIndex = 0;
+
     public Docter(){}
 
     public Docter(String uID,String name, String pass, String r) {
@@ -33,10 +35,25 @@ public class Docter extends Staff {
                 sc.nextLine();
                 switch (choice) {
                     case 1:
-                        ViewPatientMedicalRecord();
+                        System.out.println("Enter ID of patient: ");
+                        ViewPatientMedicalRecord(sc.nextLine());
                         break;
                     case 2:
-                        UpdatePatientMedicalRecord();
+                        while (true) {
+                            System.out.println("Enter 1 to update contact details, 2 to Update diagnosis and treatment: ");
+                            int choice1 = sc.nextInt();
+                            sc.nextLine();
+
+                            if (choice1 == 1) {
+                                break;
+                            }
+                            else if (choice1 == 2) {
+                                break;
+                            }
+                            else {
+                                System.out.println("Invalid choice, try again.");
+                            }
+                        }
                         break;
                     case 3:
                         viewSchedule();
@@ -62,7 +79,11 @@ public class Docter extends Staff {
                         ShowUpcomingAppointments();
                         break;
                     case 7:
-                        
+                        System.out.println("Enter PatientID: ");
+                        String patientID1 = sc.nextLine();
+                        System.out.println("Enter datetime of completion (dd-MM-YYYY HH:MM): ");
+                        String completionDate = sc.nextLine();
+                        RecordAppointmentOutcome(patientID1, completionDate);
                         break;
                     case 8:
                         
@@ -79,12 +100,28 @@ public class Docter extends Staff {
         } while(true);
     }
 
-    public boolean ViewPatientMedicalRecord() {
-        return false;
+    public void ViewPatientMedicalRecord(String patientID) {
+        if (patientListIndex == 0) {
+            System.out.println("Docter has no Patients!");
+        }   
+        else {
+            for (int i = 0; i < patientListIndex; i++) {
+                if (patientID == patientList[i].getID()) { // Found Patient
+                    // Retrieve Medical Record
+                    return;
+                }
+            }
+            // Not Found
+            System.out.println("Patient not found!");
+        }
     }
 
-    public boolean UpdatePatientMedicalRecord() {
-        return false;
+    // Update Medical Record
+    public void UpdateContact() {
+
+    }
+    public void UpdateDiagnosisAndTreatment() {
+
     }
 
     public void viewSchedule() {
@@ -104,8 +141,19 @@ public class Docter extends Staff {
     }
 
 
-    public void RecordAppointmentOutcome() {
+    public void RecordAppointmentOutcome(String patientID, String date) {
+        Appointment.completeAppointment(getID(), patientID, date);
+    }
 
+    // Helper Methods
+    public Boolean AssignPatient(Patient patient) {
+        if (patientListIndex == patientList.length) {
+            return false;
+        }
+        else {
+            patientList[patientListIndex] = patient;
+            return true;
+        }
     }
 
 
