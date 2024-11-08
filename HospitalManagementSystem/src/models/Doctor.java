@@ -2,6 +2,8 @@ package models;
 
 import java.util.Scanner;
 
+import controllers.AppointmentController;
+
 public class Doctor extends Staff {
     private Patient[] patientList = new Patient[100];
     private int patientListIndex = 0;
@@ -49,24 +51,24 @@ public class Doctor extends Staff {
     }
 
     public void viewSchedule() {
-        Appointment.showDoctorSchedule(getID());
+        AppointmentController.showDoctorSchedule(getID());
     }
 
     public void setAvailability(String date) {
-        Appointment.updateDoctorUnavailability(date, getID());
+        AppointmentController.updateDoctorUnavailability(date, getID());
     }
 
     public void acceptDeclineAppt(String date, String patientID, boolean response) {
-        Appointment.respondToRequest(getID(), patientID, date, response);    
+        AppointmentController.respondToRequest(getID(), patientID, date, response);    
     }
 
     public void ShowUpcomingAppointments() {
-        Appointment.showUpcomingAppointment(getID());
+        AppointmentController.showUpcomingAppointment(getID());
     }
 
 
     public void RecordAppointmentOutcome(String patientID, String date) {
-        Appointment.completeAppointment(getID(), patientID, date);
+        AppointmentController.completeAppointment(getID(), patientID, date);
     }
 
     // Helper Methods

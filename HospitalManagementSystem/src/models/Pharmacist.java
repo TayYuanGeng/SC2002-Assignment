@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import controllers.AppointmentController;
+
 public class Pharmacist extends Staff {
     private ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
 
@@ -36,11 +38,11 @@ public class Pharmacist extends Staff {
     }
 
     public void ViewAppointmentOutcome(String patientID) {
-        Appointment.readApptOutcome(patientID);
+        AppointmentController.readApptOutcome(patientID);
     }
 
     public void DispensePrescription(String patientID) {
-        Appointment.setPrescriptionStatus(patientID);
+        AppointmentController.setPrescriptionStatus(patientID);
     }
 
     public void ViewMedicalInventory() {
