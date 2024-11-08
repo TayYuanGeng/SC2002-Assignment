@@ -1,1 +1,3 @@
-ID,Medicine,Status
+ID,Medicine Name,Status
+1,Paracetamol,PENDING
+2,Ibuprofen,PENDING

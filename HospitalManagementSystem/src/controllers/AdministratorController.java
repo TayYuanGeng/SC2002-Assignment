@@ -38,7 +38,7 @@ public class AdministratorController {
                 System.out.println("(1) Manage Staff");
                 System.out.println("(2) View Appointments");
                 System.out.println("(3) Inventory Management");
-                System.out.println("(4) Replement Requests");
+                System.out.println("(4) Replenishment Requests");
                 System.out.println("(5) Sign out");
                 System.out.println("(6) Exit Application");
                 System.out.println("========================================");
@@ -480,7 +480,7 @@ public class AdministratorController {
                     	lowlvl = sc.nextInt();
                     	sc.nextLine();
                     	System.out.println("Please enter the Medicine's Current Amount: ");
-                    	lowlvl = sc.nextInt();
+                    	currentAmt = sc.nextInt();
                     	sc.nextLine();
                     	choice= 99;
                     	break;
@@ -505,7 +505,7 @@ public class AdministratorController {
                     	break;
             		case 5:
             			System.out.println("Please enter the Medicine's Current Amount: ");
-                    	lowlvl = sc.nextInt();
+            			currentAmt = sc.nextInt();
                     	sc.nextLine();
                     	choice= 99;
                     	break;
@@ -611,36 +611,26 @@ public class AdministratorController {
         do{
             try {
             	repReqList.clear();
-            	readData("src\\data\\ReplenishRequest_List.csv",1);
-            	displayStaff();
+            	medList.clear();
+            	readData("src\\data\\ReplenishRequest_List.csv",4);
+            	readData("src\\data\\Medicine_List.csv",3);
+            	displayRepReq();
                 System.out.println("========================================");
-                System.out.println("(1) Sort Staff List");
-                System.out.println("(2) Add Request");
-                System.out.println("(3) Remove Staff");
-                System.out.println("(4) Edit Staff");
-                System.out.println("(5) Return to Admin Menu");
+                System.out.println("(1) Approve Requests");
+                System.out.println("(2) Return to Admin Menu");
                 System.out.println("========================================");
                 choice = sc.nextInt();
                 sc.nextLine();
                 switch (choice) {
                     case 1:
                     	//Display staff list sorted by choice
-                        sortStaffDisplay();
+                        approveReqDisplay();
                         break;
                     case 2:
-                    	addStaffDisplay();
-                        break;
-                    case 3:
-                    	removeStaffDisplay();
-                    	break;
-                    case 4:
-                    	editStaffDisplay();
-                    	break;
-                    case 5:
                     	AdminPage();
                     	break;
                     default:
-                        System.out.println("Invalid Input. Please enter an integer (1-5):");
+                        System.out.println("Invalid Input. Please enter an integer (1-2):");
                         break;
                 }
             }
@@ -649,6 +639,53 @@ public class AdministratorController {
             sc.next();
         }
         }while(true);
+    }
+    
+    private static void displayRepReq() {
+    	
+    
+    	System.out.printf("%-5s%-20s%-15s%-16s%-18s\n","ID","Medicine Name","Status", "Current Amount" , "Low Level Alert");
+    	for(ReplenishmentRequest req:repReqList) {
+    		for(Medicine med:medList) {
+    			if(med.getName().equals(req.getName())) {
+    				System.out.printf("%-5s%-20s%-15s%-16s%-18s\n",req.getRequestID(),req.getName(),req.getReplenishmentStatus(),med.getCurrentAmount(),med.getLowLvlStockAmt());
+    			}
+    		}
+        	
+    	}
+    }
+    
+    private static void approveReqDisplay() {
+    	int choice = 0;
+    	System.out.printf("%-5s%-20s%-15s%-16s%-18s\n","ID","Medicine Name","Status", "Current Amount" , "Low Level Alert");
+    	for(ReplenishmentRequest req:repReqList) {
+    		for(Medicine med:medList) {
+    			if(med.getName().equals(req.getName()) && req.getReplenishmentStatus().equals(ReplenishmentRequest.ReplenishmentStatus.PENDING)) {
+    				System.out.printf("%-5s%-20s%-15s%-16s%-18s\n",req.getRequestID(),req.getName(),req.getReplenishmentStatus(),med.getCurrentAmount(),med.getLowLvlStockAmt());
+    				System.out.println("(1) Approve (2) Deny/Cancel (3) Maybe Later");
+    				choice = sc.nextInt();
+    				sc.nextLine();
+    				switch(choice) {
+    					case 1: 
+    						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.COMPLETED);
+    						med.setCurrentAmt(med.getStockAmt());
+    						CSVUtils.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
+    						CSVUtils.updateMedInCSV("src\\data\\Medicine_List.csv", med);
+    						System.out.println("Stock for " + med.getName()+" has been replenished to "+med.getCurrentAmount() + "//" + med.getStockAmt());
+    						break;
+    					case 2:
+    						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.CANCELLED);
+    						CSVUtils.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
+    						System.out.println("Replenishment Request for "+ med.getName() +" has been denied");
+    						break;
+    					case 3:
+    						continue;
+    				}
+    				
+    			}
+    		}
+        	
+    	}
     }
     
     private static void readData(String filePath,int listnum){

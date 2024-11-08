@@ -241,7 +241,7 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     
     public static void saveMedToCSV(String filePath, Medicine med) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
-            bw.write(med.getName() + "," + med.getStockAmt() + "," + med.getLowLvlStockAmt());
+            bw.write(med.getName() + "," + med.getStockAmt() + "," + med.getLowLvlStockAmt() + "," + med.getCurrentAmount());
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -339,6 +339,46 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
             e.printStackTrace();
         }
         
+    }
+    
+    public static void updateRepReqInCSV(String filePath, ReplenishmentRequest request) {
+        List<String> lines = new ArrayList<>();
+        String medName = request.getName();
+
+        boolean found = false; 
+
+        // Read all lines and modify the matching line
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                
+                if (fields.length > 0 && fields[0].equals(medName)) { // Check if the ID matches
+                    // Replace with updated staff information
+                    line = request.getName() + "," + medName + "," + request.getReplenishmentStatus();
+                    found = true;
+                }
+                
+                lines.add(line); // Add each line (modified or not) to the list
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Rewrite the file with updated lines
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                for (String l : lines) {
+                    bw.write(l);
+                    bw.newLine();
+                }
+                System.out.println("Replenishment Request updated successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Replenishment Request for medicine with Name " + medName + " not found.");
+        }
     }
 
     // private static void DataInit(String filePath){
