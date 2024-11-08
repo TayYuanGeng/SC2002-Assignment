@@ -11,11 +11,6 @@ import java.util.List;
 import models.*;
 
 
-import models.Medicine;
-import models.Staff;
-import models.ReplenishmentRequest;
-
-
 public class CSVUtils {
     
     public static void saveUserToCSV(String filePath, String username, String password, String role) {
@@ -150,6 +145,30 @@ public class CSVUtils {
         }
         return staffList;
     }
+
+    public static ArrayList<Medicine> MedicineDataInit(String filePath) { 
+        ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                if(isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                // Use comma as separator
+                String[] values = line.split(csvSplitBy);
+                Medicine m = new Medicine(values[0], Integer.parseInt(values[1]), Integer.parseInt(values[2]), Integer.parseInt(values[3]));
+                medicineList.add(m);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return medicineList;
+    }
+
 
     public static ArrayList<Patient> PatientDataInit(String filePath, ArrayList<Patient> patientList){
         String line;
