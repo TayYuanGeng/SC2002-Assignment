@@ -7,7 +7,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import models.*;
+
+
+import models.Medicine;
+import models.Staff;
+import models.ReplenishmentRequest;
+
 
 public class CSVUtils {
     
@@ -37,6 +44,7 @@ public class CSVUtils {
         List<String> lines = new ArrayList<>();
         String staffID = updatedStaff.getID();
         String hashedPassword = updatedStaff.getPassword();
+
         boolean found = false;
 
         // Read all lines and modify the matching line
@@ -169,9 +177,150 @@ public class CSVUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return patientList;
     }
 
+public static void removeStaffInCSV(String filePath,Staff removeStaff) {
+	List<String> lines = new ArrayList<>();
+    String staffID = removeStaff.getID();
+    boolean found = false;
+
+    // Read all lines and modify the matching line
+    try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] fields = line.split(",");
+            
+            if (fields.length > 0 && fields[0].equals(staffID)) { // Check if the ID matches
+                // Replace with updated staff information
+            	System.out.println("Staff to remove Found");
+                found = true;
+            }
+            else {
+            	lines.add(line); // Add each line (modified or not) to the list
+            }
+        }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Rewrite the file with updated lines
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                for (String l : lines) {
+                    bw.write(l);
+                    bw.newLine();
+                }
+                System.out.println("Staff record removed successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Staff with ID " + staffID + " not found.");
+    }
+}
+    
+    public static void saveMedToCSV(String filePath, Medicine med) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            bw.write(med.getName() + "," + med.getStockAmt() + "," + med.getLowLvlStockAmt());
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+    public static void removeMedInCSV(String filePath,Medicine removeMedicine) {
+    	List<String> lines = new ArrayList<>();
+        String medName = removeMedicine.getName();
+        boolean found = false;
+
+        // Read all lines and modify the matching line
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                
+                if (fields.length > 0 && fields[0].equals(medName)) { // Check if the ID matches
+                    // Replace with updated staff information
+                    found = true;
+                }
+                else {
+                	lines.add(line); // Add each line (modified or not) to the list
+                }
+            
+            } 
+        }catch (IOException e) {
+                e.printStackTrace();
+            }
+        // Rewrite the file with updated lines
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                for (String l : lines) {
+                    bw.write(l);
+                    bw.newLine();
+                }
+                System.out.println("Medicine record removed successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Medicine with Name " + medName + " not found.");
+        }
+            
+        }
+    	
+    
+    
+    public static void updateMedInCSV(String filePath, Medicine updatedMedicine) {
+        List<String> lines = new ArrayList<>();
+        String medName = updatedMedicine.getName();
+
+        boolean found = false;
+
+        // Read all lines and modify the matching line
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",");
+                
+                if (fields.length > 0 && fields[0].equals(medName)) { // Check if the ID matches
+                    // Replace with updated staff information
+                    line = medName + "," + updatedMedicine.getStockAmt() + "," + updatedMedicine.getLowLvlStockAmt();
+                    found = true;
+                }
+                
+                lines.add(line); // Add each line (modified or not) to the list
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Rewrite the file with updated lines
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                for (String l : lines) {
+                    bw.write(l);
+                    bw.newLine();
+                }
+                System.out.println("Medicine record updated successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Medicine with Name " + medName + " not found.");
+        }
+    }
+    
+    public static void saveReplenishReqToCSV(String filePath, ReplenishmentRequest request) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            bw.write(request.getRequestID()+","+ request.getName() + "," + request.getReplenishmentStatus());
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
 
     // private static void DataInit(String filePath){
     //     String line;

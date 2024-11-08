@@ -37,6 +37,10 @@ public class Staff extends Account{
 	public String getPassword() {
 		return super.getPassword();
 	}
+	
+	public void setRole(String role) {
+		super.setRole(role);
+	}
 
 	public void setGender(String gender) {
 		this.gender = gender;

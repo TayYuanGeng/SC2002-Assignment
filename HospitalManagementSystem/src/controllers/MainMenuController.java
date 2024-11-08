@@ -249,8 +249,8 @@ public class MainMenuController {
     }
 
     public static void WelcomePage() throws Exception {
-        staffList = CSVUtils.StaffDataInit("data/Staff_List.csv", staffList);
-        patientList = CSVUtils.PatientDataInit("data/Patient_List.csv", patientList);
+        staffList = CSVUtils.StaffDataInit("src/data/Staff_List.csv", staffList);
+        patientList = CSVUtils.PatientDataInit("src/data/Patient_List.csv", patientList);
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
 
@@ -310,7 +310,7 @@ public class MainMenuController {
                     
                     // Update in CSV based on account type
                     if (account instanceof Staff) {
-                        CSVUtils.updateStaffInCSV("data/Staff_List.csv", (Staff) account);
+                        CSVUtils.updateStaffInCSV("src/data/Staff_List.csv", (Staff) account);
                     } else if (account instanceof Patient) {
                         //CSVUtils.updatePatientInCSV("data/Patient_List.csv", (Patient) account);
                     }
