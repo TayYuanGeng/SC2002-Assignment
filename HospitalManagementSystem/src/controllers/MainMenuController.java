@@ -249,8 +249,8 @@ public class MainMenuController {
     }
 
     public static void WelcomePage() throws Exception {
-        staffList = CSVUtils.StaffDataInit("src/data/Staff_List.csv", staffList);
-        patientList = CSVUtils.PatientDataInit("src/data/Patient_List.csv", patientList);
+        staffList = CSVUtils.StaffDataInit("SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv", staffList);
+        patientList = CSVUtils.PatientDataInit("SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv", patientList);
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
 
@@ -334,6 +334,7 @@ public class MainMenuController {
                 return 1;
             case "Patient":
                 System.out.println("Patient logged in");
+                PatientController.main(loggedInUser);
                 return 2;
             case "Doctor":
                 System.out.println("Doctor logged in");

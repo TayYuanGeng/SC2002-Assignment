@@ -1,24 +1,23 @@
-package models;
-import java.util.ArrayList;
+package controllers;
+
 import java.util.Scanner;
+import models.*;
 
 
-public class Patient extends Account {
-    private MedicalRecordService recordService;
-    private ArrayList<Appointment> appointments;
-
-    public Patient(String uID, String pass, String name, String r, MedicalRecordService recordService)
+public class PatientController {
+    static Scanner sc = new Scanner(System.in);
+    public static void main(Account loggedInUser) throws Exception
     {
-        super(uID,name,pass,r);    
-        this.recordService = recordService;  
+        System.out.println("Welcome, " + loggedInUser.getName());
+        PatientPage(loggedInUser);
     }
-        
-    
 
-    public void displayMenu()
+    public static void PatientPage(Account loggedInUser) throws Exception
     {
+        MedicalRecordRepo recordRepo = new MedicalRecordRepo("SC2002-Assignment\\\\HospitalManagementSystem\\\\src\\\\data\\\\Patient_List.csv");
+        MedicalRecordService recordService = new MedicalRecordService(recordRepo);
         int choice;
-        String ID = getID();
+        String ID = loggedInUser.getID();
         Scanner sc = new Scanner(System.in);
         do
         {
@@ -44,7 +43,7 @@ public class Patient extends Account {
                     break;
                 
                 case 3:
-                    Appointment.showDoctorUnavailability();
+                    AppointmentController.showDoctorUnavailability();
                     break;
                 
                 case 4:
@@ -53,7 +52,7 @@ public class Patient extends Account {
                     String date_time = sc.nextLine();
                     System.out.print("Enter doctor's name: ");
                     String doctor_name = sc.nextLine();
-                    Appointment.scheduleAppointment(date_time, ID, doctor_name);
+                    AppointmentController.scheduleAppointment(date_time, ID, doctor_name);
 
                     break;
                 
@@ -64,23 +63,25 @@ public class Patient extends Account {
                     System.out.print("Enter the date and time of when would you like to reschedule to: ");
                     String new_date_time = sc.nextLine();
 
-                    Appointment.rescheduleAppointment(ID, old_date_time, new_date_time);
+                    AppointmentController.rescheduleAppointment(ID, old_date_time, new_date_time);
                     break;
                 
                 case 6:
                     sc.nextLine();
                     System.out.print("Enter the date and time of the appointment that you want to cancel: ");
                     String cancel_date_time = sc.nextLine();
-                    Appointment.cancelAppointment(ID, cancel_date_time);
+                    AppointmentController.cancelAppointment(ID, cancel_date_time);
                     
                 case 7:
-                    Appointment.showPatientAppointment(ID);
+                    AppointmentController.showPatientAppointment(ID);
                     break;
 
                 case 8:
-                    Appointment.readApptOutcome(ID);
+                    AppointmentController.readApptOutcome(ID);
+                    break;
     
                 case 9:
+                    MainMenuController.LoginPage();
                     break;
                 
                 default:
@@ -88,41 +89,5 @@ public class Patient extends Account {
             }
         }
         while(choice != 9);    
-        
-
-    }
-    
-
-    public void CancelAppoinment(int index)
-    {
-        if(index >= 0 && index< appointments.size())
-        {
-            appointments.remove(index);
-            System.out.println("Appoinment Cancelled");
-        }
-        else
-        {
-            System.out.println("No appointments scheduled");
-        }
-        
-    }
-
-
-    
-    public String getID() {
-		return super.getID();
-	}
-
-    public void setPassword(String pass) {
-		super.setPassword(pass);
-	};
-	
-	public String getPassword() {
-		return super.getPassword();
-	}
-
-    public MedicalRecordService getMedicalRecordService()
-    {
-        return this.recordService;
     }
 }
