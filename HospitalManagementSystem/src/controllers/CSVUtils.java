@@ -74,6 +74,46 @@ public class CSVUtils {
         }
     }
 
+    // public static void updatePatientInCSV(String filePath, Patient updatedPatient) {
+    //     List<String> lines = new ArrayList<>();
+    //     String staffID = updatedPatient.getID();
+    //     String hashedPassword = updatedPatient.getPassword();
+    //     boolean found = false;
+
+    //     // Read all lines and modify the matching line
+    //     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+    //         String line;
+    //         while ((line = br.readLine()) != null) {
+    //             String[] fields = line.split(",");
+                
+    //             if (fields.length > 0 && fields[0].equals(staffID)) { // Check if the ID matches
+    //                 // Replace with updated staff information
+    //                 line = staffID + "," + updatedPatient.getName() + "," + updatedPatient.getDOB() + "," +
+    //                 found = true;
+    //             }
+                
+    //             lines.add(line); // Add each line (modified or not) to the list
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+
+    //     // Rewrite the file with updated lines
+    //     if (found) {
+    //         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+    //             for (String l : lines) {
+    //                 bw.write(l);
+    //                 bw.newLine();
+    //             }
+    //             System.out.println("Patient record updated successfully.");
+    //         } catch (IOException e) {
+    //             e.printStackTrace();
+    //         }
+    //     } else {
+    //         System.out.println("Patient with ID " + staffID + " not found.");
+    //     }
+    // }
+
     public static ArrayList<Staff> StaffDataInit(String filePath, ArrayList<Staff> staffList){
         String line;
         String csvSplitBy = ",";
