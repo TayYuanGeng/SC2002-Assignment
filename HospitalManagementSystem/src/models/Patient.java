@@ -91,6 +91,11 @@ public class Patient extends Account {
         
 
     }
+    
+    public MedicalRecordService getMedicalRecordService()
+    {
+        return this.recordService;
+    }
 
     public void CancelAppoinment(int index)
     {

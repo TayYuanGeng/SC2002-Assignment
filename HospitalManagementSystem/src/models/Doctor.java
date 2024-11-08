@@ -2,13 +2,13 @@ package models;
 
 import java.util.Scanner;
 
-public class Docter extends Staff {
+public class Doctor extends Staff {
     private Patient[] patientList = new Patient[100];
     private int patientListIndex = 0;
 
-    public Docter(){}
+    public Doctor(){}
 
-    public Docter(String uID,String name, String pass, String r) {
+    public Doctor(String uID,String name, String pass, String r) {
 		super(uID,name,pass,r);
 	}
 
@@ -102,7 +102,7 @@ public class Docter extends Staff {
 
     public void ViewPatientMedicalRecord(String patientID) {
         if (patientListIndex == 0) {
-            System.out.println("Docter has no Patients!");
+            System.out.println("Doctor has no Patients!");
         }   
         else {
             for (int i = 0; i < patientListIndex; i++) {
