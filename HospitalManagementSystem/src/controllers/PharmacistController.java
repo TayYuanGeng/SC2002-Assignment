@@ -40,9 +40,10 @@ public class PharmacistController {
                         pharm.ViewMedicalInventory();
                         break;
                     case 4:
-                        
+
                         break;
                     case 5:
+                        MainMenuController.LoginPage();
                         break;
                     default:
                         System.out.println("Invalid Input. Please enter an integer (1-5):");

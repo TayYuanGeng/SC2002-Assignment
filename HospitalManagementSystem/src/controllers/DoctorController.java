@@ -66,7 +66,7 @@ public class DoctorController {
                             docter.RecordAppointmentOutcome(patientID1, completionDate);
                             break;
                         case 8:
-                            
+                            MainMenuController.LoginPage();
                             break;
                         default:
                             System.out.println("Invalid Input. Please enter an integer (1-5):");
