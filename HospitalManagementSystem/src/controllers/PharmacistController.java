@@ -7,6 +7,8 @@ public class PharmacistController {
     public static void main(Account loggedInUser) throws Exception {
         // You now have access to the logged-in user here
         Pharmacist pharm = (Pharmacist)loggedInUser;
+        pharm.SetMedicineList(CSVUtils.MedicineDataInit("TO BE FILLED"));
+
         System.out.println("Welcome, " + loggedInUser.getName());
 
         Scanner sc = new Scanner(System.in);
@@ -35,8 +37,10 @@ public class PharmacistController {
                         pharm.DispensePrescription(sc.nextLine());
                         break;
                     case 3:
+                        pharm.ViewMedicalInventory();
                         break;
                     case 4:
+                        
                         break;
                     case 5:
                         break;
