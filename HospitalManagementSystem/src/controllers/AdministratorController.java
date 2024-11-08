@@ -56,6 +56,7 @@ public class AdministratorController {
                         break;
                     case 4:
                     	manageRepReq();
+                    	break;
                     case 5:
                     	MainMenuController.LoginPage();
                     	break;
@@ -453,10 +454,10 @@ public class AdministratorController {
     		default:
     			break;
     	}
-    	System.out.printf("%-20s%-15s%-20s\n","Name","Stock Level","Low Level Alert");
+    	System.out.printf("%-20s%-15s%-20s%-20s\n","Name","Stock Level","Low Level Alert","Current Amount");
 
     	for(Medicine medicine:medList) {
-        	System.out.printf("%-20s%-15s%-20s\n",medicine.getName(),medicine.getStockAmt(),medicine.getLowLvlStockAmt());
+        	System.out.printf("%-20s%-15s%-20s%-20s\n",medicine.getName(),medicine.getStockAmt(),medicine.getLowLvlStockAmt(),medicine.getCurrentAmount());
         	
     	}
     }
@@ -642,8 +643,6 @@ public class AdministratorController {
     }
     
     private static void displayRepReq() {
-    	
-    
     	System.out.printf("%-5s%-20s%-15s%-16s%-18s\n","ID","Medicine Name","Status", "Current Amount" , "Low Level Alert");
     	for(ReplenishmentRequest req:repReqList) {
     		for(Medicine med:medList) {
@@ -657,11 +656,11 @@ public class AdministratorController {
     
     private static void approveReqDisplay() {
     	int choice = 0;
-    	System.out.printf("%-5s%-20s%-15s%-16s%-18s\n","ID","Medicine Name","Status", "Current Amount" , "Low Level Alert");
+    	System.out.printf("%-5s%-20s%-15s%-16s%-18s%-18s\n","ID","Medicine Name","Status", "Current Amount" , "Low Level Alert", "Total after Replenishment");
     	for(ReplenishmentRequest req:repReqList) {
     		for(Medicine med:medList) {
     			if(med.getName().equals(req.getName()) && req.getReplenishmentStatus().equals(ReplenishmentRequest.ReplenishmentStatus.PENDING)) {
-    				System.out.printf("%-5s%-20s%-15s%-16s%-18s\n",req.getRequestID(),req.getName(),req.getReplenishmentStatus(),med.getCurrentAmount(),med.getLowLvlStockAmt());
+    				System.out.printf("%-5s%-20s%-15s%-16s%-18s%-18s\n",req.getRequestID(),req.getName(),req.getReplenishmentStatus(),med.getCurrentAmount(),med.getLowLvlStockAmt(),med.getStockAmt());
     				System.out.println("(1) Approve (2) Deny/Cancel (3) Maybe Later");
     				choice = sc.nextInt();
     				sc.nextLine();
@@ -671,7 +670,7 @@ public class AdministratorController {
     						med.setCurrentAmt(med.getStockAmt());
     						CSVUtils.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
     						CSVUtils.updateMedInCSV("src\\data\\Medicine_List.csv", med);
-    						System.out.println("Stock for " + med.getName()+" has been replenished to "+med.getCurrentAmount() + "//" + med.getStockAmt());
+    						System.out.println("Stock for " + med.getName()+" has been replenished to "+ med.getCurrentAmount() + "/" + med.getStockAmt());
     						break;
     					case 2:
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.CANCELLED);
