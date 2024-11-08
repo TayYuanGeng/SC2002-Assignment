@@ -39,21 +39,13 @@ public class Doctor extends Staff {
                         ViewPatientMedicalRecord(sc.nextLine());
                         break;
                     case 2:
-                        while (true) {
-                            System.out.println("Enter 1 to update contact details, 2 to Update diagnosis and treatment: ");
-                            int choice1 = sc.nextInt();
-                            sc.nextLine();
-
-                            if (choice1 == 1) {
-                                break;
-                            }
-                            else if (choice1 == 2) {
-                                break;
-                            }
-                            else {
-                                System.out.println("Invalid choice, try again.");
-                            }
-                        }
+                        System.out.println("Enter PatientID: ");
+                        String patientID2 = sc.nextLine();
+                        System.out.println("Enter diagnosis: ");
+                        String diagnosis = sc.nextLine();
+                        System.out.println("Enter treatment: ");
+                        String treatment = sc.nextLine();
+                        UpdateDiagnosisAndTreatment(patientID2, diagnosis, treatment);
                         break;
                     case 3:
                         viewSchedule();
@@ -101,27 +93,24 @@ public class Doctor extends Staff {
     }
 
     public void ViewPatientMedicalRecord(String patientID) {
-        if (patientListIndex == 0) {
-            System.out.println("Doctor has no Patients!");
-        }   
-        else {
-            for (int i = 0; i < patientListIndex; i++) {
-                if (patientID == patientList[i].getID()) { // Found Patient
-                    // Retrieve Medical Record
-                    return;
-                }
-            }
-            // Not Found
+        Patient p = GetPatient(patientID);
+        if (p == null) { // Patient not found
             System.out.println("Patient not found!");
+        }
+        else {
+            p.getMedicalRecordService().getMedicalRecord(patientID);
         }
     }
 
     // Update Medical Record
-    public void UpdateContact() {
-
-    }
-    public void UpdateDiagnosisAndTreatment() {
-
+    public void UpdateDiagnosisAndTreatment(String patientID, String diagnosis, String treatment) {
+        Patient p = GetPatient(patientID);
+        if (p == null) { // Patient not found
+            System.out.println("Patient not found!");
+        }
+        else {
+            p.getMedicalRecordService().updateDiagnosisandTreatment(patientID, diagnosis, treatment);
+        }
     }
 
     public void viewSchedule() {
@@ -156,5 +145,17 @@ public class Doctor extends Staff {
         }
     }
 
-
+    public Patient GetPatient(String patientID) {
+        if (patientListIndex == 0) {
+            return null;
+        }   
+        else {
+            for (int i = 0; i < patientListIndex; i++) {
+                if (patientID == patientList[i].getID()) { // Found Patient
+                    return patientList[i];
+                }
+            }
+            return null;
+        }
+    }
 }
