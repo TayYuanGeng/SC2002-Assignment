@@ -283,7 +283,7 @@ public class MainMenuController {
     }
 
     private static boolean isFirstTimeLogin(Account account, String password) {
-        System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
+        //System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
         return account.getPassword().equals("Password");
     }
 
@@ -294,6 +294,11 @@ public class MainMenuController {
         while (!passChanged) {
             System.out.println("Please enter new password:");
             String newPassword = sc.nextLine();
+
+            if(PasswordUtilsController.hashPassword(newPassword).equals(PasswordUtilsController.hashPassword("Password"))){
+                System.out.println("Invalid Password. Please try again!");
+                continue;
+            }
 
             if (!PasswordUtilsController.hashPassword(newPassword).equals(account.getPassword())) {
                 System.out.println("Confirm new password:");
