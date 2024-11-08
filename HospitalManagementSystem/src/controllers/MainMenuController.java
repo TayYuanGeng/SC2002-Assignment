@@ -46,14 +46,13 @@ public class MainMenuController {
 	
     private static int Login(String username, String password, int userType){
     	int result =0;
-        boolean loggedIn = false;
     	switch(userType) {
             case 1:
     		for(Staff staff : staffList) {
-    			//System.out.println("Test: " + staff.getID() + " ; " + staff.getPassword() + " ; " + staff.getRole());
-                if(staff.getID().equals(username) &&  !password.equals("Password")){ //Not first-time users
+    			System.out.println("Test: " + staff.getID()+ " ; " + staff.getName() + " ; " + staff.getPassword() + " ; " + staff.getRole() + " ; " + staff.getGender() + " ; " + staff.getAge());
+                if(staff.getID().equals(username) &&  !password.equals("Password") && staff.getPassword().equals(PasswordUtilsController.hashPassword(password))){ //Not first-time users
                     System.out.println("Login Success!");
-                    loggedIn = true;
+                    loggedInUser = staff; // Store logged in user here
                 }
     			else if(staff.getID().equals(username) && 
                 PasswordUtilsController.hashPassword(staff.getPassword()).equals(PasswordUtilsController.hashPassword(password))) { //First-time users
@@ -77,7 +76,7 @@ public class MainMenuController {
                                     System.out.println(PasswordUtilsController.hashPassword(cfmPassword));
                                     System.out.println("Password changed successfully!");
                                     CSVUtils.updateStaffInCSV("data/Staff_List.csv", staff);
-                                    loggedIn = true;
+                                    loggedInUser = staff; // Store logged in user here
                                 }
                                 else{
                                     System.out.println("Password does not match. Please try again.");
@@ -86,21 +85,18 @@ public class MainMenuController {
                         }
                     }
                 }
-                if(loggedIn){
-                    loggedInUser = staff; // Store logged in user here
-                    switch(staff.getRole()) {
-                    case "Administrator":
-                        result = 1;
-                        break;
-                    case "Doctor":
-                        result = 3;
-                        break;
-                    case "Pharmacist":
-                        result = 4;
-                        break;
-                    }
-                }
     		}
+            switch(loggedInUser.getRole()) {
+                case "Administrator":
+                    result = 1;
+                    break;
+                case "Doctor":
+                    result = 3;
+                    break;
+                case "Pharmacist":
+                    result = 4;
+                    break;
+                }
     		break;
             case 2:
                 break;

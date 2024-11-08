@@ -2,4 +2,5 @@
 D001,John Smith,Password,Doctor,Male,45
 D002,Emily Clarke,Password,Doctor,Female,38
 P001,Mark Lee,Password,Pharmacist,Male,29
-A001,Sarah Lee,Password,Administrator,Female,40
+A001,Sarah Lee,008c70392e3abfbd0fa47bbc2ed96aa99bd49e159727fcba0f2e6abeb3a9d601,Administrator,Female,40
+D003,Guan Xiang,Password,Doctor,Gay,99
