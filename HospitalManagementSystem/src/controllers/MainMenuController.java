@@ -337,9 +337,11 @@ public class MainMenuController {
                 return 2;
             case "Doctor":
                 System.out.println("Doctor logged in");
+                DoctorController.main(loggedInUser);
                 return 3;
             case "Pharmacist":
                 System.out.println("Pharmacist logged in");
+                PharmacistController.main(loggedInUser);
                 return 4;
             default:
                 System.out.println("Unknown role");
