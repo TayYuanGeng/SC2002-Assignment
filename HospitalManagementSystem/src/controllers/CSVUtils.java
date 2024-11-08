@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import models.Staff;
+import models.*;
 
 public class CSVUtils {
     
@@ -73,6 +73,66 @@ public class CSVUtils {
             System.out.println("Staff with ID " + staffID + " not found.");
         }
     }
+
+    public static ArrayList<Staff> StaffDataInit(String filePath, ArrayList<Staff> staffList){
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+            	if(isFirstLine) {
+            		isFirstLine = false;
+            		continue;
+            	}
+                // Use comma as separator
+                String[] values = line.split(csvSplitBy);
+                
+                // Example: Print the values
+                for (String value : values) {
+                    System.out.print(value + " ");
+                }
+                staffList.add(new Staff(values[0], values[1],values[2],values[3]));
+                staffList.get(staffList.size()-1).setGender(values[4]);
+                staffList.get(staffList.size()-1).setAge(Integer.valueOf(values[5]));
+                System.out.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return staffList;
+    }
+
+    public static ArrayList<Patient> PatientDataInit(String filePath, ArrayList<Patient> patientList){
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+            	if(isFirstLine) {
+            		isFirstLine = false;
+            		continue;
+            	}
+                // Use comma as separator
+                String[] values = line.split(csvSplitBy);
+                
+                // Example: Print the values
+                for (String value : values) {
+                    System.out.print(value + " ");
+                }
+                MedicalRecordRepo recordRepo = new MedicalRecordRepo(filePath);
+                MedicalRecordService medicalRR = new MedicalRecordService(recordRepo);
+                patientList.add(new Patient(values[0], values[8],values[1],"Patient", medicalRR));
+                System.out.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return patientList;
+    }
+
+
     // private static void DataInit(String filePath){
     //     String line;
     //     String csvSplitBy = ",";
