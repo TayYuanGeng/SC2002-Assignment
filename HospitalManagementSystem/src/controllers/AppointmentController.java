@@ -118,11 +118,11 @@ public class AppointmentController {
                     // If the appointment is accepted, update the unavailability list
                     if (accept) {
                         unavailabilities.add(new Unavailability(dateTime, doctorID));
-                        writeToCSV(APPTREQ_CSV_FILE, appointments);
-                        writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+                        CSVUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
+                        CSVUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
                         System.out.println("Appointment Accepted!");
                     } else {
-                        writeToCSV(APPTREQ_CSV_FILE, appointments);
+                        CSVUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
                         System.out.println("Appointment Declined!");
                     }
                     return;
@@ -180,8 +180,8 @@ public class AppointmentController {
         appointmentToComplete.setAppointmentStatus(AppointmentStatus.COMPLETED);
 
         // Save to CSV or database if needed
-        writeToCSV(APPTREQ_CSV_FILE, appointments);  // Updating appointments CSV with "COMPLETED" status
-        writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
+        CSVUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);  // Updating appointments CSV with "COMPLETED" status
+        CSVUtils.writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
         // Write the outcome data to CSV
         // try (BufferedWriter bw = new BufferedWriter(new FileWriter(APPTOUTCOME_CSV_FILE, true))) {
         //     bw.write("\n" + outcome.getDateTime() + "," + patientID + "," + outcome.getServiceType() + "," + 
