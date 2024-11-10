@@ -305,7 +305,7 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
                 
                 if (fields.length > 0 && fields[0].equals(medName)) { // Check if the ID matches
                     // Replace with updated staff information
-                    line = medName + "," + updatedMedicine.getStockAmt() + "," + updatedMedicine.getLowLvlStockAmt();
+                    line = medName + "," + updatedMedicine.getStockAmt() + "," + updatedMedicine.getLowLvlStockAmt()+","+ updatedMedicine.getCurrentAmount();
                     found = true;
                 }
                 
@@ -353,9 +353,9 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
                 
-                if (fields.length > 0 && fields[0].equals(medName)) { // Check if the ID matches
+                if (fields.length > 0 && fields[1].equals(medName)) { // Check if the ID matches
                     // Replace with updated staff information
-                    line = request.getName() + "," + medName + "," + request.getReplenishmentStatus();
+                    line = request.getRequestID() + "," + medName + "," + request.getReplenishmentStatus();
                     found = true;
                 }
                 
@@ -376,8 +376,9 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("Replenishment Request for medicine with Name " + medName + " not found.");
+        } 
+        else {
+            System.out.println("Replenishment Request for medicine " + medName + " not found.");
         }
     }
 

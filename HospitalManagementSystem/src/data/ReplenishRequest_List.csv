@@ -1,3 +1,5 @@
 ID,Medicine Name,Status
-1,Paracetamol,PENDING
-2,Ibuprofen,PENDING
+1,Paracetamol,COMPLETED
+2,Ibuprofen,CANCELLED
+3,Amoxicillin,CANCELLED
+4,Cough Syrup,PENDING
