@@ -18,7 +18,7 @@ public abstract class Account {
 	public Account(String uID,String name,String pass,String r) {
 		this.userID = uID;
 		this.name = name;
-		this.password = pass;
+		this.password = PasswordUtilsController.hashPassword(pass);
 		this.role = r;
 	}
 	
@@ -41,10 +41,7 @@ public abstract class Account {
 	}
 	
 	public void setPassword(String pass) {
-		if(pass.equals("Password"))
-			this.password = "Password";
-		else
-			this.password = PasswordUtilsController.hashPassword(pass);
+		this.password = PasswordUtilsController.hashPassword(pass);
 	}
 	
 	public void setRole(String role) {
