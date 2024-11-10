@@ -12,187 +12,23 @@ public class AppointmentController {
     private AppointmentStatus appointmentStatus;
     private AppOutcome outcome;
     private String appointmentDateTime;
-    private static Map<String, String> patientIdToNameMap = new HashMap<>();
-    private static Map<String, String> doctorIdToNameMap = new HashMap<>();
-    private static List<Appointment> appointments = new ArrayList<Appointment>();
-    private static List<Unavailability> unavailabilities = new ArrayList<Unavailability>();
-    private static List<AppOutcome> appOutcomes = new ArrayList<AppOutcome>();
     private static final String STAFF_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv";
     private static final String PATIENT_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv";
     private static final String UNAVAIL_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Unavailability.csv";
     private static final String APPTREQ_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptRequest.csv";
     private static final String APPTOUTCOME_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptOutcome.csv";
-
-    public static void writeToCSV(String fileName, List<?> dataList) {
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitUnavail(UNAVAIL_CSV_FILE);
-        DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-            // Write headers based on whether it's appointments or unavailability
-            if (dataList.equals(unavailabilities)){
-                bw.write("DateTime,DoctorID");
-                for (Object data : dataList) {
-                    Unavailability unavailability = (Unavailability) data;
-                    bw.write("\n" + unavailability.getDateTime() + "," + unavailability.getDoctorID());
-                }
-            } else if (dataList.equals(appointments)) {
-                bw.write("DateTime Slot,DoctorID,PatientID,Status");
-                for (Object data : dataList) {
-                    Appointment appt = (Appointment) data;
-                    bw.write("\n" + appt.getAppointmentDateTime() + "," +
-                            appt.getDoctorID() + "," +
-                            appt.getPatientID() + "," +
-                            appt.getAppointmentStatus());
-                }
-            } else if (dataList.equals(appOutcomes)){
-                bw.write("DateTime,PatientID,ServiceType,PrescribedMedications,ConsultationNotes,PrescriptionStatus");
-                for (Object data : dataList) {
-                    AppOutcome apptOut = (AppOutcome) data;
-                    String medications = String.join(" ", apptOut.getPrescribedMedications());
-                    bw.write("\n" + apptOut.getDateTime() + "," +
-                    apptOut.getPatientID() + "," +
-                    apptOut.getServiceType() + "," +
-                    medications + "," + 
-                    apptOut.getConsultationNotes() + "," + 
-                    apptOut.getPrescriptionStatus());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error writing to CSV file.");
-        }
-    }
+    private static Map<String, String> patientIdToNameMap = CSVUtils.DataInitPatient(PATIENT_CSV_FILE);
+    private static Map<String, String> doctorIdToNameMap = CSVUtils.DataInitStaff(STAFF_CSV_FILE);
+    private static List<Appointment> appointments = CSVUtils.DataInitApptReq(APPTREQ_CSV_FILE);
+    private static List<Unavailability> unavailabilities = CSVUtils.DataInitUnavail(UNAVAIL_CSV_FILE);
+    private static List<AppOutcome> appOutcomes = CSVUtils.DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
 
     public static void main(String[] args){
         completeAppointment("D001", "P1002", "12-03-2025 13:00");
     }
-
-    // Init Appt Req
-    private static void DataInitApptReq(String filePath){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-                
-                // Example: Print the values
-                // for (String value : values) {
-                //     System.out.print(value + " ");
-                // }
-                appointments.add(new Appointment(values[0], values[1], values[2], AppointmentStatus.valueOf(values[3])));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    // Init Unavailability Sched
-    private static void DataInitUnavail(String filePath){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            //System.out.println("The following doctor's dates and times are unavailable for booking:");
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-                //System.out.print("Slot: " + values[0] + ", Doctor ID: " + values[1]);
-                unavailabilities.add(new Unavailability(values[0], values[1]));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    // Init patientID to patient name
-    private static void DataInitPatient(String filePath){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-                patientIdToNameMap.put(values[0], values[1]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    // Init staffID to staff name
-    private static void DataInitStaff(String filePath){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-                if (values[3].equals("Doctor")) {
-                    doctorIdToNameMap.put(values[0], values[1]);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    // Init Appt Outcome
-    private static void DataInitApptOutcome(String filePath){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-
-            // Extract data and create AppOutcome
-            String dateTime = values[0];
-            String patientID = values[1];
-            String serviceType = values[2];
-            String medications = values[3];
-            String notes = values[4];
-            String status = values[5];
-
-            // Convert medications from a single string to a list
-            List<String> medicationsList = new ArrayList<>(Arrays.asList(medications.split(" ")));
-
-            // Create an AppOutcome object and add it to the list
-            appOutcomes.add(new AppOutcome(dateTime, patientID, serviceType, medicationsList, notes, status));
-        }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error reading from CSV file.");
-        }
-    }
     
     // Update doctor unavailability in CSV (Doctor)
     public static void updateDoctorUnavailability(String dateTime, String doctorID) {
-        DataInitUnavail(UNAVAIL_CSV_FILE);
         for (Unavailability unavail : unavailabilities){
             if (unavail.getDateTime().equals(dateTime) && unavail.getDoctorID().equals(doctorID)){
                 System.out.println("Duplicate records!");
@@ -208,8 +44,6 @@ public class AppointmentController {
 
     // Show doctor unavailability in CSV (Patient)
     public static void showDoctorUnavailability() {
-        DataInitUnavail(UNAVAIL_CSV_FILE);
-        DataInitStaff(STAFF_CSV_FILE);
         System.out.println("Time slots of doctors not available: ");
         boolean hasUnavailability = false;
         
@@ -224,7 +58,6 @@ public class AppointmentController {
 
     // Show doctor unavailability in CSV (Doctor)
     public static void showDoctorSchedule(String doctorID){
-        DataInitUnavail(UNAVAIL_CSV_FILE);
         System.out.println("Time slots you are not available: ");
         boolean hasUnavailability = false;
         
@@ -241,8 +74,6 @@ public class AppointmentController {
 
     // Show appointment requests from CSV (Doctor)
     public static List<Appointment> showAppointmentRequests(String doctorID) {
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitPatient(PATIENT_CSV_FILE);
         System.out.println("Pending bookings from patient:");
         List<Appointment> pendingAppointments = new ArrayList<>();
         boolean hasPendingAppointments = false;
@@ -262,8 +93,6 @@ public class AppointmentController {
 
     // Accepts or declines a request (Doctor)
     public static void respondToRequest(String doctorID, String patientID, String dateTime, boolean accept) {
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitUnavail(UNAVAIL_CSV_FILE);
         // Iterate through the appointments to find the matching request
         for (Appointment appt : appointments) {
             for (Unavailability unavail : unavailabilities) {
@@ -305,8 +134,6 @@ public class AppointmentController {
 
     // Mark appointment as completed and update outcome (Doctor)
     public static void completeAppointment(String doctorID, String patientID, String dateTime){
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
         // Find the appointment to complete
         Appointment appointmentToComplete = null;
         
@@ -413,8 +240,6 @@ public class AppointmentController {
 
     // Show upcoming appointment from CSV (Doctor)
     public static void showUpcomingAppointment(String doctorID){
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitPatient(PATIENT_CSV_FILE);
         boolean hasUpcomingAppt = false;
         System.out.println("Upcoming appointments:");
         for (Appointment appt : appointments){
@@ -430,8 +255,6 @@ public class AppointmentController {
 
     // Cancel appointment requests in CSV (Doctor)
     public static void cancelAppointmentRequests(String doctorID, String dateTime) {
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitUnavail(UNAVAIL_CSV_FILE);
         for (Appointment appt : appointments) {
             if (appt.getDoctorID().equals(doctorID) && appt.getAppointmentDateTime().equals(dateTime) && appt.getAppointmentStatus().equals(AppointmentStatus.CONFIRMED)){
                 appt.setAppointmentStatus(AppointmentStatus.CANCELLED);
@@ -440,13 +263,12 @@ public class AppointmentController {
                 break;
             }
         }
-        writeToCSV(UNAVAIL_CSV_FILE, appointments);
-        writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+        CSVUtils.writeToCSV(UNAVAIL_CSV_FILE, appointments);
+        CSVUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
     }
 
     // Check if slot is available for booking
     public static boolean isSlotAvailable(String dateTime, String doctorID) {
-        DataInitUnavail(UNAVAIL_CSV_FILE);
         for (Unavailability unavail : unavailabilities) {
             if (unavail.getDoctorID().equals(doctorID) && unavail.getDateTime().equals(dateTime)) {
                 return false;
@@ -457,8 +279,6 @@ public class AppointmentController {
 
     // Schedule Appointment (Patient)
     public static void scheduleAppointment(String dateTime, String patientID, String doctorName){
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitStaff(STAFF_CSV_FILE);
         String doctorID = doctorIdToNameMap.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().equals(doctorName))
@@ -498,8 +318,6 @@ public class AppointmentController {
 
     // Reschedule Appointment (Patient)
     public static void rescheduleAppointment(String patientID, String dateTime, String newDateTime) {
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitUnavail(UNAVAIL_CSV_FILE);
         Appointment appointmentToUpdate = appointments.stream()
             .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
             .findFirst()
@@ -529,8 +347,8 @@ public class AppointmentController {
             unavailabilities.add(new Unavailability(newDateTime, doctorID));
     
             // Write updated appointments and unavailabilities to CSV
-            writeToCSV(APPTREQ_CSV_FILE, appointments);
-            writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+            CSVUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
+            CSVUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
     
             System.out.println("Appointment rescheduled successfully!");
         } else {
@@ -540,8 +358,6 @@ public class AppointmentController {
     
     // Cancel Appointment (Patient)
     public static void cancelAppointment(String patientID, String dateTime){
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitUnavail(UNAVAIL_CSV_FILE);
         // Find the appointment to cancel
         Appointment appointmentToCancel = appointments.stream()
         .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
@@ -564,16 +380,14 @@ public class AppointmentController {
         unavailabilities.removeIf(unavail -> unavail.getDateTime().equals(dateTime) && unavail.getDoctorID().equals(doctorID));
 
         // Write updated appointments and unavailabilities to CSV
-        writeToCSV(APPTREQ_CSV_FILE, appointments);
-        writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+        CSVUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
+        CSVUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
 
         System.out.println("Appointment cancelled successfully! The time slot has been made available.");
     }
 
     // Show appointment status (Patient)
     public static void showPatientAppointment(String patientID){
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitStaff(STAFF_CSV_FILE);
         boolean hasAppt = false;
         System.out.println("Upcoming appointments:");
         for (Appointment appt : appointments){
@@ -621,8 +435,6 @@ public class AppointmentController {
     }
     // Update medication status dispensed (Pharmacist)
     public static void setPrescriptionStatus(String patientID){
-        DataInitApptReq(APPTREQ_CSV_FILE);
-        DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
         for (Appointment appointment : appointments) {
             if (appointment.getPatientID().equals(patientID) && appointment.getAppointmentStatus() == AppointmentStatus.COMPLETED) {
                 for (AppOutcome appOutcome : appOutcomes){
@@ -634,7 +446,7 @@ public class AppointmentController {
                         appOutcome.setPrescriptionStatus();
                     }
                 }
-                writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
+                CSVUtils.writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
                 System.out.println("Medications dispensed!");
                 return;
             }

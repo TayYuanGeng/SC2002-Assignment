@@ -6,9 +6,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.*;
+import models.Appointment.AppointmentStatus;
 
 
 public class CSVUtils {
@@ -384,6 +388,165 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         } 
         else {
             System.out.println("Replenishment Request for medicine " + medName + " not found.");
+        }
+    }
+
+    // Initialize Appointment Request
+    public static List<Appointment> DataInitApptReq(String filePath) {
+        List<Appointment> appointments = new ArrayList<>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] values = line.split(csvSplitBy);
+                appointments.add(new Appointment(values[0], values[1], values[2], AppointmentStatus.valueOf(values[3])));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return appointments;
+    }
+
+    // Initialize Unavailability Schedule
+    public static List<Unavailability> DataInitUnavail(String filePath) {
+        List<Unavailability> unavailabilities = new ArrayList<>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] values = line.split(csvSplitBy);
+                unavailabilities.add(new Unavailability(values[0], values[1]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return unavailabilities;
+    }
+
+    // Initialize Patient Data (patientId to name map)
+    public static Map<String, String> DataInitPatient(String filePath) {
+        Map<String, String> patientIdToNameMap = new HashMap<>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] values = line.split(csvSplitBy);
+                patientIdToNameMap.put(values[0], values[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return patientIdToNameMap;
+    }
+
+    // Initialize Staff Data (doctorId to name map)
+    public static Map<String, String> DataInitStaff(String filePath) {
+        Map<String, String> doctorIdToNameMap = new HashMap<>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] values = line.split(csvSplitBy);
+                if (values[3].equals("Doctor")) {
+                    doctorIdToNameMap.put(values[0], values[1]);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return doctorIdToNameMap;
+    }
+
+    // Initialize Appointment Outcomes
+    public static List<AppOutcome> DataInitApptOutcome(String filePath) {
+        List<AppOutcome> appOutcomes = new ArrayList<>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] values = line.split(csvSplitBy);
+                String dateTime = values[0];
+                String patientID = values[1];
+                String serviceType = values[2];
+                String medications = values[3];
+                String notes = values[4];
+                String status = values[5];
+
+                List<String> medicationsList = new ArrayList<>(Arrays.asList(medications.split(" ")));
+                appOutcomes.add(new AppOutcome(dateTime, patientID, serviceType, medicationsList, notes, status));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return appOutcomes;
+    }
+
+    // Save data to CSV (For Unavailability.csv, Appointment.csv, ApptOutcome.csv)
+    public static void writeToCSV(String fileName, List<?> dataList) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+            if (dataList instanceof List<?>) {
+                if (dataList.get(0) instanceof Unavailability) {
+                    bw.write("DateTime,DoctorID");
+                    for (Object data : dataList) {
+                        Unavailability unavailability = (Unavailability) data;
+                        bw.write("\n" + unavailability.getDateTime() + "," + unavailability.getDoctorID());
+                    }
+                } else if (dataList.get(0) instanceof Appointment) {
+                    bw.write("DateTime Slot,DoctorID,PatientID,Status");
+                    for (Object data : dataList) {
+                        Appointment appt = (Appointment) data;
+                        bw.write("\n" + appt.getAppointmentDateTime() + "," +
+                                appt.getDoctorID() + "," +
+                                appt.getPatientID() + "," +
+                                appt.getAppointmentStatus());
+                    }
+                } else if (dataList.get(0) instanceof AppOutcome) {
+                    bw.write("DateTime,PatientID,ServiceType,PrescribedMedications,ConsultationNotes,PrescriptionStatus");
+                    for (Object data : dataList) {
+                        AppOutcome apptOut = (AppOutcome) data;
+                        String medications = String.join(" ", apptOut.getPrescribedMedications());
+                        bw.write("\n" + apptOut.getDateTime() + "," +
+                                apptOut.getPatientID() + "," +
+                                apptOut.getServiceType() + "," +
+                                medications + "," +
+                                apptOut.getConsultationNotes() + "," +
+                                apptOut.getPrescriptionStatus());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error writing to CSV file.");
         }
     }
 
