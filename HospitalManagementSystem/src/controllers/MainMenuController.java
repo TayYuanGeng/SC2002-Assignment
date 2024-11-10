@@ -231,7 +231,7 @@ public class MainMenuController {
             String username = sc.nextLine();
             System.out.println("Please enter password:");
             String password = sc.nextLine();
-            System.out.println(PasswordUtilsController.hashPassword(password));
+            //System.out.println(PasswordUtilsController.hashPassword(password));
 
             login(username, password, userType);
             if (loggedInUser == null) {
@@ -278,12 +278,12 @@ public class MainMenuController {
     }
 
     private static boolean isValidPassword(Account account, String password) {
-        System.out.println(PasswordUtilsController.hashPassword(password).equals(account.getPassword()));
+        //System.out.println(PasswordUtilsController.hashPassword(password).equals(account.getPassword()));
         return PasswordUtilsController.hashPassword(password).equals(account.getPassword());
     }
 
     private static boolean isFirstTimeLogin(Account account, String password) {
-        System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
+        //System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
         return account.getPassword().equals(PasswordUtilsController.hashPassword("Password"));
     }
 
@@ -310,9 +310,9 @@ public class MainMenuController {
                     
                     // Update in CSV based on account type
                     if (account instanceof Staff) {
-                        CSVUtils.updateStaffInCSV("src/data/Staff_List.csv", (Staff) account);
+                        CSVUtils.updateStaffInCSV("data\\Staff_List.csv", (Staff) account);
                     } else if (account instanceof Patient) {
-                        //CSVUtils.updatePatientInCSV("data/Patient_List.csv", (Patient) account);
+                        CSVUtils.updatePatientInCSV("data\\Patient_List.csv", (Patient) account);
                     }
 
                     passChanged = true;

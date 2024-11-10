@@ -1,15 +1,17 @@
 package models;
-import java.util.ArrayList;
-import java.util.Scanner;
-import controllers.AppointmentController;
 
 public class Patient extends Account {
+    private String DOB;
+    private String gender;
+    private String bloodType;
+    private String email;
+    private int phoneNumber;
     private MedicalRecordService recordService;
 
     public Patient(String uID, String pass, String name, String r, MedicalRecordService recordService)
     {
         super(uID,name,pass,r);    
-        this.recordService = recordService;  
+        this.recordService = recordService;
     }
         
     public String GetName()
@@ -33,4 +35,44 @@ public class Patient extends Account {
     {
         return this.recordService;
     }
+
+    public void setGender(String gender) {
+		this.gender = gender;
+	};
+	
+	public String getGender() {
+		return this.gender;
+	}
+
+    public void setDOB(String dateOfBirth) {
+		this.DOB = dateOfBirth;
+	};
+	
+	public String getDOB() {
+		return this.DOB;
+	}
+
+    public void setbloodType(String bloodType) {
+		this.bloodType = bloodType;
+	};
+	
+	public String getbloodType() {
+		return this.bloodType;
+	}
+
+    public void setEmail(String email) {
+		this.email = email;
+	};
+	
+	public String getEmail() {
+		return this.email;
+	}
+
+    public void setphoneNumber(int number) {
+		this.phoneNumber = number;
+	};
+	
+	public int getphoneNumber() {
+		return this.phoneNumber;
+	}
 }
