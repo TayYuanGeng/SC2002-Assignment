@@ -217,7 +217,6 @@ public class MainMenuController {
 
     public static void LoginPage() throws Exception {
         int exitChoice = -1;
-        int success;
 
         do {
             System.out.println("========================================");
@@ -232,6 +231,7 @@ public class MainMenuController {
             String username = sc.nextLine();
             System.out.println("Please enter password:");
             String password = sc.nextLine();
+            System.out.println(PasswordUtilsController.hashPassword(password));
 
             login(username, password, userType);
             if (loggedInUser == null) {
@@ -249,8 +249,10 @@ public class MainMenuController {
     }
 
     public static void WelcomePage() throws Exception {
-        staffList = CSVUtils.StaffDataInit("SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv", staffList);
-        patientList = CSVUtils.PatientDataInit("SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv", patientList);
+        // Absolute path "SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv"
+        //"SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv"
+        staffList = CSVUtils.StaffDataInit("data\\Staff_List.csv", staffList);
+        patientList = CSVUtils.PatientDataInit("data\\Patient_List.csv", patientList);
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
 
@@ -276,15 +278,13 @@ public class MainMenuController {
     }
 
     private static boolean isValidPassword(Account account, String password) {
-        if(account.getPassword().equals("Password")){
-            return account.getPassword().equals(password);
-        }
+        System.out.println(PasswordUtilsController.hashPassword(password).equals(account.getPassword()));
         return PasswordUtilsController.hashPassword(password).equals(account.getPassword());
     }
 
     private static boolean isFirstTimeLogin(Account account, String password) {
-        //System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
-        return account.getPassword().equals("Password");
+        System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
+        return account.getPassword().equals(PasswordUtilsController.hashPassword("Password"));
     }
 
     private static void handleFirstTimeLogin(Account account) {
