@@ -10,6 +10,9 @@ import java.util.Scanner;
 
 import controllers.AdministratorController;
 import controllers.CSVUtils;
+import controllers.PasswordUtilsController;
+
+import java.net.PasswordAuthentication;
 
 
 
@@ -54,7 +57,7 @@ public class Administrator extends Staff {
 	public static int addStaff(String name, String role, String gender, int age) {
 		
 		String uid = generateID(role);
-		Staff newStaff = new Staff(uid,name,"Password",role);
+		Staff newStaff = new Staff(uid,name,PasswordUtilsController.hashPassword("Password"),role);
 		newStaff.setAge(age);
 		newStaff.setGender(gender);
 		CSVUtils.saveStaffToCSV("src\\data\\Staff_List.csv", newStaff);
