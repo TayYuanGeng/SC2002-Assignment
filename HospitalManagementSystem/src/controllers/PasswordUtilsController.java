@@ -38,12 +38,12 @@ public class PasswordUtilsController {
     }
 
     public static boolean isValidPassword(Account account, String password) {
-        System.out.println("Is valid pass: " + PasswordUtilsController.hashPassword(password).equals(account.getPassword()));
+        //System.out.println("Is valid pass: " + PasswordUtilsController.hashPassword(password).equals(account.getPassword()));
         return PasswordUtilsController.hashPassword(password).equals(account.getPassword());
     }
 
     public static boolean isFirstTimeLogin(Account account, String password) {
-        System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
+        //System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
         return account.getPassword().equals(PasswordUtilsController.hashPassword("Password"));
     }
 
@@ -57,7 +57,14 @@ public class PasswordUtilsController {
             String newPassword = sc.nextLine();
 
             if(!isValidNewPassword(newPassword)){
-                System.out.println("Invalid Password. Please try again!");
+                System.out.println("""
+                                   Invalid Password. Please try again!
+                                   Password cannot be "Password".
+                                   Password must be 8 to 16 characters long.
+                                   Contains at least one uppercase letter.
+                                   Contains at least one special character (such as !@#$%^&*, etc.).)""" //
+                //
+                );
                 continue;
             }
 
