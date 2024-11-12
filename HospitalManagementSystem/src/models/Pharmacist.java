@@ -65,6 +65,8 @@ public class Pharmacist extends Staff {
     }
 
     public void SubmitReplenishmentRequest(String filepath, ReplenishmentRequest r) {
-        CSVUtilsController.saveReplenishReqToCSV(filepath, r);
+        if (CSVUtilsController.saveReplenishReqToCSV(filepath, r)) {
+            System.out.println("Replenish request submitted!");
+        }
     }
 }
