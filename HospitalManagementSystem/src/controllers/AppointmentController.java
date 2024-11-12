@@ -43,16 +43,62 @@ public class AppointmentController {
     }
 
     // Show doctor unavailability in CSV (Patient)
-    public static void showDoctorUnavailability() {
-        System.out.println("Time slots of doctors not available: ");
-        boolean hasUnavailability = false;
-        
-        for (Unavailability unavail : unavailabilities) {
-            System.out.println(unavail.getDateTime() + ", Doctor Name: " + doctorIdToNameMap.get(unavail.getDoctorID()));
-            hasUnavailability = true;
+    public static void showDoctorUnavailability(String doctorFilter, String dateFilter, boolean checkingAvail) {
+        if (doctorFilter.isEmpty() && !dateFilter.isEmpty()) {
+            System.out.println("Doctors not available on the given date: ");
+        } else if (!doctorFilter.isEmpty() && dateFilter.isEmpty()) {
+            System.out.println("Time slots of the given doctor not available: ");
+        } else if (!doctorFilter.isEmpty() && !dateFilter.isEmpty() && checkingAvail == false) {
+            System.out.println("Time slots of the given doctor on the given date not available: ");
+        } else if (checkingAvail == true) {
+            System.out.println("Showing available time slots on " + dateFilter + " for Doctor " + doctorFilter + ":");
+        } else {
+            System.out.println("Showing all unavailable time slots: ");
         }
-        if (!hasUnavailability) {
-            System.out.println("No unavailable time slots found.");
+
+        if (checkingAvail == true) {
+            String[] allTimeSlots = {"08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"};
+            boolean hasAvailableSlots = false;
+    
+            // Iterate through all possible time slots and check for availability
+            for (String timeSlot : allTimeSlots) {
+                String dateTime = dateFilter + " " + timeSlot;
+                boolean isUnavailable = false;
+    
+                // Check if this time slot is unavailable for the specified doctor
+                for (Unavailability unavail : unavailabilities) {
+                    if (unavail.getDateTime().equals(dateTime) && doctorIdToNameMap.get(unavail.getDoctorID()).contains(doctorFilter)) {
+                        isUnavailable = true;
+                        break;
+                    }
+                }
+    
+                // If not unavailable, then it's an available time slot
+                if (!isUnavailable) {
+                    System.out.println(dateTime);
+                    hasAvailableSlots = true;
+                }
+            }
+    
+            if (!hasAvailableSlots) {
+                System.out.println("No available time slots for the given doctor on the given date.");
+            }
+        }
+        else {
+            boolean hasUnavailability = false;
+            for (Unavailability unavail : unavailabilities) {
+                boolean matchesDoctor = doctorFilter.isEmpty() || doctorIdToNameMap.get(unavail.getDoctorID()).contains(doctorFilter);
+                boolean matchesDate = dateFilter.isEmpty() || unavail.getDateTime().contains(dateFilter);
+    
+                // Apply filters
+                if (matchesDoctor && matchesDate) {
+                    System.out.println(unavail.getDateTime() + ", Doctor Name: " + doctorIdToNameMap.get(unavail.getDoctorID()));
+                    hasUnavailability = true;
+                }
+            }
+            if (!hasUnavailability) {
+                System.out.println("No unavailable time slots found.");
+            }
         }
     }
 

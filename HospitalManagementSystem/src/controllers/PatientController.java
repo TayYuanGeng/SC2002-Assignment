@@ -43,7 +43,35 @@ public class PatientController {
                     break;
                 
                 case 3:
-                    AppointmentController.showDoctorUnavailability();
+                    sc.nextLine();
+                    System.out.println("Enter filter option to check doctors availability/unavailability: ");
+                    System.out.println("1. Filter by Doctor Name (Unavailability)");
+                    System.out.println("2. Filter by Date (Unavailability)");
+                    System.out.println("3. Filter by Both Doctor Name and Date (Unavailability)");
+                    System.out.println("4. Show All Unavailable Slots");
+                    System.out.println("5. Show Available Slots of a Doctor and Date");
+                    System.out.print("Choose an option: ");
+                    int option = sc.nextInt();
+                    sc.nextLine();
+                    boolean checkingAvail = false;
+
+                    if (option == 5){
+                        checkingAvail = true;
+                    }
+        
+                    String doctorFilter = "";
+                    String dateFilter = "";
+
+                    // Gather filters based on user choice
+                    if (option == 1 || option == 3 || option == 5) {
+                        System.out.print("Enter doctor name: ");
+                        doctorFilter = sc.nextLine();
+                    }
+                    if (option == 2 || option == 3 || option == 5) {
+                        System.out.print("Enter date (e.g., 12-03-2025): ");
+                        dateFilter = sc.nextLine();
+                    }
+                    AppointmentController.showDoctorUnavailability(doctorFilter, dateFilter, checkingAvail);
                     break;
                 
                 case 4:
