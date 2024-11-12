@@ -6,7 +6,7 @@ import models.*;
 public class DoctorController {
     public static void main(Account loggedInUser) throws Exception {
             // You now have access to the logged-in user here
-            Doctor docter = (Doctor)loggedInUser;
+            Doctor docter = new Doctor(loggedInUser.getID(), loggedInUser.getName(), loggedInUser.getPassword(), loggedInUser.getRole());
             System.out.println("Welcome, " + loggedInUser.getName());
 
             Scanner sc = new Scanner(System.in);

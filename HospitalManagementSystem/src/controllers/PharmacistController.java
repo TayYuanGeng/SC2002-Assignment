@@ -9,7 +9,7 @@ public class PharmacistController {
         final String MEDICINE_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Medicine_List.csv";
 
         // You now have access to the logged-in user here
-        Pharmacist pharm = (Pharmacist)loggedInUser;
+        Pharmacist pharm = new Pharmacist(loggedInUser.getID(), loggedInUser.getName(), loggedInUser.getPassword(), loggedInUser.getRole());
         pharm.SetMedicineList(CSVUtilsController.MedicineDataInit(MEDICINE_CSV_FILE));
 
         System.out.println("Welcome, " + loggedInUser.getName());
