@@ -13,6 +13,7 @@ import java.util.Map;
 
 import models.*;
 import models.Appointment.AppointmentStatus;
+import models.ReplenishmentRequest.ReplenishmentStatus;
 
 
 public class CSVUtils {
@@ -679,6 +680,44 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
             e.printStackTrace();
         }
     }
+
+    // Replenish Request CSV
+     private static void WriteReplenishRequestCSV(String filePath, ReplenishmentRequest request){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            bw.write(request.getRequestID() + "," + request.getName() + "," + request.getReplenishmentStatus());
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+    private static ArrayList<ReplenishmentRequest> ReadReplenishRequestCSV(String filePath){
+        ArrayList<ReplenishmentRequest> repReqList = new ArrayList<ReplenishmentRequest>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+            	if(isFirstLine) {
+            		isFirstLine = false;
+            		continue;
+            	}
+                // Use comma as separator
+                String[] values = line.split(csvSplitBy);
+        		repReqList.add(new ReplenishmentRequest(Integer.valueOf(values[0]), values[1],ReplenishmentStatus.valueOf(values[3])));
+                }
+                
+                System.out.println();
+                return repReqList;
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    // END -- Replenish Request CSV
+
     // private static void DataInit(String filePath){
     //     String line;
     //     String csvSplitBy = ",";
