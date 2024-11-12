@@ -16,7 +16,7 @@ import models.Appointment.AppointmentStatus;
 import models.ReplenishmentRequest.ReplenishmentStatus;
 
 
-public class CSVUtils {
+public class CSVUtilsController {
     
     public static void saveUserToCSV(String filePath, String username, String password, String role) {
         String hashedPassword = password;

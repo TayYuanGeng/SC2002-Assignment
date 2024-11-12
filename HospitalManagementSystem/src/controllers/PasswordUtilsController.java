@@ -77,9 +77,9 @@ public class PasswordUtilsController {
                     
                     // Update in CSV based on account type
                     if (account instanceof Staff) {
-                        CSVUtils.updateStaffInCSV("data\\Staff_List.csv", (Staff) account);
+                        CSVUtilsController.updateStaffInCSV("data\\Staff_List.csv", (Staff) account);
                     } else if (account instanceof Patient) {
-                        CSVUtils.updatePatientInCSV("data\\Patient_List.csv", (Patient) account);
+                        CSVUtilsController.updatePatientInCSV("data\\Patient_List.csv", (Patient) account);
                     }
 
                     passChanged = true;

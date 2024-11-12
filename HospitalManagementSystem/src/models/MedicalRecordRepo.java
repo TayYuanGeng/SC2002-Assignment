@@ -1,7 +1,6 @@
 package models;
 
-
-import controllers.CSVUtils;
+import controllers.CSVUtilsController;
 
 public class MedicalRecordRepo {
     private String filepath;
@@ -13,17 +12,17 @@ public class MedicalRecordRepo {
 
     public MedicalRecord loadRecord(String patientID)
     {
-        return CSVUtils.Read_Patientcsv(filepath, patientID);
+        return CSVUtilsController.Read_Patientcsv(filepath, patientID);
     }
 
 
     public void saveContactRecord(MedicalRecord record)
     {
-        CSVUtils.saveContactRecordCSV(filepath,record);
+        CSVUtilsController.saveContactRecordCSV(filepath,record);
     }
 
     public void updateDiagnosisandTreatment(String patientID, String diagnosis, String treatment)
     {
-        CSVUtils.updateDiagnosisandTreatmentCSV(filepath, patientID, diagnosis, treatment);
+        CSVUtilsController.updateDiagnosisandTreatmentCSV(filepath, patientID, diagnosis, treatment);
     }
 }

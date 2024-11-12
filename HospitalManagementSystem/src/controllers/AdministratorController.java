@@ -287,7 +287,7 @@ public class AdministratorController {
     			choice = sc.nextInt();
     			sc.nextLine();
     			if(choice == 1) {
-    				CSVUtils.removeStaffInCSV("src\\data\\Staff_List.csv",staff);
+    				CSVUtilsController.removeStaffInCSV("src\\data\\Staff_List.csv",staff);
         			break;
     			}
     		}
@@ -340,7 +340,7 @@ public class AdministratorController {
         						System.out.println("Invalid input. Please enter a valid option");
     					}
     					if(choice>0 && choice <6) {
-    						CSVUtils.updateStaffInCSV("src\\data\\Staff_List.csv",staff);
+    						CSVUtilsController.updateStaffInCSV("src\\data\\Staff_List.csv",staff);
     						break;
     					}else if(choice == 6){
     						break;
@@ -533,7 +533,7 @@ public class AdministratorController {
             	
             }while(true);
     	Medicine med = new Medicine(name,stockAmt,lowlvl,currentAmt);
-    	CSVUtils.saveMedToCSV("src\\data\\Medicine_List.csv", med);
+    	CSVUtilsController.saveMedToCSV("src\\data\\Medicine_List.csv", med);
 		System.out.println("Medicine Successfully added");
     }
     
@@ -548,7 +548,7 @@ public class AdministratorController {
     			choice = sc.nextInt();
     			sc.nextLine();
     			if(choice == 1) {
-    				CSVUtils.removeMedInCSV("src\\data\\Medicine_List.csv",med);
+    				CSVUtilsController.removeMedInCSV("src\\data\\Medicine_List.csv",med);
         			break;
     			}
     		}
@@ -593,7 +593,7 @@ public class AdministratorController {
         						System.out.println("Invalid input. Please enter a valid option");
     					}
     					if(choice>0 && choice <4) {
-    						CSVUtils.updateMedInCSV("src\\data\\Medicine_List.csv",med);
+    						CSVUtilsController.updateMedInCSV("src\\data\\Medicine_List.csv",med);
     						break;
     					}else if(choice == 4){
     						break;
@@ -668,13 +668,13 @@ public class AdministratorController {
     					case 1: 
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.COMPLETED);
     						med.setCurrentAmt(med.getStockAmt());
-    						CSVUtils.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
-    						CSVUtils.updateMedInCSV("src\\data\\Medicine_List.csv", med);
+    						CSVUtilsController.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
+    						CSVUtilsController.updateMedInCSV("src\\data\\Medicine_List.csv", med);
     						System.out.println("Stock for " + med.getName()+" has been replenished to "+ med.getCurrentAmount() + "/" + med.getStockAmt());
     						break;
     					case 2:
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.CANCELLED);
-    						CSVUtils.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
+    						CSVUtilsController.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
     						System.out.println("Replenishment Request for "+ med.getName() +" has been denied");
     						break;
     					case 3:

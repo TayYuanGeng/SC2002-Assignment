@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 
 import controllers.AdministratorController;
-import controllers.CSVUtils;
+import controllers.CSVUtilsController;
 import controllers.PasswordUtilsController;
 
 import java.net.PasswordAuthentication;
@@ -60,7 +60,7 @@ public class Administrator extends Staff {
 		Staff newStaff = new Staff(uid,name,PasswordUtilsController.hashPassword("Password"),role);
 		newStaff.setAge(age);
 		newStaff.setGender(gender);
-		CSVUtils.saveStaffToCSV("src\\data\\Staff_List.csv", newStaff);
+		CSVUtilsController.saveStaffToCSV("src\\data\\Staff_List.csv", newStaff);
 		return 1;
     }
 

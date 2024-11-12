@@ -109,8 +109,8 @@ public class MainMenuController {
     public static void WelcomePage() throws Exception {
         // Absolute path "SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv"
         //"SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv"
-        staffList = CSVUtils.StaffDataInit("data\\Staff_List.csv", staffList);
-        patientList = CSVUtils.PatientDataInit("data\\Patient_List.csv", patientList);
+        staffList = CSVUtilsController.StaffDataInit("data\\Staff_List.csv", staffList);
+        patientList = CSVUtilsController.PatientDataInit("data\\Patient_List.csv", patientList);
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
 

@@ -1,6 +1,5 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import models.*;
 
@@ -11,7 +10,7 @@ public class PharmacistController {
 
         // You now have access to the logged-in user here
         Pharmacist pharm = (Pharmacist)loggedInUser;
-        pharm.SetMedicineList(CSVUtils.MedicineDataInit(MEDICINE_CSV_FILE));
+        pharm.SetMedicineList(CSVUtilsController.MedicineDataInit(MEDICINE_CSV_FILE));
 
         System.out.println("Welcome, " + loggedInUser.getName());
         Scanner sc = new Scanner(System.in);

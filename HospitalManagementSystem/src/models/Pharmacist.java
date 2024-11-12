@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import controllers.AppointmentController;
-import controllers.CSVUtils;
+import controllers.CSVUtilsController;
 
 public class Pharmacist extends Staff {
     private ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
@@ -65,6 +65,6 @@ public class Pharmacist extends Staff {
     }
 
     public void SubmitReplenishmentRequest(String filepath, ReplenishmentRequest r) {
-        CSVUtils.saveReplenishReqToCSV(filepath, r);
+        CSVUtilsController.saveReplenishReqToCSV(filepath, r);
     }
 }

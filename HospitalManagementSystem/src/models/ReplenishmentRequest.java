@@ -1,13 +1,7 @@
 package models;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-
-import java.io.FileReader;
-import java.io.IOException;
+import controllers.CSVUtilsController;
 import java.util.ArrayList;
-
-import controllers.CSVUtils;
 
 public class ReplenishmentRequest {
 	private int reqId;
@@ -59,7 +53,7 @@ public class ReplenishmentRequest {
     }
     
     private static int generateID() {
-    	ArrayList<ReplenishmentRequest> repReqList = CSVUtils.ReadReplenishRequestCSV("src\\data\\ReplenishRequest_List.csv");
+    	ArrayList<ReplenishmentRequest> repReqList = CSVUtilsController.ReadReplenishRequestCSV("src\\data\\ReplenishRequest_List.csv");
 		int maxid = 0;
 		for(ReplenishmentRequest req : repReqList) {
 			int uid = Integer.valueOf(req.getRequestID());

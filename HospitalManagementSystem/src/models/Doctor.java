@@ -1,6 +1,5 @@
 package models;
 
-import java.util.Scanner;
 
 import controllers.AppointmentController;
 
