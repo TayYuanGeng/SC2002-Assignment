@@ -29,32 +29,33 @@ public class Staff extends Account{
 	public String getRole() {
 		return super.getRole();
 	}
-	
-	public void setPassword(String pass) {
-		super.setPassword(pass);
-	};
+
+	public void setRole(String role) {
+		super.setRole(role);
+	}
 	
 	public String getPassword() {
 		return super.getPassword();
 	}
-	
-	public void setRole(String role) {
-		super.setRole(role);
+
+	public void setPassword(String pass) {
+		super.setPassword(pass);
+	};
+
+	public String getGender() {
+		return this.gender;
 	}
 
 	public void setGender(String gender) {
 		this.gender = gender;
 	};
-	
-	public String getGender() {
-		return this.gender;
+
+	public int getAge() {
+		return this.age;
 	}
 
 	public void setAge(int age) {
 		this.age = age;
 	};
 	
-	public int getAge() {
-		return this.age;
-	}
 }

@@ -39,11 +39,7 @@ public abstract class Account {
 	public String getRole() {
 		return this.role;
 	}
-	
-	public void setPassword(String pass) {
-		this.password = PasswordUtilsController.hashPassword(pass);
-	}
-	
+
 	public void setRole(String role) {
 		this.role = role;
 	}
@@ -51,4 +47,9 @@ public abstract class Account {
 	public String getPassword() {
 		return this.password;
 	}
+
+	public void setPassword(String pass) {
+		this.password = PasswordUtilsController.hashPassword(pass);
+	}
+
 }
