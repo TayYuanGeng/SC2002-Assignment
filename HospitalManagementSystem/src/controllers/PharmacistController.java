@@ -1,30 +1,29 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import models.*;
 
 public class PharmacistController {
     public static void main(Account loggedInUser) throws Exception {
+        final String REPLENISH_REQUEST_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ReplenishRequest_List.csv";
+        final String MEDICINE_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Medicine_List.csv";
+
         // You now have access to the logged-in user here
         Pharmacist pharm = (Pharmacist)loggedInUser;
-        pharm.SetMedicineList(CSVUtils.MedicineDataInit("TO BE FILLED"));
+        pharm.SetMedicineList(CSVUtils.MedicineDataInit(MEDICINE_CSV_FILE));
 
         System.out.println("Welcome, " + loggedInUser.getName());
-
         Scanner sc = new Scanner(System.in);
         System.out.println("========================================");
         System.out.println("Welcome to Pharmacist Menu");
         int choice = 0;
         do{
             try {
-                System.out.println("========================================");
-                System.out.println("(1) View Appointment Outcome Record ");
-                System.out.println("(2) Update Prescription Status ");
-                System.out.println("(3) View Medication Inventory");
-                System.out.println("(4) Submit Replenishment Request");
-                System.out.println("(5) Logout");
+                // Display Pharmacist menu
+                pharm.displayMenu();
 
-                System.out.println("========================================");
+                // Handle Menu choice
                 choice = sc.nextInt();
                 sc.nextLine();
                 switch (choice) {
@@ -40,7 +39,8 @@ public class PharmacistController {
                         pharm.ViewMedicalInventory();
                         break;
                     case 4:
-
+                        System.out.println("Enter medicine name: ");
+                        pharm.SubmitReplenishmentRequest(REPLENISH_REQUEST_CSV_FILE, new ReplenishmentRequest(sc.nextLine()));
                         break;
                     case 5:
                         MainMenuController.LoginPage();
@@ -51,8 +51,8 @@ public class PharmacistController {
                 }
             }
             catch (Exception e) {
-            System.out.println("Invalid input. Please enter an integer: ");
-            sc.next();
+                System.out.println("Invalid Input. Please enter an integer (1-5):");
+                sc.next();
             }
         } while(true);
     }

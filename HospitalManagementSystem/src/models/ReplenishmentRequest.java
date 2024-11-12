@@ -1,12 +1,15 @@
 package models;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import controllers.CSVUtils;
+
 public class ReplenishmentRequest {
-	static ArrayList<ReplenishmentRequest> repReqList = new ArrayList<ReplenishmentRequest>();
 	private int reqId;
 	private String medicineName;
 	private ReplenishmentStatus replenishmentStatus;
@@ -56,7 +59,7 @@ public class ReplenishmentRequest {
     }
     
     private static int generateID() {
-    	readRepReqData("src\\data\\ReplenishRequest_List.csv");
+    	ArrayList<ReplenishmentRequest> repReqList = CSVUtils.ReadReplenishRequestCSV("src\\data\\ReplenishRequest_List.csv");
 		int maxid = 0;
 		for(ReplenishmentRequest req : repReqList) {
 			int uid = Integer.valueOf(req.getRequestID());
@@ -66,30 +69,6 @@ public class ReplenishmentRequest {
 			}
 		}
 		return maxid+1;
-	
 	}
-    
-    private static void readRepReqData(String filePath){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-        		repReqList.add(new ReplenishmentRequest(Integer.valueOf(values[0]), values[1],ReplenishmentStatus.valueOf(values[3])));
-
-                }
-                
-                System.out.println();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
 
