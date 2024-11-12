@@ -707,32 +707,4 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     }
 
     // END -- Replenish Request CSV
-
-    // private static void DataInit(String filePath){
-    //     String line;
-    //     String csvSplitBy = ",";
-    //     boolean isFirstLine = true;
-
-        
-    //     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-    //         while ((line = br.readLine()) != null) {
-    //         	if(isFirstLine) {
-    //         		isFirstLine = false;
-    //         		continue;
-    //         	}
-    //             // Use comma as separator
-    //             String[] values = line.split(csvSplitBy);
-                
-    //             // Example: Print the values
-    //             for (String value : values) {
-    //                 System.out.print(value + " ");
-    //             }
-    //             staffList.add(new Staff(values[0], values[1],"Password",values[2]));
-                
-    //             System.out.println();
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 }
