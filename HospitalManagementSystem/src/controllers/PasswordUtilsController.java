@@ -62,8 +62,7 @@ public class PasswordUtilsController {
                                    Password cannot be "Password".
                                    Password must be 8 to 16 characters long.
                                    Contains at least one uppercase letter.
-                                   Contains at least one special character (such as !@#$%^&*, etc.)""" //
-                //
+                                   Contains at least one special character (such as !@#$%^&*, etc.)"""
                 );
                 continue;
             }
