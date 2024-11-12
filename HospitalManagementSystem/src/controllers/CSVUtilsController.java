@@ -354,7 +354,7 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
             	}
                 // Use comma as separator
                 String[] values = line.split(csvSplitBy);
-        		repReqList.add(new ReplenishmentRequest(Integer.valueOf(values[0]), values[1],ReplenishmentStatus.valueOf(values[3])));
+        		repReqList.add(new ReplenishmentRequest(Integer.valueOf(values[0]), values[1],ReplenishmentStatus.valueOf(values[2])));
                 }
                 
                 System.out.println();
