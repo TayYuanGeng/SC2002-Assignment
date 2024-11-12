@@ -366,12 +366,14 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         }
     }
 
-    public static void saveReplenishReqToCSV(String filePath, ReplenishmentRequest request) {
+    public static Boolean saveReplenishReqToCSV(String filePath, ReplenishmentRequest request) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(request.getRequestID()+","+ request.getName() + "," + request.getReplenishmentStatus());
             bw.newLine();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
         
     }
