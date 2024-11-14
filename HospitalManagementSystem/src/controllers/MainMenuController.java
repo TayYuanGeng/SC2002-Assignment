@@ -12,7 +12,7 @@ public class MainMenuController {
     static Account loggedInUser;
     static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
     public static CSVUtilsInterface csvUtils = new CSVUtilsController();
-    public static final String CSV_FILE_PATH = "src\\data\\"; //Edit this to your file path so you can run the code smoothly
+    public static final String CSV_FILE_PATH = "data\\"; //Edit this to your file path so you can run the code smoothly
 
     public static void main(String[] args) throws Exception {
         WelcomePage();
