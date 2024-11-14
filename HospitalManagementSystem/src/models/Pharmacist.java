@@ -8,9 +8,11 @@ import java.util.*;
 
 import controllers.AppointmentController;
 import controllers.CSVUtilsController;
+import interfaces.CSVUtilsInterface;
 
 public class Pharmacist extends Staff {
     private ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
 
     public Pharmacist(){}
 
@@ -65,7 +67,7 @@ public class Pharmacist extends Staff {
     }
 
     public void SubmitReplenishmentRequest(String filepath, ReplenishmentRequest r) {
-        if (CSVUtilsController.saveReplenishReqToCSV(filepath, r)) {
+        if (csvUtils.saveReplenishReqToCSV(filepath, r)) {
             System.out.println("Replenish request submitted!");
         }
     }

@@ -1,5 +1,7 @@
 package controllers;
 
+import interfaces.CSVUtilsInterface;
+import interfaces.PasswordUtilsInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -8,10 +10,13 @@ import models.Account;
 import models.Patient;
 import models.Staff;
 
-public class PasswordUtilsController {
+public class PasswordUtilsController implements PasswordUtilsInterface {
     static Scanner sc = new Scanner(System.in);
+    static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
 
-    public static String hashPassword(String password) {
+    @Override
+    public String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
@@ -28,26 +33,30 @@ public class PasswordUtilsController {
             throw new RuntimeException(e);
         }
     }
-
-    public static boolean isValidNewPassword(String password) {
-        if(PasswordUtilsController.hashPassword(password).equals(PasswordUtilsController.hashPassword("Password"))){
+    
+    @Override
+    public boolean isValidNewPassword(String password) {
+        if(passwordUtils.hashPassword(password).equals(passwordUtils.hashPassword("Password"))){
             return false;
         }
         String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,16}$";
         return Pattern.matches(regex, password);
     }
-
-    public static boolean isValidPassword(Account account, String password) {
+    
+    @Override
+    public boolean isValidPassword(Account account, String password) {
         //System.out.println("Is valid pass: " + PasswordUtilsController.hashPassword(password).equals(account.getPassword()));
-        return PasswordUtilsController.hashPassword(password).equals(account.getPassword());
+        return passwordUtils.hashPassword(password).equals(account.getPassword());
     }
-
-    public static boolean isFirstTimeLogin(Account account, String password) {
+    
+    @Override
+    public boolean isFirstTimeLogin(Account account, String password) {
         //System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
-        return account.getPassword().equals(PasswordUtilsController.hashPassword("Password"));
+        return account.getPassword().equals(passwordUtils.hashPassword("Password"));
     }
-
-    public static Account handleFirstTimeLogin(Account account) {
+    
+    @Override
+    public Account handleFirstTimeLogin(Account account) {
         Account loggedInUser = null;
         System.out.println("First-Time login. Please change password.");
         boolean passChanged = false;
@@ -67,7 +76,7 @@ public class PasswordUtilsController {
                 continue;
             }
 
-            if (!PasswordUtilsController.hashPassword(newPassword).equals(account.getPassword())) {
+            if (!passwordUtils.hashPassword(newPassword).equals(account.getPassword())) {
                 System.out.println("Confirm new password:");
                 String confirmPassword = sc.nextLine();
 
@@ -77,9 +86,9 @@ public class PasswordUtilsController {
                     
                     // Update in CSV based on account type
                     if (account instanceof Staff) {
-                        CSVUtilsController.updateStaffInCSV("data\\Staff_List.csv", (Staff) account);
+                        csvUtils.updateStaffInCSV("data\\Staff_List.csv", (Staff) account);
                     } else if (account instanceof Patient) {
-                        CSVUtilsController.updatePatientInCSV("data\\Patient_List.csv", (Patient) account);
+                        csvUtils.updatePatientInCSV("data\\Patient_List.csv", (Patient) account);
                     }
 
                     passChanged = true;

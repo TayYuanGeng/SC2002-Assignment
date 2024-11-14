@@ -1,5 +1,7 @@
 package controllers;
 
+import interfaces.CSVUtilsInterface;
+import interfaces.PasswordUtilsInterface;
 import java.util.*;
 import models.*;
 
@@ -8,6 +10,8 @@ public class MainMenuController {
     static ArrayList<Staff> staffList = new ArrayList<>();
     static ArrayList<Patient> patientList = new ArrayList<>();
     static Account loggedInUser;
+    static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
 
     public static void main(String[] args) throws Exception {
         WelcomePage();
@@ -21,9 +25,9 @@ public class MainMenuController {
                 // Staff login
                 for (Staff staff : staffList) {
                     if (staff.getID().equals(username)) {
-                        if (PasswordUtilsController.isFirstTimeLogin(staff, password) && PasswordUtilsController.isValidPassword(staff, password)) {
-                            loggedInUser = PasswordUtilsController.handleFirstTimeLogin(staff);
-                        } else if (PasswordUtilsController.isValidPassword(staff, password)) {
+                        if (passwordUtils.isFirstTimeLogin(staff, password) && passwordUtils.isValidPassword(staff, password)) {
+                            loggedInUser = passwordUtils.handleFirstTimeLogin(staff);
+                        } else if (passwordUtils.isValidPassword(staff, password)) {
                             System.out.println("Login Success!");
                             loggedInUser = staff;
                         }
@@ -36,9 +40,9 @@ public class MainMenuController {
                 for (Patient patient : patientList) {
                     System.out.println(patient.getID());
                     if (patient.getID().equals(username)) {
-                        if (PasswordUtilsController.isFirstTimeLogin(patient, password) && PasswordUtilsController.isValidPassword(patient, password)) {
-                            loggedInUser = PasswordUtilsController.handleFirstTimeLogin(patient);
-                        } else if (PasswordUtilsController.isValidPassword(patient, password)) {
+                        if (passwordUtils.isFirstTimeLogin(patient, password) && passwordUtils.isValidPassword(patient, password)) {
+                            loggedInUser = passwordUtils.handleFirstTimeLogin(patient);
+                        } else if (passwordUtils.isValidPassword(patient, password)) {
                             System.out.println("Login Success!");
                             loggedInUser = patient;
                         }
@@ -109,8 +113,8 @@ public class MainMenuController {
     public static void WelcomePage() throws Exception {
         // Absolute path "SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv"
         //"SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv"
-        staffList = CSVUtilsController.StaffDataInit("data\\Staff_List.csv", staffList);
-        patientList = CSVUtilsController.PatientDataInit("data\\Patient_List.csv", patientList);
+        staffList = csvUtils.StaffDataInit("data\\Staff_List.csv", staffList);
+        patientList = csvUtils.PatientDataInit("data\\Patient_List.csv", patientList);
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
 

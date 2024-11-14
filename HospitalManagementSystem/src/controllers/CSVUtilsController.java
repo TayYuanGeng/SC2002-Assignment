@@ -1,5 +1,6 @@
 package controllers;
 
+import interfaces.CSVUtilsInterface;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -16,9 +17,10 @@ import models.Appointment.AppointmentStatus;
 import models.ReplenishmentRequest.ReplenishmentStatus;
 
 
-public class CSVUtilsController {
+public class CSVUtilsController implements CSVUtilsInterface {
     
-    public static void saveUserToCSV(String filePath, String username, String password, String role) {
+    @Override
+    public void saveUserToCSV(String filePath, String username, String password, String role) {
         String hashedPassword = password;
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(username + "," + hashedPassword + "," + role);
@@ -29,7 +31,8 @@ public class CSVUtilsController {
         
     }
 
-    public static void saveStaffToCSV(String filePath, Staff staff) {
+    @Override
+    public void saveStaffToCSV(String filePath, Staff staff) {
         String hashedPassword = staff.getPassword();
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(staff.getID() + "," + staff.getName() + "," + hashedPassword + "," + staff.getRole()+ "," + staff.getGender()+ "," + staff.getAge());
@@ -40,7 +43,8 @@ public class CSVUtilsController {
         
     }
 
-    public static void updateStaffInCSV(String filePath, Staff updatedStaff) {
+    @Override
+    public void updateStaffInCSV(String filePath, Staff updatedStaff) {
         List<String> lines = new ArrayList<>();
         String staffID = updatedStaff.getID();
         String hashedPassword = updatedStaff.getPassword();
@@ -82,7 +86,8 @@ public class CSVUtilsController {
         }
     }
 
-    public static void updatePatientInCSV(String filePath, Patient updatedPatient) {
+    @Override
+    public void updatePatientInCSV(String filePath, Patient updatedPatient) {
         List<String> lines = new ArrayList<>();
         String patientID = updatedPatient.getID();
         boolean found = false;
@@ -121,7 +126,8 @@ public class CSVUtilsController {
         }
     }
 
-    public static ArrayList<Staff> StaffDataInit(String filePath, ArrayList<Staff> staffList){
+    @Override
+    public ArrayList<Staff> StaffDataInit(String filePath, ArrayList<Staff> staffList){
         String line;
         String csvSplitBy = ",";
         boolean isFirstLine = true;
@@ -150,7 +156,8 @@ public class CSVUtilsController {
         return staffList;
     }
 
-    public static ArrayList<Medicine> MedicineDataInit(String filePath) { 
+    @Override
+    public ArrayList<Medicine> MedicineDataInit(String filePath) { 
         ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
         String line;
         String csvSplitBy = ",";
@@ -174,7 +181,8 @@ public class CSVUtilsController {
     }
 
 
-    public static ArrayList<Patient> PatientDataInit(String filePath, ArrayList<Patient> patientList){
+    @Override
+    public ArrayList<Patient> PatientDataInit(String filePath, ArrayList<Patient> patientList){
         String line;
         String csvSplitBy = ",";
         boolean isFirstLine = true;
@@ -210,7 +218,8 @@ public class CSVUtilsController {
         return patientList;
     }
 
-public static void removeStaffInCSV(String filePath,Staff removeStaff) {
+    @Override
+    public void removeStaffInCSV(String filePath,Staff removeStaff) {
 	List<String> lines = new ArrayList<>();
     String staffID = removeStaff.getID();
     boolean found = false;
@@ -248,8 +257,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
             System.out.println("Staff with ID " + staffID + " not found.");
     }
 }
-    
-    public static void saveMedToCSV(String filePath, Medicine med) {
+    @Override
+    public void saveMedToCSV(String filePath, Medicine med) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(med.getName() + "," + med.getStockAmt() + "," + med.getLowLvlStockAmt() + "," + med.getCurrentAmount());
             bw.newLine();
@@ -259,7 +268,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         
     }
     
-    public static void removeMedInCSV(String filePath,Medicine removeMedicine) {
+    @Override
+    public void removeMedInCSV(String filePath,Medicine removeMedicine) {
     	List<String> lines = new ArrayList<>();
         String medName = removeMedicine.getName();
         boolean found = false;
@@ -300,8 +310,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         }
     	
     
-    
-    public static void updateMedInCSV(String filePath, Medicine updatedMedicine) {
+    @Override
+    public void updateMedInCSV(String filePath, Medicine updatedMedicine) {
         List<String> lines = new ArrayList<>();
         String medName = updatedMedicine.getName();
 
@@ -341,7 +351,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         }
     }
     
-    public static ArrayList<ReplenishmentRequest> ReadReplenishRequestCSV(String filePath){
+    @Override
+    public ArrayList<ReplenishmentRequest> ReadReplenishRequestCSV(String filePath){
         ArrayList<ReplenishmentRequest> repReqList = new ArrayList<ReplenishmentRequest>();
         String line;
         String csvSplitBy = ",";
@@ -366,7 +377,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         }
     }
 
-    public static Boolean saveReplenishReqToCSV(String filePath, ReplenishmentRequest request) {
+    @Override
+    public boolean saveReplenishReqToCSV(String filePath, ReplenishmentRequest request) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
             bw.write(request.getRequestID()+","+ request.getName() + "," + request.getReplenishmentStatus());
             bw.newLine();
@@ -378,7 +390,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         
     }
     
-    public static void updateRepReqInCSV(String filePath, ReplenishmentRequest request) {
+    @Override
+    public void updateRepReqInCSV(String filePath, ReplenishmentRequest request) {
         List<String> lines = new ArrayList<>();
         String medName = request.getName();
 
@@ -420,7 +433,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     }
 
     // Initialize Appointment Request
-    public static List<Appointment> DataInitApptReq(String filePath) {
+    @Override
+    public List<Appointment> DataInitApptReq(String filePath) {
         List<Appointment> appointments = new ArrayList<>();
         String line;
         String csvSplitBy = ",";
@@ -442,7 +456,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     }
 
     // Initialize Unavailability Schedule
-    public static List<Unavailability> DataInitUnavail(String filePath) {
+    @Override
+    public List<Unavailability> DataInitUnavail(String filePath) {
         List<Unavailability> unavailabilities = new ArrayList<>();
         String line;
         String csvSplitBy = ",";
@@ -464,7 +479,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     }
 
     // Initialize Patient Data (patientId to name map)
-    public static Map<String, String> DataInitPatient(String filePath) {
+    @Override
+    public Map<String, String> DataInitPatient(String filePath) {
         Map<String, String> patientIdToNameMap = new HashMap<>();
         String line;
         String csvSplitBy = ",";
@@ -486,7 +502,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     }
 
     // Initialize Staff Data (doctorId to name map)
-    public static Map<String, String> DataInitStaff(String filePath) {
+    @Override
+    public Map<String, String> DataInitStaff(String filePath) {
         Map<String, String> doctorIdToNameMap = new HashMap<>();
         String line;
         String csvSplitBy = ",";
@@ -510,7 +527,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     }
 
     // Initialize Appointment Outcomes
-    public static List<AppOutcome> DataInitApptOutcome(String filePath) {
+    @Override
+    public List<AppOutcome> DataInitApptOutcome(String filePath) {
         List<AppOutcome> appOutcomes = new ArrayList<>();
         String line;
         String csvSplitBy = ",";
@@ -540,7 +558,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
     }
 
     // Save data to CSV (For Unavailability.csv, Appointment.csv, ApptOutcome.csv)
-    public static void writeToCSV(String fileName, List<?> dataList) {
+    @Override
+    public void writeToCSV(String fileName, List<?> dataList) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
             if (dataList instanceof List<?>) {
                 if (dataList.get(0) instanceof Unavailability) {
@@ -578,7 +597,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         }
     }
 
-    public static MedicalRecord Read_Patientcsv(String filepath, String patientID)
+    @Override
+    public MedicalRecord Read_Patientcsv(String filepath, String patientID)
     {
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) 
         {
@@ -612,7 +632,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         return null;
     }
 
-    public static void saveContactRecordCSV(String filepath, MedicalRecord record)
+    @Override
+    public void saveContactRecordCSV(String filepath, MedicalRecord record)
     {
         List<String> updatedLines = new ArrayList<>();  
         boolean updated = false;
@@ -655,7 +676,8 @@ public static void removeStaffInCSV(String filePath,Staff removeStaff) {
         }
     }
 
-    public static void updateDiagnosisandTreatmentCSV(String filepath, String patientID, String diagnosis, String treatment)
+    @Override
+    public void updateDiagnosisandTreatmentCSV(String filepath, String patientID, String diagnosis, String treatment)
     {
         List<String> updatedLines = new ArrayList<>();  
         boolean updated = false;

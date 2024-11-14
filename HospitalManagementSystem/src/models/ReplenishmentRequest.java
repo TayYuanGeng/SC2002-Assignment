@@ -1,9 +1,11 @@
 package models;
 
 import controllers.CSVUtilsController;
+import interfaces.CSVUtilsInterface;
 import java.util.ArrayList;
 
 public class ReplenishmentRequest {
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
 	private int reqId;
 	private String medicineName;
 	private ReplenishmentStatus replenishmentStatus;
@@ -53,7 +55,7 @@ public class ReplenishmentRequest {
     }
     
     private static int generateID() {
-    	ArrayList<ReplenishmentRequest> repReqList = CSVUtilsController.ReadReplenishRequestCSV("src\\data\\ReplenishRequest_List.csv");
+    	ArrayList<ReplenishmentRequest> repReqList = csvUtils.ReadReplenishRequestCSV("src\\data\\ReplenishRequest_List.csv");
 		int maxid = 0;
 		for(ReplenishmentRequest req : repReqList) {
 			int uid = Integer.valueOf(req.getRequestID());

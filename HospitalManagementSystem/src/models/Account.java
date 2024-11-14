@@ -1,17 +1,19 @@
 package models;
 
 import controllers.PasswordUtilsController;
+import interfaces.PasswordUtilsInterface;
 
 public abstract class Account {
 	private String userID;
 	private String name;
 	private String password;
 	private String role;
+	static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
 	
 	public Account() {
 		userID ="";
 		name = "";
-		password = PasswordUtilsController.hashPassword("password");
+		password = passwordUtils.hashPassword("password");
 		role = "";
 	}
 	
@@ -49,7 +51,7 @@ public abstract class Account {
 	}
 
 	public void setPassword(String pass) {
-		this.password = PasswordUtilsController.hashPassword(pass);
+		this.password = passwordUtils.hashPassword(pass);
 	}
 
 }

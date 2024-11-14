@@ -1,5 +1,6 @@
 package controllers;
 
+import interfaces.CSVUtilsInterface;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -7,6 +8,7 @@ import models.*;
 import models.Appointment.AppointmentStatus;
 
 public class AppointmentController {
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
     private String patientID;
     private String doctorID;
     private AppointmentStatus appointmentStatus;
@@ -17,11 +19,11 @@ public class AppointmentController {
     private static final String UNAVAIL_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Unavailability.csv";
     private static final String APPTREQ_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptRequest.csv";
     private static final String APPTOUTCOME_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptOutcome.csv";
-    private static Map<String, String> patientIdToNameMap = CSVUtilsController.DataInitPatient(PATIENT_CSV_FILE);
-    private static Map<String, String> doctorIdToNameMap = CSVUtilsController.DataInitStaff(STAFF_CSV_FILE);
-    private static List<Appointment> appointments = CSVUtilsController.DataInitApptReq(APPTREQ_CSV_FILE);
-    private static List<Unavailability> unavailabilities = CSVUtilsController.DataInitUnavail(UNAVAIL_CSV_FILE);
-    private static List<AppOutcome> appOutcomes = CSVUtilsController.DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
+    private static Map<String, String> patientIdToNameMap = csvUtils.DataInitPatient(PATIENT_CSV_FILE);
+    private static Map<String, String> doctorIdToNameMap = csvUtils.DataInitStaff(STAFF_CSV_FILE);
+    private static List<Appointment> appointments = csvUtils.DataInitApptReq(APPTREQ_CSV_FILE);
+    private static List<Unavailability> unavailabilities = csvUtils.DataInitUnavail(UNAVAIL_CSV_FILE);
+    private static List<AppOutcome> appOutcomes = csvUtils.DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
 
     public static void main(String[] args){
         completeAppointment("D001", "P1002", "12-03-2025 13:00");
@@ -164,11 +166,11 @@ public class AppointmentController {
                     // If the appointment is accepted, update the unavailability list
                     if (accept) {
                         unavailabilities.add(new Unavailability(dateTime, doctorID));
-                        CSVUtilsController.writeToCSV(APPTREQ_CSV_FILE, appointments);
-                        CSVUtilsController.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+                        csvUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
+                        csvUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
                         System.out.println("Appointment Accepted!");
                     } else {
-                        CSVUtilsController.writeToCSV(APPTREQ_CSV_FILE, appointments);
+                        csvUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
                         System.out.println("Appointment Declined!");
                     }
                     return;
@@ -226,8 +228,8 @@ public class AppointmentController {
         appointmentToComplete.setAppointmentStatus(AppointmentStatus.COMPLETED);
 
         // Save to CSV or database if needed
-        CSVUtilsController.writeToCSV(APPTREQ_CSV_FILE, appointments);  // Updating appointments CSV with "COMPLETED" status
-        CSVUtilsController.writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
+        csvUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);  // Updating appointments CSV with "COMPLETED" status
+        csvUtils.writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
         // Write the outcome data to CSV
         // try (BufferedWriter bw = new BufferedWriter(new FileWriter(APPTOUTCOME_CSV_FILE, true))) {
         //     bw.write("\n" + outcome.getDateTime() + "," + patientID + "," + outcome.getServiceType() + "," + 
@@ -309,8 +311,8 @@ public class AppointmentController {
                 break;
             }
         }
-        CSVUtilsController.writeToCSV(UNAVAIL_CSV_FILE, appointments);
-        CSVUtilsController.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+        csvUtils.writeToCSV(UNAVAIL_CSV_FILE, appointments);
+        csvUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
     }
 
     // Check if slot is available for booking
@@ -393,8 +395,8 @@ public class AppointmentController {
             unavailabilities.add(new Unavailability(newDateTime, doctorID));
     
             // Write updated appointments and unavailabilities to CSV
-            CSVUtilsController.writeToCSV(APPTREQ_CSV_FILE, appointments);
-            CSVUtilsController.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+            csvUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
+            csvUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
     
             System.out.println("Appointment rescheduled successfully!");
         } else {
@@ -426,8 +428,8 @@ public class AppointmentController {
         unavailabilities.removeIf(unavail -> unavail.getDateTime().equals(dateTime) && unavail.getDoctorID().equals(doctorID));
 
         // Write updated appointments and unavailabilities to CSV
-        CSVUtilsController.writeToCSV(APPTREQ_CSV_FILE, appointments);
-        CSVUtilsController.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
+        csvUtils.writeToCSV(APPTREQ_CSV_FILE, appointments);
+        csvUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
 
         System.out.println("Appointment cancelled successfully! The time slot has been made available.");
     }
@@ -492,7 +494,7 @@ public class AppointmentController {
                         appOutcome.setPrescriptionStatus();
                     }
                 }
-                CSVUtilsController.writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
+                csvUtils.writeToCSV(APPTOUTCOME_CSV_FILE, appOutcomes);
                 System.out.println("Medications dispensed!");
                 return;
             }

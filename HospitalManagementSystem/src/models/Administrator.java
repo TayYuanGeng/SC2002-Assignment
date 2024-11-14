@@ -11,12 +11,16 @@ import java.util.Scanner;
 import controllers.AdministratorController;
 import controllers.CSVUtilsController;
 import controllers.PasswordUtilsController;
+import interfaces.CSVUtilsInterface;
+import interfaces.PasswordUtilsInterface;
 
 import java.net.PasswordAuthentication;
 
 
 
 public class Administrator extends Staff {
+	static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
+	static CSVUtilsInterface csvUtils = new CSVUtilsController();
 	static ArrayList<Staff> staffList = new ArrayList<Staff>();
 	static Scanner sc = new Scanner(System.in);
 	
@@ -57,10 +61,10 @@ public class Administrator extends Staff {
 	public static int addStaff(String name, String role, String gender, int age) {
 		
 		String uid = generateID(role);
-		Staff newStaff = new Staff(uid,name,PasswordUtilsController.hashPassword("Password"),role);
+		Staff newStaff = new Staff(uid,name,passwordUtils.hashPassword("Password"),role);
 		newStaff.setAge(age);
 		newStaff.setGender(gender);
-		CSVUtilsController.saveStaffToCSV("src\\data\\Staff_List.csv", newStaff);
+		csvUtils.saveStaffToCSV("src\\data\\Staff_List.csv", newStaff);
 		return 1;
     }
 
