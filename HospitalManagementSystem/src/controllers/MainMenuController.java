@@ -38,7 +38,6 @@ public class MainMenuController {
             case 2:
                 // Patient login
                 for (Patient patient : patientList) {
-                    System.out.println(patient.getID());
                     if (patient.getID().equals(username)) {
                         if (passwordUtils.isFirstTimeLogin(patient, password) && passwordUtils.isValidPassword(patient, password)) {
                             loggedInUser = passwordUtils.handleFirstTimeLogin(patient);
