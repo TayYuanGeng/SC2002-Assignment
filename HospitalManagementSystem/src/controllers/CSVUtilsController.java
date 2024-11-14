@@ -599,7 +599,7 @@ public class CSVUtilsController implements CSVUtilsInterface {
     }
 
     @Override
-    public MedicalRecord Read_Patientcsv(String filepath, String patientID)
+    public MedicalRecord getMedicalRecord(String filepath, String patientID)
     {
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) 
         {

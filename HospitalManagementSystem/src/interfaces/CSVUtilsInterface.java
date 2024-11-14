@@ -53,7 +53,7 @@ public interface CSVUtilsInterface {
 
     void writeToCSV(String fileName, List<?> dataList);
 
-    MedicalRecord Read_Patientcsv(String filepath, String patientID);
+    MedicalRecord getMedicalRecord(String filepath, String patientID);
 
     void saveContactRecordCSV(String filepath, MedicalRecord record);
 
