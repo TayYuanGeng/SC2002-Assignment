@@ -4,9 +4,13 @@ import java.util.Scanner;
 import models.*;
 
 public class DoctorController {
+    static Patient[] patientList = new Patient[100];
+    static int patientListIndex = 0;            
+    static Doctor docter;
+
     public static void main(Account loggedInUser) throws Exception {
             // You now have access to the logged-in user here
-            Doctor docter = new Doctor(loggedInUser.getID(), loggedInUser.getName(), loggedInUser.getPassword(), loggedInUser.getRole());
+            docter = new Doctor(loggedInUser.getID(), loggedInUser.getName(), loggedInUser.getPassword(), loggedInUser.getRole());
             System.out.println("Welcome, " + loggedInUser.getName());
 
             Scanner sc = new Scanner(System.in);
@@ -24,7 +28,7 @@ public class DoctorController {
                     switch (choice) {
                         case 1:
                             System.out.println("Enter ID of patient: ");
-                            docter.ViewPatientMedicalRecord(sc.nextLine());
+                            ViewPatientMedicalRecord(sc.nextLine());
                             break;
                         case 2:
                             System.out.println("Enter PatientID: ");
@@ -33,14 +37,14 @@ public class DoctorController {
                             String diagnosis = sc.nextLine();
                             System.out.println("Enter treatment: ");
                             String treatment = sc.nextLine();
-                            docter.UpdateDiagnosisAndTreatment(patientID2, diagnosis, treatment);
+                            UpdateDiagnosisAndTreatment(patientID2, diagnosis, treatment);
                             break;
                         case 3:
-                        docter.viewSchedule();
+                        viewSchedule();
                             break;
                         case 4:
                             System.out.println("Enter Unavailable Date (dd-MM-YYYY HH:MM): ");
-                            docter.setAvailability(sc.nextLine());
+                            setAvailability(sc.nextLine());
                             break;
                         case 5:
                             System.out.println("Enter Appointment Date (dd-MM-YYYY HH:MM): ");
@@ -53,17 +57,17 @@ public class DoctorController {
                             if (response.equals('n')) {
                                 responseBool = false;
                             }
-                            docter.acceptDeclineAppt(apptDate, patientID, responseBool);
+                            acceptDeclineAppt(apptDate, patientID, responseBool);
                             break;
                         case 6:
-                            docter.ShowUpcomingAppointments();
+                            ShowUpcomingAppointments();
                             break;
                         case 7:
                             System.out.println("Enter PatientID: ");
                             String patientID1 = sc.nextLine();
                             System.out.println("Enter datetime of completion (dd-MM-YYYY HH:MM): ");
                             String completionDate = sc.nextLine();
-                            docter.RecordAppointmentOutcome(patientID1, completionDate);
+                            RecordAppointmentOutcome(patientID1, completionDate);
                             break;
                         case 8:
                             MainMenuController.LoginPage();
@@ -78,5 +82,72 @@ public class DoctorController {
                 sc.next();
                 }
             } while(true);
+    }
+
+    public static void ViewPatientMedicalRecord(String patientID) {
+        Patient p = GetPatient(patientID);
+        if (p == null) { // Patient not found
+            System.out.println("Patient not found!");
+        }
+        else {
+            p.getMedicalRecordService().getMedicalRecord(patientID);
+        }
+    }
+
+    // Update Medical Record
+    public static void UpdateDiagnosisAndTreatment(String patientID, String diagnosis, String treatment) {
+        Patient p = GetPatient(patientID);
+        if (p == null) { // Patient not found
+            System.out.println("Patient not found!");
+        }
+        else {
+            p.getMedicalRecordService().updateDiagnosisandTreatment(patientID, diagnosis, treatment);
+        }
+    }
+
+    public static void viewSchedule() {
+        AppointmentController.showDoctorSchedule(docter.getID());
+    }
+
+    public static void setAvailability(String date) {
+        AppointmentController.updateDoctorUnavailability(date, docter.getID());
+    }
+
+    public static void acceptDeclineAppt(String date, String patientID, boolean response) {
+        AppointmentController.respondToRequest(docter.getID(), patientID, date, response);    
+    }
+
+    public static void ShowUpcomingAppointments() {
+        AppointmentController.showUpcomingAppointment(docter.getID());
+    }
+
+
+    public static void RecordAppointmentOutcome(String patientID, String date) {
+        AppointmentController.completeAppointment(docter.getID(), patientID, date);
+    }
+
+    // Helper Methods
+    public static Boolean AssignPatient(Patient patient) {
+        if (patientListIndex == patientList.length) {
+            return false;
+        }
+        else {
+            patientList[patientListIndex] = patient;
+            return true;
+        }
+    }
+
+    public static Patient GetPatient(String patientID) {
+        if (patientListIndex == 0) {
+            return null;
+        }   
+        else {
+            for (int i = 0; i < patientListIndex; i++) {
+                if (patientID == patientList[i].getID()) { // Found Patient
+                    return patientList[i];
+                }
+            }
+            return null;
+        }
     }
 }
