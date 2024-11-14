@@ -1,4 +1,5 @@
 package models;
+import interfaces.*;
 
 public class Patient extends Account {
     private String DOB;
@@ -6,9 +7,9 @@ public class Patient extends Account {
     private String bloodType;
     private String email;
     private int phoneNumber;
-    private MedicalRecordService recordService;
+    private IMedicalRecordService recordService;
 
-    public Patient(String uID, String pass, String name, String r, MedicalRecordService recordService)
+    public Patient(String uID, String pass, String name, String r, IMedicalRecordService recordService)
     {
         super(uID,name,pass,r);    
         this.recordService = recordService;
@@ -39,7 +40,7 @@ public class Patient extends Account {
 		return super.getPassword();
 	}
 
-    public MedicalRecordService getMedicalRecordService()
+    public IMedicalRecordService getMedicalRecordService()
     {
         return this.recordService;
     }
