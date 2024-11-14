@@ -1,6 +1,7 @@
 package models;
 
 import controllers.CSVUtilsController;
+import controllers.MainMenuController;
 import interfaces.CSVUtilsInterface;
 import java.util.ArrayList;
 
@@ -55,7 +56,7 @@ public class ReplenishmentRequest {
     }
     
     private static int generateID() {
-    	ArrayList<ReplenishmentRequest> repReqList = csvUtils.ReadReplenishRequestCSV("src\\data\\ReplenishRequest_List.csv");
+    	ArrayList<ReplenishmentRequest> repReqList = csvUtils.ReadReplenishRequestCSV(MainMenuController.CSV_FILE_PATH + "ReplenishRequest_List.csv");
 		int maxid = 0;
 		for(ReplenishmentRequest req : repReqList) {
 			int uid = Integer.valueOf(req.getRequestID());

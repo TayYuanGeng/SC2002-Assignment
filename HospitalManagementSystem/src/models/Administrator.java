@@ -42,17 +42,6 @@ public class Administrator extends Staff {
 		
 	}
 	
-	public int setStockAmount() {
-		return 0;
-	}
-	
-	public int setLowLevelStockAmt() {
-		return 0;
-	}
-	
-	public int addStaffmember() {
-		return 0;
-	}
 	
 	public static int addStaff(String name, String role, String gender, int age) {
 		

@@ -40,7 +40,7 @@ public class AdministratorController {
         int choice;
         do{
             try {
-                System.out.println("========================================");
+            	System.out.println("========================================");
                 System.out.println("(1) Manage Staff");
                 System.out.println("(2) View Appointments");
                 System.out.println("(3) Inventory Management");
