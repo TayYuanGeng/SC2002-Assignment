@@ -91,7 +91,6 @@ public class CSVUtilsController implements CSVUtilsInterface {
         List<String> lines = new ArrayList<>();
         String patientID = updatedPatient.getID();
         boolean found = false;
-
         // Read all lines and modify the matching line
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -99,8 +98,9 @@ public class CSVUtilsController implements CSVUtilsInterface {
                 String[] fields = line.split(",");
                 
                 if (fields.length > 0 && fields[0].equals(patientID)) { // Check if the ID matches
-                    // Replace with updated staff information
-                    line = patientID + "," + updatedPatient.getName() + "," + updatedPatient.getDOB() + "," + updatedPatient.getGender() + "," + updatedPatient.getbloodType() + "," + updatedPatient.getEmail() + "," + updatedPatient.getphoneNumber() + "," + updatedPatient.getMedicalRecordService()+ "," + updatedPatient.getPassword();
+                    line = patientID + "," + updatedPatient.getName() + "," + updatedPatient.getDOB() + "," + updatedPatient.getGender() 
+                    + "," + updatedPatient.getbloodType() + "," + updatedPatient.getEmail() + "," 
+                    + updatedPatient.getphoneNumber() + "," + fields[7] + "," + updatedPatient.getPassword();
                     found = true;
                 }
                 
