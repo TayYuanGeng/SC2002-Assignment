@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.Scanner;
 import models.*;
+import interfaces.*;
 
 
 public class PatientController {
@@ -15,7 +16,7 @@ public class PatientController {
     public static void PatientPage(Account loggedInUser) throws Exception
     {
         MedicalRecordRepo recordRepo = new MedicalRecordRepo(MainMenuController.CSV_FILE_PATH+"Patient_List.csv");
-        MedicalRecordService recordService = new MedicalRecordService(recordRepo);
+        IMedicalRecordService recordService = new MedicalRecordService(recordRepo);
         int choice;
         String ID = loggedInUser.getID();
         Scanner sc = new Scanner(System.in);

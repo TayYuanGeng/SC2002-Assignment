@@ -1,6 +1,8 @@
 package models;
 
-public class MedicalRecordService {
+import interfaces.IMedicalRecordService;
+
+public class MedicalRecordService implements IMedicalRecordService {
     // used to read/write to csv
     private MedicalRecordRepo recordRepo;
 

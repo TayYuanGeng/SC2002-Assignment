@@ -14,11 +14,11 @@ public class AppointmentController {
     private AppointmentStatus appointmentStatus;
     private AppOutcome outcome;
     private String appointmentDateTime;
-    private static final String STAFF_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv";
-    private static final String PATIENT_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv";
-    private static final String UNAVAIL_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Unavailability.csv";
-    private static final String APPTREQ_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptRequest.csv";
-    private static final String APPTOUTCOME_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptOutcome.csv";
+    private static final String STAFF_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Staff_List.csv";
+    private static final String PATIENT_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Patient_List.csv";
+    private static final String UNAVAIL_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Unavailability.csv";
+    private static final String APPTREQ_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptRequest.csv";
+    private static final String APPTOUTCOME_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv";
     private static Map<String, String> patientIdToNameMap = csvUtils.DataInitPatient(MainMenuController.CSV_FILE_PATH + "Patient_List.csv");
     private static Map<String, String> doctorIdToNameMap = csvUtils.DataInitStaff(MainMenuController.CSV_FILE_PATH + "Staff_List.csv");
     private static List<Appointment> appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
