@@ -19,13 +19,11 @@ public class PatientController {
         int choice;
         String ID = loggedInUser.getID();
         Scanner sc = new Scanner(System.in);
+        Patient patient = new Patient(loggedInUser.getID(), loggedInUser.getPassword(),loggedInUser.getName(), loggedInUser.getRole(), recordService);
+
         do
         {
-            System.out.println("===================================================");
-            System.out.println("Welcome to patient Menu");
-            System.out.println("===================================================");
-            System.out.println(" (1) View Medical Record \n (2) Update Personal Information \n (3) View Available Appointment Slots \n (4) Schedule an Appointment \n (5) Reschedule an Appointment \n (6) Cancel an Appointment \n (7) View Scheduled Appointment \n (8) View Past Appoinment Outcome Records \n (9) Logout");
-            System.out.println("===================================================");
+            patient.displayMenu();
             choice = sc.nextInt();
             switch(choice)
             {

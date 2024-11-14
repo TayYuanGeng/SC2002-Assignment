@@ -13,7 +13,15 @@ public class Patient extends Account {
         super(uID,name,pass,r);    
         this.recordService = recordService;
     }
-        
+    
+	public void displayMenu(){
+		System.out.println("===================================================");
+		System.out.println("Welcome to patient Menu");
+		System.out.println("===================================================");
+		System.out.println(" (1) View Medical Record \n (2) Update Personal Information \n (3) View Available Appointment Slots \n (4) Schedule an Appointment \n (5) Reschedule an Appointment \n (6) Cancel an Appointment \n (7) View Scheduled Appointment \n (8) View Past Appoinment Outcome Records \n (9) Logout");
+		System.out.println("===================================================");
+	}
+
     public String GetName()
     {
         return super.getName();

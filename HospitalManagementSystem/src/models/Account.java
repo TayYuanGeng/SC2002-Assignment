@@ -24,7 +24,7 @@ public abstract class Account {
 		this.role = r;
 	}
 	
-	public void displayMenu() {}
+	public abstract void displayMenu();
 
 	public String getName(){
 		return this.name;
