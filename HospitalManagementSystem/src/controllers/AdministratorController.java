@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import interfaces.CSVUtilsInterface;
+import interfaces.PasswordUtilsInterface;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import models.*;
 import models.Appointment.AppointmentStatus;
+import controllers.PasswordUtilsController;
 
 
 
@@ -24,6 +26,7 @@ public class AdministratorController {
     static List<Appointment> apptList = new ArrayList<>();
     static ArrayList<Medicine> medList = new ArrayList<Medicine>();
     static ArrayList<ReplenishmentRequest> repReqList = new ArrayList<ReplenishmentRequest>();
+    static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
     static int sortBy = 0;
     
     public static void main(Account loggedInUser) throws Exception {
@@ -158,7 +161,6 @@ public class AdministratorController {
     	}
     }
     	
-    
     private static void sortStaffDisplay() {
     	do{
             try {
@@ -279,9 +281,44 @@ public class AdministratorController {
             	}
             	
             }while(true);
-    	Administrator.addStaff(name,role,gender,age);
+    	addStaff(name,role,gender,age);
 		System.out.println("Staff Successfully added");
     }
+    
+	public static int addStaff(String name, String role, String gender, int age) {
+		
+		String uid = generateID(role);
+		Staff newStaff = new Staff(uid,name,passwordUtils.hashPassword("Password"),role);
+		newStaff.setAge(age);
+		newStaff.setGender(gender);
+		csvUtils.saveStaffToCSV(MainMenuController.CSV_FILE_PATH+"Staff_List.csv", newStaff);
+		return 1;
+    }
+
+	private static String generateID(String role) {
+		staffList = csvUtils.StaffDataInit(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staffList);
+		int maxid = 0;
+		for(Staff staff : staffList) {
+			if(staff.getRole().equals(role)) {
+				int uid = Integer.parseInt(staff.getID().substring(1));
+				System.out.println(uid);
+				if(uid>maxid) {
+					maxid = uid;
+				}
+			}
+		}
+		switch(role) {
+			case "Doctor":
+				return String.format("D%03d", maxid+1);
+			case "Pharmacist":
+				return String.format("P%03d", maxid+1);
+			case "Administrator":
+				return String.format("A%03d", maxid+1);
+			default:
+				System.out.println("Nothing Found");
+				return "";
+		}
+	}
     
     private static void removeStaffDisplay() {
     	int choice =0;
@@ -696,8 +733,6 @@ public class AdministratorController {
         	
     	}
     }
-
-  
 
 }
 
