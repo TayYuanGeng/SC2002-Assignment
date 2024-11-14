@@ -14,7 +14,7 @@ public class MedicalRecordRepo {
 
     public MedicalRecord loadRecord(String patientID)
     {
-        return csvUtils.Read_Patientcsv(filepath, patientID);
+        return csvUtils.getMedicalRecord(filepath, patientID);
     }
 
 
