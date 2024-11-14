@@ -1,10 +1,6 @@
 package models;
 
 public class Staff extends Account{
-	private String staffID;
-	private String name;
-	private String password;
-	private String role;
 	private String gender;
 	private int age;
 	
