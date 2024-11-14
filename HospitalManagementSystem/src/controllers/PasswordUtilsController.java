@@ -86,9 +86,9 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
                     
                     // Update in CSV based on account type
                     if (account instanceof Staff) {
-                        csvUtils.updateStaffInCSV("data\\Staff_List.csv", (Staff) account);
+                        csvUtils.updateStaffInCSV(MainMenuController.CSV_FILE_PATH + "Staff_List.csv", (Staff) account);
                     } else if (account instanceof Patient) {
-                        csvUtils.updatePatientInCSV("data\\Patient_List.csv", (Patient) account);
+                        csvUtils.updatePatientInCSV(MainMenuController.CSV_FILE_PATH + "Patient_List.csv", (Patient) account);
                     }
 
                     passChanged = true;

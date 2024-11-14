@@ -19,11 +19,11 @@ public class AppointmentController {
     private static final String UNAVAIL_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Unavailability.csv";
     private static final String APPTREQ_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptRequest.csv";
     private static final String APPTOUTCOME_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ApptOutcome.csv";
-    private static Map<String, String> patientIdToNameMap = csvUtils.DataInitPatient(PATIENT_CSV_FILE);
-    private static Map<String, String> doctorIdToNameMap = csvUtils.DataInitStaff(STAFF_CSV_FILE);
-    private static List<Appointment> appointments = csvUtils.DataInitApptReq(APPTREQ_CSV_FILE);
-    private static List<Unavailability> unavailabilities = csvUtils.DataInitUnavail(UNAVAIL_CSV_FILE);
-    private static List<AppOutcome> appOutcomes = csvUtils.DataInitApptOutcome(APPTOUTCOME_CSV_FILE);
+    private static Map<String, String> patientIdToNameMap = csvUtils.DataInitPatient(MainMenuController.CSV_FILE_PATH + "Patient_List.csv");
+    private static Map<String, String> doctorIdToNameMap = csvUtils.DataInitStaff(MainMenuController.CSV_FILE_PATH + "Staff_List.csv");
+    private static List<Appointment> appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
+    private static List<Unavailability> unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
+    private static List<AppOutcome> appOutcomes = csvUtils.DataInitApptOutcome(MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv");
 
     public static void main(String[] args){
         completeAppointment("D001", "P1002", "12-03-2025 13:00");

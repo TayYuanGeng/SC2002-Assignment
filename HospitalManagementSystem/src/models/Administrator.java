@@ -1,15 +1,11 @@
 package models;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
-
-import controllers.AdministratorController;
 import controllers.CSVUtilsController;
+import controllers.MainMenuController;
 import controllers.PasswordUtilsController;
 import interfaces.CSVUtilsInterface;
 import interfaces.PasswordUtilsInterface;
@@ -64,13 +60,14 @@ public class Administrator extends Staff {
 		Staff newStaff = new Staff(uid,name,passwordUtils.hashPassword("Password"),role);
 		newStaff.setAge(age);
 		newStaff.setGender(gender);
-		csvUtils.saveStaffToCSV("src\\data\\Staff_List.csv", newStaff);
+		csvUtils.saveStaffToCSV(MainMenuController.CSV_FILE_PATH+"Staff_List.csv", newStaff);
 		return 1;
     }
 
 	
 	private static String generateID(String role) {
-		readData("src\\data\\Staff_List.csv",1);
+		//readData("src\\data\\Staff_List.csv",1);
+		staffList = csvUtils.StaffDataInit(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staffList);
 		int maxid = 0;
 		for(Staff staff : staffList) {
 			if(staff.getRole().equals(role)) {
@@ -94,29 +91,6 @@ public class Administrator extends Staff {
 		}
 	}
 	
-	private static void readData(String filePath,int listnum){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-        		staffList.add(new Staff(values[0], values[1],values[2],values[3]));
-        		staffList.get(staffList.size()-1).setGender(values[4]);
-                staffList.get(staffList.size()-1).setAge(Integer.valueOf(values[5]));
-
-                }
-                
-                System.out.println();
-            }
-         catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	
 }
 

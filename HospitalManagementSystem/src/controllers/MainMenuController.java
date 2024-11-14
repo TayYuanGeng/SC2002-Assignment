@@ -11,7 +11,8 @@ public class MainMenuController {
     static ArrayList<Patient> patientList = new ArrayList<>();
     static Account loggedInUser;
     static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
-    static CSVUtilsInterface csvUtils = new CSVUtilsController();
+    public static CSVUtilsInterface csvUtils = new CSVUtilsController();
+    public static final String CSV_FILE_PATH = "src\\data\\"; //Edit this to your file path so you can run the code smoothly
 
     public static void main(String[] args) throws Exception {
         WelcomePage();
@@ -112,8 +113,8 @@ public class MainMenuController {
     public static void WelcomePage() throws Exception {
         // Absolute path "SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv"
         //"SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv"
-        staffList = csvUtils.StaffDataInit("data\\Staff_List.csv", staffList);
-        patientList = csvUtils.PatientDataInit("data\\Patient_List.csv", patientList);
+        staffList = csvUtils.StaffDataInit(CSV_FILE_PATH +"Staff_List.csv", staffList);
+        patientList = csvUtils.PatientDataInit(CSV_FILE_PATH + "Patient_List.csv", patientList);
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
 

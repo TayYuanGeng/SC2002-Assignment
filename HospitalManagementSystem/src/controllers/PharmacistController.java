@@ -7,8 +7,8 @@ import models.*;
 public class PharmacistController {
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
     public static void main(Account loggedInUser) throws Exception {
-        final String REPLENISH_REQUEST_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/ReplenishRequest_List.csv";
-        final String MEDICINE_CSV_FILE = "/Users/yuangeng/Downloads/Y2S1/SC2002 Object Oriented Des & Prog/SC2002-Assignment/HospitalManagementSystem/src/data/Medicine_List.csv";
+        final String REPLENISH_REQUEST_CSV_FILE = MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv";
+        final String MEDICINE_CSV_FILE = MainMenuController.CSV_FILE_PATH+"Medicine_List.csv";
 
 
         // You now have access to the logged-in user here

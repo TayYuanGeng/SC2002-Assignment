@@ -10,6 +10,8 @@ import interfaces.CSVUtilsInterface;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+
 import models.*;
 import models.Appointment.AppointmentStatus;
 
@@ -19,7 +21,7 @@ public class AdministratorController {
 	static CSVUtilsInterface csvUtils = new CSVUtilsController();
     static Scanner sc = new Scanner(System.in);
     static ArrayList<Staff> staffList = new ArrayList<Staff>();
-    static ArrayList<Appointment> apptList = new ArrayList<Appointment>();
+    static List<Appointment> apptList = new ArrayList<>();
     static ArrayList<Medicine> medList = new ArrayList<Medicine>();
     static ArrayList<ReplenishmentRequest> repReqList = new ArrayList<ReplenishmentRequest>();
     static int sortBy = 0;
@@ -86,7 +88,8 @@ public class AdministratorController {
         do{
             try {
             	staffList.clear();
-            	readData("src\\data\\Staff_List.csv",1);
+            	//readData("src\\data\\Staff_List.csv",1);
+            	staffList = csvUtils.StaffDataInit(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staffList);
             	displayStaff();
                 System.out.println("========================================");
                 System.out.println("(1) Sort Staff List");
@@ -291,7 +294,7 @@ public class AdministratorController {
     			choice = sc.nextInt();
     			sc.nextLine();
     			if(choice == 1) {
-    				csvUtils.removeStaffInCSV("src\\data\\Staff_List.csv",staff);
+    				csvUtils.removeStaffInCSV(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staff);
         			break;
     			}
     		}
@@ -344,7 +347,7 @@ public class AdministratorController {
         						System.out.println("Invalid input. Please enter a valid option");
     					}
     					if(choice>0 && choice <6) {
-    						csvUtils.updateStaffInCSV("src\\data\\Staff_List.csv",staff);
+    						csvUtils.updateStaffInCSV(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staff);
     						break;
     					}else if(choice == 6){
     						break;
@@ -359,11 +362,12 @@ public class AdministratorController {
     }
     
     private static void displayAppt() {
-    	readData("src\\data\\ApptRequest.csv",2); //retrieve appointment details from csv
+    	//readData("src\\data\\ApptRequest.csv",2); //retrieve appointment details from csv
+    	apptList = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH+"ApptRequest.csv");
     	System.out.printf("%-10s%-11s%-20s%-18s%-19s%n","DoctorID","PatientID","Appointment Status","Date and Time","Appointment Outcome"); 
     	
-    	for (Object obj : apptList) { // for every appointment in appointment list
-    		Appointment appt = (Appointment) obj;
+    	for (Appointment appt : apptList) { // for every appointment in appointment list
+    		//Appointment appt = (Appointment) obj;
     		//print out Doctor and Patient ID , Appointment Status and the Appointment DateTime
     		System.out.printf("%-10s%-11s%-20s%-18s",appt.getDoctorID(), appt.getPatientID(), appt.getAppointmentStatus(), appt.getAppointmentDateTime()); 
     		// If Appointment Status is completed 
@@ -382,7 +386,7 @@ public class AdministratorController {
         do{
             try {
             	medList.clear();
-            	readData("src\\data\\Medicine_List.csv",3);
+            	medList = csvUtils.MedicineDataInit(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv");
             	displayMedicine();
                 System.out.println("========================================");
                 System.out.println("(1) Sort Medicine List");
@@ -537,7 +541,7 @@ public class AdministratorController {
             	
             }while(true);
     	Medicine med = new Medicine(name,stockAmt,lowlvl,currentAmt);
-    	csvUtils.saveMedToCSV("src\\data\\Medicine_List.csv", med);
+    	csvUtils.saveMedToCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv", med);
 		System.out.println("Medicine Successfully added");
     }
     
@@ -552,7 +556,7 @@ public class AdministratorController {
     			choice = sc.nextInt();
     			sc.nextLine();
     			if(choice == 1) {
-    				csvUtils.removeMedInCSV("src\\data\\Medicine_List.csv",med);
+    				csvUtils.removeMedInCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv",med);
         			break;
     			}
     		}
@@ -597,7 +601,7 @@ public class AdministratorController {
         						System.out.println("Invalid input. Please enter a valid option");
     					}
     					if(choice>0 && choice <4) {
-    						csvUtils.updateMedInCSV("src\\data\\Medicine_List.csv",med);
+    						csvUtils.updateMedInCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv",med);
     						break;
     					}else if(choice == 4){
     						break;
@@ -617,8 +621,10 @@ public class AdministratorController {
             try {
             	repReqList.clear();
             	medList.clear();
-            	readData("src\\data\\ReplenishRequest_List.csv",4);
-            	readData("src\\data\\Medicine_List.csv",3);
+            	// readData("src\\data\\ReplenishRequest_List.csv",4);
+            	repReqList = csvUtils.ReadReplenishRequestCSV(MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv");
+            	//readData("src\\data\\Medicine_List.csv",3);
+            	medList = csvUtils.MedicineDataInit(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv");
             	displayRepReq();
                 System.out.println("========================================");
                 System.out.println("(1) Approve Requests");
@@ -672,13 +678,13 @@ public class AdministratorController {
     					case 1: 
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.COMPLETED);
     						med.setCurrentAmt(med.getStockAmt());
-    						csvUtils.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
-    						csvUtils.updateMedInCSV("src\\data\\Medicine_List.csv", med);
+    						csvUtils.updateRepReqInCSV(MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv", req);
+    						csvUtils.updateMedInCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv", med);
     						System.out.println("Stock for " + med.getName()+" has been replenished to "+ med.getCurrentAmount() + "/" + med.getStockAmt());
     						break;
     					case 2:
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.CANCELLED);
-    						csvUtils.updateRepReqInCSV("src\\data\\ReplenishRequest_List.csv", req);
+    						csvUtils.updateRepReqInCSV(MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv", req);
     						System.out.println("Replenishment Request for "+ med.getName() +" has been denied");
     						break;
     					case 3:
@@ -690,43 +696,7 @@ public class AdministratorController {
         	
     	}
     }
-    
-    private static void readData(String filePath,int listnum){
-        String line;
-        String csvSplitBy = ",";
-        boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-            	if(isFirstLine) {
-            		isFirstLine = false;
-            		continue;
-            	}
-                // Use comma as separator
-                String[] values = line.split(csvSplitBy);
-                
-                switch(listnum) {
-                	case 1:
 
-                		staffList.add(new Staff(values[0], values[1],values[2],values[3]));
-                		staffList.get(staffList.size()-1).setGender(values[4]);
-                        staffList.get(staffList.size()-1).setAge(Integer.valueOf(values[5]));
-                		break;
-                	case 2:
-                		apptList.add(new Appointment(values[0], values[1],values[2],Appointment.AppointmentStatus.valueOf(values[3])));
-                		break;
-                	case 3:
-                		medList.add(new Medicine(values[0],Integer.valueOf(values[1]), Integer.valueOf(values[2]),Integer.valueOf(values[3])));
-                		break;
-                	case 4:
-                		repReqList.add(new ReplenishmentRequest(Integer.valueOf(values[0]),values[1],ReplenishmentRequest.ReplenishmentStatus.valueOf(values[2])));
-                }
-                
-                System.out.println();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
   
 
 }

@@ -14,7 +14,7 @@ public class PatientController {
 
     public static void PatientPage(Account loggedInUser) throws Exception
     {
-        MedicalRecordRepo recordRepo = new MedicalRecordRepo("SC2002-Assignment\\\\HospitalManagementSystem\\\\src\\\\data\\\\Patient_List.csv");
+        MedicalRecordRepo recordRepo = new MedicalRecordRepo(MainMenuController.CSV_FILE_PATH+"Patient_List.csv");
         MedicalRecordService recordService = new MedicalRecordService(recordRepo);
         int choice;
         String ID = loggedInUser.getID();
