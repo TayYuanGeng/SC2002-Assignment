@@ -455,38 +455,6 @@ public class AppointmentController {
         }
     }
     
-    // Getters & Setters
-    public String getPatientID() {
-        return patientID;
-    }
-
-    public String getDoctorID() {
-        return doctorID;
-    }
-
-    public AppointmentStatus getAppointmentStatus() {
-        return appointmentStatus;
-    }
-
-    public void setAppointmentStatus(AppointmentStatus status) {
-        this.appointmentStatus = status;
-    }
-
-    public String getAppointmentDateTime() {
-        return appointmentDateTime;
-    }
-
-    public void setAppointmentDateTime(String dateTime){
-        this.appointmentDateTime = dateTime;
-    }
-
-    public AppOutcome getOutcome() {
-        return outcome;
-    }
-
-    public void setOutcome(AppOutcome outcome) {
-        this.outcome = outcome;
-    }
     // Update medication status dispensed (Pharmacist)
     public static void setPrescriptionStatus(String patientID){
         for (Appointment appointment : appointments) {
