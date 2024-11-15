@@ -1,15 +1,27 @@
 package controllers;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import interfaces.CSVUtilsInterface;
 import models.*;
 
-public class DoctorController {
-    static Patient[] patientList = new Patient[100];
-    static int patientListIndex = 0;            
+public class DoctorController {           
     static Doctor docter;
+    static ArrayList<Patient> patients = new ArrayList<Patient>();
+    static final String APPT_REQUEST_CSV_FILE = MainMenuController.CSV_FILE_PATH+"ApptRequest.csv";
+    static final String PATIENT_CSV_FILE = MainMenuController.CSV_FILE_PATH+"Patient_List.csv";
+
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
 
     public static void main(Account loggedInUser) throws Exception {
-            // You now have access to the logged-in user here
+            // Get patient list from CSV
+            patients = csvUtils.PatientDataInit(PATIENT_CSV_FILE, patients);
+
             docter = new Doctor(loggedInUser.getID(), loggedInUser.getName(), loggedInUser.getPassword(), loggedInUser.getRole());
             System.out.println("Welcome, " + loggedInUser.getName());
 
@@ -28,7 +40,21 @@ public class DoctorController {
                     switch (choice) {
                         case 1:
                             System.out.println("Enter ID of patient: ");
-                            ViewPatientMedicalRecord(sc.nextLine());
+                            String patientID = sc.nextLine();
+                            // Check if Patient is assigned to Doctor
+                            Boolean isAssigned = csvUtils.CheckPatientApptDoctorCSV(APPT_REQUEST_CSV_FILE, patientID, docter.getID());
+                            if (isAssigned) {
+                                Patient patientRetrieved = GetPatient(patients, patientID);
+                                if (patientRetrieved == null) { // Cannot Find patient inn CSV
+                                    System.out.println("Patient does not exist!");
+                                }
+                                else {
+                                    ViewPatientMedicalRecord(patientRetrieved);
+                                }
+                            }
+                            else {
+                                System.out.println("Patient not assigned to you!");
+                            }
                             break;
                         case 2:
                             System.out.println("Enter PatientID: ");
@@ -37,7 +63,20 @@ public class DoctorController {
                             String diagnosis = sc.nextLine();
                             System.out.println("Enter treatment: ");
                             String treatment = sc.nextLine();
-                            UpdateDiagnosisAndTreatment(patientID2, diagnosis, treatment);
+                            // Check if Patient is assigned to Doctor
+                            Boolean isAssigned1 = csvUtils.CheckPatientApptDoctorCSV(APPT_REQUEST_CSV_FILE, patientID2, docter.getID());
+                            if (isAssigned1) {
+                                Patient patientRetrieved = GetPatient(patients, patientID2);
+                                if (patientRetrieved == null) { // Cannot Find patient inn CSV
+                                    System.out.println("Patient does not exist!");
+                                }
+                                else {
+                                    UpdateDiagnosisAndTreatment(patientRetrieved, diagnosis, treatment);
+                                }
+                            }
+                            else {
+                                System.out.println("Patient not assigned to you!");
+                            }
                             break;
                         case 3:
                         viewSchedule();
@@ -50,14 +89,14 @@ public class DoctorController {
                             System.out.println("Enter Appointment Date (dd-MM-YYYY HH:MM): ");
                             String apptDate = sc.nextLine();
                             System.out.println("Enter PatientID: ");
-                            String patientID = sc.nextLine();
+                            String patientID3 = sc.nextLine();
                             System.out.println("Type 'y' to accept, 'n' to decline appointment: ");
                             String response = sc.nextLine();
                             Boolean responseBool = true;
-                            if (response.equals('n')) {
+                            if (response.equals("n")) {
                                 responseBool = false;
                             }
-                            acceptDeclineAppt(apptDate, patientID, responseBool);
+                            acceptDeclineAppt(apptDate, patientID3, responseBool);
                             break;
                         case 6:
                             ShowUpcomingAppointments();
@@ -84,25 +123,12 @@ public class DoctorController {
             } while(true);
     }
 
-    public static void ViewPatientMedicalRecord(String patientID) {
-        Patient p = GetPatient(patientID);
-        if (p == null) { // Patient not found
-            System.out.println("Patient not found!");
-        }
-        else {
-            p.getMedicalRecordService().getMedicalRecord(patientID);
-        }
+    public static void ViewPatientMedicalRecord(Patient p) {
+        p.getMedicalRecordService().getMedicalRecord(p.getID());
     }
 
-    // Update Medical Record
-    public static void UpdateDiagnosisAndTreatment(String patientID, String diagnosis, String treatment) {
-        Patient p = GetPatient(patientID);
-        if (p == null) { // Patient not found
-            System.out.println("Patient not found!");
-        }
-        else {
-            p.getMedicalRecordService().updateDiagnosisandTreatment(patientID, diagnosis, treatment);
-        }
+    public static void UpdateDiagnosisAndTreatment(Patient p, String diagnosis, String treatment) {
+        p.getMedicalRecordService().updateDiagnosisandTreatment(p.getID(), diagnosis, treatment);
     }
 
     public static void viewSchedule() {
@@ -121,33 +147,17 @@ public class DoctorController {
         AppointmentController.showUpcomingAppointment(docter.getID());
     }
 
-
     public static void RecordAppointmentOutcome(String patientID, String date) {
         AppointmentController.completeAppointment(docter.getID(), patientID, date);
     }
 
-    // Helper Methods
-    public static Boolean AssignPatient(Patient patient) {
-        if (patientListIndex == patientList.length) {
-            return false;
-        }
-        else {
-            patientList[patientListIndex] = patient;
-            return true;
-        }
-    }
-
-    public static Patient GetPatient(String patientID) {
-        if (patientListIndex == 0) {
-            return null;
-        }   
-        else {
-            for (int i = 0; i < patientListIndex; i++) {
-                if (patientID == patientList[i].getID()) { // Found Patient
-                    return patientList[i];
-                }
+    //Helper
+    public static Patient GetPatient(ArrayList<Patient> patientList, String patientID) {
+        for (Patient p: patientList) {
+            if (patientID.equals(p.getID())) {
+                return p;
             }
-            return null;
         }
+        return null;
     }
 }
