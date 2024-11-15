@@ -39,6 +39,7 @@ public class PatientController {
                     System.out.print("Enter new phone number: ");
                     String new_phone = sc.nextLine();
                     recordService.updateContact(ID, new_email, new_phone);
+                    System.out.println("Contact Details Updated!");
                     break;
                 
                 case 3:
