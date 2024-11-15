@@ -4,15 +4,37 @@ import java.util.Scanner;
 import models.*;
 import interfaces.*;
 
-
+/**
+ * The PatientController class manages the interaction between a logged-in patient
+ * and the system, allowing the patient to perform various actions such as viewing
+ * medical records, updating contact details, scheduling/rescheduling/canceling appointments,
+ * and checking doctor availability.
+ */
 public class PatientController {
     static Scanner sc = new Scanner(System.in);
+
+    /**
+     * Main method to start the patient interface, displaying a welcome message and 
+     * launching the patient page.
+     *
+     * @param loggedInUser the account of the logged-in user (patient).
+     * @throws Exception if an error occurs while loading or interacting with patient data.
+     */
     public static void main(Account loggedInUser) throws Exception
     {
         System.out.println("Welcome, " + loggedInUser.getName());
         PatientPage(loggedInUser);
     }
 
+
+    /**
+     * Displays the patient menu and processes the patient's choice of action.
+     * The actions include viewing/updating medical records, managing appointments,
+     * and interacting with doctor availability.
+     *
+     * @param loggedInUser the account of the logged-in user (patient).
+     * @throws Exception if an error occurs while performing any patient-related actions.
+     */
     public static void PatientPage(Account loggedInUser) throws Exception
     {
         MedicalRecordRepo recordRepo = new MedicalRecordRepo(MainMenuController.CSV_FILE_PATH+"Patient_List.csv");
