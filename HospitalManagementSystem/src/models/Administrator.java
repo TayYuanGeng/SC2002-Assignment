@@ -16,14 +16,5 @@ public class Administrator extends Staff {
 		super(uID,name,pass,r);
 	}
 	
-	public String getPassword() {
-		return super.getPassword();
-	}
-	
-	
-	public void setPassword(String pass) {
-		super.setPassword(pass);
-	}
-	
 }
 
