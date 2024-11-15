@@ -144,14 +144,10 @@ public class AppointmentController {
 
     // Accepts or declines a request (Doctor)
     public static void respondToRequest(String doctorID, String patientID, String dateTime, boolean accept) {
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
+        unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         // Iterate through the appointments to find the matching request
         for (Appointment appt : appointments) {
-            for (Unavailability unavail : unavailabilities) {
-                if (unavail.getDateTime().equals(dateTime) && unavail.getDoctorID().equals(doctorID)) {
-                    System.out.println("Unavailable at that time!");
-                    return;
-                }
-            }
             if (appt.getDoctorID().equals(doctorID) && appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime)) {
                 
                 if (appt.getAppointmentStatus() == AppointmentStatus.CONFIRMED && accept == true){
@@ -178,6 +174,13 @@ public class AppointmentController {
                     }
                     return;
                 }
+            }
+        }
+
+        for (Unavailability unavail : unavailabilities) {
+            if (unavail.getDateTime().equals(dateTime) && unavail.getDoctorID().equals(doctorID)) {
+                System.out.println("Unavailable at that time!");
+                return;
             }
         }
         System.out.println("No matching appointment found.");
