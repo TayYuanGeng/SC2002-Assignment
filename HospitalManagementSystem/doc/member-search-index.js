@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"models","c":"Administrator","l":"Administrator()","u":"%3Cinit%3E()"},{"p":"models","c":"Administrator","l":"Administrator(String, String, String, String)","u":"%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,java.lang.String)"},{"p":"models","c":"Administrator","l":"staffList"}];updateSearchResults();
