@@ -45,15 +45,16 @@ public class DoctorController {
                             Boolean isAssigned = csvUtils.CheckPatientApptDoctorCSV(APPT_REQUEST_CSV_FILE, patientID, docter.getID());
                             if (isAssigned) {
                                 Patient patientRetrieved = GetPatient(patients, patientID);
+                                ViewPatientMedicalRecord(patientRetrieved);
+                            }
+                            else {
+                                Patient patientRetrieved = GetPatient(patients, patientID);
                                 if (patientRetrieved == null) { // Cannot Find patient inn CSV
                                     System.out.println("Patient does not exist!");
                                 }
                                 else {
-                                    ViewPatientMedicalRecord(patientRetrieved);
+                                    System.out.println("Patient not assigned to you!");
                                 }
-                            }
-                            else {
-                                System.out.println("Patient not assigned to you!");
                             }
                             break;
                         case 2:
