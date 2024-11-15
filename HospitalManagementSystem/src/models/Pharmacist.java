@@ -38,37 +38,5 @@ public class Pharmacist extends Staff {
         System.out.println("(5) Logout");
 
         System.out.println("========================================");
-    }
-
-    public void ViewAppointmentOutcome(String patientID) {
-        AppointmentController.readApptOutcome(patientID);
-    }
-
-    public void DispensePrescription(String patientID) {
-        AppointmentController.setPrescriptionStatus(patientID);
-    }
-
-    public void ViewMedicalInventory() {
-        if (medicineList.size() != 0) {
-            // Header
-            System.out.println("Name\t" + "Current Stock\t" + "Initial Stock" + "Low Level Stock");
-
-            for (Medicine m: medicineList) {
-                String currentStockAmt = Integer.toString(m.getStockAmt());
-                String initialStock = Integer.toString(m.getCurrentAmount());
-                String lowLvlStock = Integer.toString(m.getLowLvlStockAmt());
-
-                System.out.println(m.getName() + "\t" + currentStockAmt + "\t" + initialStock + "\t" + lowLvlStock + "\t");
-            }
-        }
-        else {
-            System.out.println("No medicine available!");
-        }
-    }
-
-    public void SubmitReplenishmentRequest(String filepath, ReplenishmentRequest r) {
-        if (csvUtils.saveReplenishReqToCSV(filepath, r)) {
-            System.out.println("Replenish request submitted!");
-        }
-    }
+    }    
 }

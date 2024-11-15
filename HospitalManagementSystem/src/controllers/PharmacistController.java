@@ -1,6 +1,8 @@
 package controllers;
 
 import interfaces.CSVUtilsInterface;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 import models.*;
 
@@ -31,18 +33,18 @@ public class PharmacistController {
                 switch (choice) {
                     case 1:
                         System.out.println("Enter PatientID: ");
-                        pharm.ViewAppointmentOutcome(sc.nextLine());
+                        ViewAppointmentOutcome(sc.nextLine());
                         break;
                     case 2:
                         System.out.println("Enter PatientID: ");
-                        pharm.DispensePrescription(sc.nextLine());
+                        DispensePrescription(sc.nextLine());
                         break;
                     case 3:
-                        pharm.ViewMedicalInventory();
+                        ViewMedicalInventory(pharm.GetMedicineList());
                         break;
                     case 4:
                         System.out.println("Enter medicine name: ");
-                        pharm.SubmitReplenishmentRequest(REPLENISH_REQUEST_CSV_FILE, new ReplenishmentRequest(sc.nextLine()));
+                        SubmitReplenishmentRequest(REPLENISH_REQUEST_CSV_FILE, new ReplenishmentRequest(sc.nextLine()));
                         break;
                     case 5:
                         MainMenuController.LoginPage();
@@ -57,5 +59,37 @@ public class PharmacistController {
                 sc.next();
             }
         } while(true);
+    }
+
+    public static void ViewAppointmentOutcome(String patientID) {
+        AppointmentController.readApptOutcome(patientID);
+    }
+
+    public static void DispensePrescription(String patientID) {
+        AppointmentController.setPrescriptionStatus(patientID);
+    }
+
+    public static void ViewMedicalInventory(ArrayList<Medicine> medicineList) {
+        if (medicineList.size() != 0) {
+            // Header
+            System.out.println("Name\t" + "Current Stock\t" + "Initial Stock" + "Low Level Stock");
+
+            for (Medicine m: medicineList) {
+                String currentStockAmt = Integer.toString(m.getStockAmt());
+                String initialStock = Integer.toString(m.getCurrentAmount());
+                String lowLvlStock = Integer.toString(m.getLowLvlStockAmt());
+
+                System.out.println(m.getName() + "\t" + currentStockAmt + "\t" + initialStock + "\t" + lowLvlStock + "\t");
+            }
+        }
+        else {
+            System.out.println("No medicine available!");
+        }
+    }
+
+    public static void SubmitReplenishmentRequest(String filepath, ReplenishmentRequest r) {
+        if (csvUtils.saveReplenishReqToCSV(filepath, r)) {
+            System.out.println("Replenish request submitted!");
+        }
     }
 }
