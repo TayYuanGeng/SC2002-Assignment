@@ -10,11 +10,34 @@ import models.Account;
 import models.Patient;
 import models.Staff;
 
+/**
+ * Handles password-related functionality, including hashing, validation, and first-time login handling.
+ * Implements the {@link PasswordUtilsInterface}.
+ */
 public class PasswordUtilsController implements PasswordUtilsInterface {
+
+    /**
+     * Scanner instance for user input.
+     */
     static Scanner sc = new Scanner(System.in);
+
+    /**
+     * Singleton instance of {@link PasswordUtilsInterface}.
+     */
     static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
+
+    /**
+     * Singleton instance of {@link CSVUtilsInterface}.
+     */
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
 
+    /**
+     * Hashes the given password using SHA-256 algorithm.
+     *
+     * @param password The plain text password to be hashed.
+     * @return The hashed password as a hexadecimal string.
+     * @throws RuntimeException If the hashing algorithm is not available.
+     */
     @Override
     public String hashPassword(String password) {
         try {
@@ -33,28 +56,62 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
             throw new RuntimeException(e);
         }
     }
-    
+
+    /**
+     * Validates if the provided password meets the system's password policy.
+     * 
+     * The password must:
+     * - Be 8 to 16 characters long.
+     * - Contain at least one uppercase letter.
+     * - Contain at least one special character (e.g., !@#$%^&*).
+     * - Not match the default password "Password".
+     *
+     * @param password The password to be validated.
+     * @return {@code true} if the password is valid; {@code false} otherwise.
+     */
     @Override
     public boolean isValidNewPassword(String password) {
-        if(passwordUtils.hashPassword(password).equals(passwordUtils.hashPassword("Password"))){
+        if (passwordUtils.hashPassword(password).equals(passwordUtils.hashPassword("Password"))) {
             return false;
         }
         String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,16}$";
         return Pattern.matches(regex, password);
     }
-    
+
+    /**
+     * Validates a password against the given account's stored password.
+     *
+     * @param account  The account whose password is being validated.
+     * @param password The plain text password to be validated.
+     * @return {@code true} if the password matches; {@code false} otherwise.
+     */
     @Override
     public boolean isValidPassword(Account account, String password) {
-        //System.out.println("Is valid pass: " + PasswordUtilsController.hashPassword(password).equals(account.getPassword()));
         return passwordUtils.hashPassword(password).equals(account.getPassword());
     }
-    
+
+    /**
+     * Checks if the account is logging in for the first time.
+     * 
+     * An account is considered to be logging in for the first time if its password
+     * matches the default hashed password.
+     *
+     * @param account  The account to check.
+     * @param password The plain text password entered during login.
+     * @return {@code true} if it is the first login; {@code false} otherwise.
+     */
     @Override
     public boolean isFirstTimeLogin(Account account, String password) {
-        //System.out.println("First time login" + (account.getPassword().equals("Password") && isValidPassword(account, password)));
         return account.getPassword().equals(passwordUtils.hashPassword("Password"));
     }
-    
+
+    /**
+     * Handles the first-time login process, prompting the user to change their default password.
+     * Ensures the new password meets the system's policy and updates the account details in the CSV file.
+     *
+     * @param account The account of the user logging in for the first time.
+     * @return The updated account after a successful password change.
+     */
     @Override
     public Account handleFirstTimeLogin(Account account) {
         Account loggedInUser = null;
@@ -65,7 +122,7 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
             System.out.println("Please enter new password:");
             String newPassword = sc.nextLine();
 
-            if(!isValidNewPassword(newPassword)){
+            if (!isValidNewPassword(newPassword)) {
                 System.out.println("""
                                    Invalid Password. Please try again!
                                    Password cannot be "Password".
@@ -83,7 +140,7 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
                 if (newPassword.equals(confirmPassword)) {
                     account.setPassword(newPassword);
                     System.out.println("Password changed successfully!");
-                    
+
                     // Update in CSV based on account type
                     if (account instanceof Staff) {
                         csvUtils.updateStaffInCSV(MainMenuController.CSV_FILE_PATH + "Staff_List.csv", (Staff) account);

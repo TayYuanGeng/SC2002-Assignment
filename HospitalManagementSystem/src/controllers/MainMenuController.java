@@ -5,25 +5,73 @@ import interfaces.PasswordUtilsInterface;
 import java.util.*;
 import models.*;
 
+/**
+ * Main controller for the Hospital Management System (HMS).
+ * Handles user login, role-based navigation, and system initialization.
+ */
 public class MainMenuController {
-    static Scanner sc = new Scanner(System.in);
-    static ArrayList<Staff> staffList = new ArrayList<>();
-    static ArrayList<Patient> patientList = new ArrayList<>();
-    static Account loggedInUser;
-    static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
-    public static CSVUtilsInterface csvUtils = new CSVUtilsController();
-    public static final String CSV_FILE_PATH = "data\\"; //Edit this to your file path so you can run the code smoothly
 
+    /**
+     * Scanner instance for user input.
+     */
+    static Scanner sc = new Scanner(System.in);
+
+    /**
+     * List of staff users loaded from the CSV file.
+     */
+    static ArrayList<Staff> staffList = new ArrayList<>();
+
+    /**
+     * List of patient users loaded from the CSV file.
+     */
+    static ArrayList<Patient> patientList = new ArrayList<>();
+
+    /**
+     * Currently logged-in user.
+     */
+    static Account loggedInUser;
+
+    /**
+     * Password utility instance for password management.
+     */
+    static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
+
+    /**
+     * CSV utility instance for handling data operations.
+     */
+    public static CSVUtilsInterface csvUtils = new CSVUtilsController();
+
+    /**
+     * Path to the CSV files for staff and patient data.
+     * Update this to the appropriate path for your environment.
+     */
+    public static final String CSV_FILE_PATH = "data\\";
+
+    /**
+     * Main entry point for the application.
+     * Displays the welcome page and initializes the system.
+     *
+     * @param args Command-line arguments (not used).
+     * @throws Exception If an error occurs during system execution.
+     */
     public static void main(String[] args) throws Exception {
         WelcomePage();
     }
 
+    /**
+     * Handles the login process for staff or patients.
+     * Verifies user credentials and updates the logged-in user.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     * @param userType The type of user (1 for Staff, 2 for Patient).
+     * @throws Exception If an error occurs during login or password handling.
+     */
     private static void login(String username, String password, int userType) throws Exception {
         loggedInUser = null;
 
         switch (userType) {
-            case 1:
-                // Staff login
+            case 1: // Staff login
                 for (Staff staff : staffList) {
                     if (staff.getID().equals(username)) {
                         if (passwordUtils.isFirstTimeLogin(staff, password) && passwordUtils.isValidPassword(staff, password)) {
@@ -36,8 +84,7 @@ public class MainMenuController {
                     }
                 }
                 break;
-            case 2:
-                // Patient login
+            case 2: // Patient login
                 for (Patient patient : patientList) {
                     if (patient.getID().equals(username)) {
                         if (passwordUtils.isFirstTimeLogin(patient, password) && passwordUtils.isValidPassword(patient, password)) {
@@ -48,7 +95,7 @@ public class MainMenuController {
                         }
                         break;
                     }
-                }   
+                }
                 break;
             default:
                 System.out.println("Invalid user type. Please enter '1' for Staff or '2' for Patient.");
@@ -56,6 +103,11 @@ public class MainMenuController {
         }
     }
 
+    /**
+     * Displays the login page and handles user input for login.
+     *
+     * @throws Exception If an error occurs during login or navigation.
+     */
     public static void LoginPage() throws Exception {
         int exitChoice = -1;
 
@@ -65,11 +117,10 @@ public class MainMenuController {
             System.out.println("(2) Patient Login");
             System.out.println("(3) Back");
             System.out.println("========================================");
-
             System.out.print("Please select an option: ");
 
-            String username=null;
-            String password=null;
+            String username = null;
+            String password = null;
             if (sc.hasNextInt()) {
                 int userType = sc.nextInt();
                 sc.nextLine(); // Clear the buffer
@@ -95,26 +146,29 @@ public class MainMenuController {
                 sc.next(); // Clear the invalid input from the scanner buffer
             }
 
-            //System.out.println(PasswordUtilsController.hashPassword(password));
             if (loggedInUser == null && username != null && password != null) {
                 System.out.println("Incorrect login. (1) Try again or (2) Exit:");
                 exitChoice = sc.nextInt();
                 sc.nextLine(); // Clear buffer
-            } else if(loggedInUser != null){
+            } else if (loggedInUser != null) {
                 navigateByRole(loggedInUser.getRole());
             }
-        } while (exitChoice != 2 && loggedInUser==null);
-        
+        } while (exitChoice != 2 && loggedInUser == null);
+
         if (exitChoice == 2) {
             WelcomePage();
         }
     }
 
+    /**
+     * Displays the welcome page and initializes data for the system.
+     *
+     * @throws Exception If an error occurs during data initialization.
+     */
     public static void WelcomePage() throws Exception {
-        // Absolute path "SC2002-Assignment/HospitalManagementSystem/src/data/Staff_List.csv"
-        //"SC2002-Assignment/HospitalManagementSystem/src/data/Patient_List.csv"
-        staffList = csvUtils.StaffDataInit(CSV_FILE_PATH +"Staff_List.csv", staffList);
+        staffList = csvUtils.StaffDataInit(CSV_FILE_PATH + "Staff_List.csv", staffList);
         patientList = csvUtils.PatientDataInit(CSV_FILE_PATH + "Patient_List.csv", patientList);
+
         System.out.println("========================================");
         System.out.println("Welcome to Hospital Management System");
 
@@ -146,6 +200,13 @@ public class MainMenuController {
         } while (true);
     }
 
+    /**
+     * Navigates the user to the appropriate role-based menu.
+     *
+     * @param role The role of the logged-in user.
+     * @return A numeric code representing the user's role.
+     * @throws Exception If an error occurs during role navigation.
+     */
     private static int navigateByRole(String role) throws Exception {
         switch (role) {
             case "Administrator":
