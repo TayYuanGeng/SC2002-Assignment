@@ -561,42 +561,70 @@ public class CSVUtilsController implements CSVUtilsInterface {
     // Save data to CSV (For Unavailability.csv, Appointment.csv, ApptOutcome.csv)
     @Override
     public void writeToCSV(String fileName, List<?> dataList) {
+        if (dataList == null || dataList.isEmpty()) {
+            System.out.println("No data to write to CSV.");
+            return;
+        }
+    
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-            if (dataList instanceof List<?>) {
-                if (dataList.get(0) instanceof Unavailability) {
-                    bw.write("DateTime,DoctorID");
-                    for (Object data : dataList) {
-                        Unavailability unavailability = (Unavailability) data;
-                        bw.write("\n" + unavailability.getDateTime() + "," + unavailability.getDoctorID());
-                    }
-                } else if (dataList.get(0) instanceof Appointment) {
-                    bw.write("DateTime Slot,DoctorID,PatientID,Status");
-                    for (Object data : dataList) {
-                        Appointment appt = (Appointment) data;
-                        bw.write("\n" + appt.getAppointmentDateTime() + "," +
-                                appt.getDoctorID() + "," +
-                                appt.getPatientID() + "," +
-                                appt.getAppointmentStatus());
-                    }
-                } else if (dataList.get(0) instanceof AppOutcome) {
-                    bw.write("DateTime,PatientID,ServiceType,PrescribedMedications,ConsultationNotes,PrescriptionStatus");
-                    for (Object data : dataList) {
-                        AppOutcome apptOut = (AppOutcome) data;
-                        String medications = String.join(" ", apptOut.getPrescribedMedications());
-                        bw.write("\n" + apptOut.getDateTime() + "," +
-                                apptOut.getPatientID() + "," +
-                                apptOut.getServiceType() + "," +
-                                medications + "," +
-                                apptOut.getConsultationNotes() + "," +
-                                apptOut.getPrescriptionStatus());
+            // Check the type of the first element
+            Object firstItem = dataList.get(0);
+    
+            if (firstItem instanceof Unavailability) {
+                // Write header
+                bw.write("DateTime,DoctorID");
+                bw.newLine();
+    
+                // Write data without trailing newline
+                for (int i = 0; i < dataList.size(); i++) {
+                    Unavailability unavailability = (Unavailability) dataList.get(i);
+                    bw.write(unavailability.getDateTime() + "," + unavailability.getDoctorID());
+                    if (i < dataList.size() - 1) {
+                        bw.newLine();
                     }
                 }
+            } else if (firstItem instanceof Appointment) {
+                // Write header
+                bw.write("DateTime Slot,DoctorID,PatientID,Status");
+                bw.newLine();
+    
+                // Write data without trailing newline
+                for (int i = 0; i < dataList.size(); i++) {
+                    Appointment appt = (Appointment) dataList.get(i);
+                    bw.write(appt.getAppointmentDateTime() + "," +
+                            appt.getDoctorID() + "," +
+                            appt.getPatientID() + "," +
+                            appt.getAppointmentStatus());
+                    if (i < dataList.size() - 1) {
+                        bw.newLine();
+                    }
+                }
+            } else if (firstItem instanceof AppOutcome) {
+                // Write header
+                bw.write("DateTime,PatientID,ServiceType,PrescribedMedications,ConsultationNotes,PrescriptionStatus");
+                bw.newLine();
+    
+                // Write data without trailing newline
+                for (int i = 0; i < dataList.size(); i++) {
+                    AppOutcome apptOut = (AppOutcome) dataList.get(i);
+                    String medications = String.join(" ", apptOut.getPrescribedMedications());
+                    bw.write(apptOut.getDateTime() + "," +
+                            apptOut.getPatientID() + "," +
+                            apptOut.getServiceType() + "," +
+                            medications + "," +
+                            apptOut.getConsultationNotes() + "," +
+                            apptOut.getPrescriptionStatus());
+                    if (i < dataList.size() - 1) {
+                        bw.newLine();
+                    }
+                }
+            } else {
+                System.out.println("Unsupported data type for CSV writing.");
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error writing to CSV file.");
+            System.err.println("Error writing to CSV: " + e.getMessage());
         }
-    }
+    }    
 
     @Override
     public MedicalRecord getMedicalRecord(String filepath, String patientID)
