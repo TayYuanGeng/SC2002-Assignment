@@ -731,5 +731,29 @@ public class CSVUtilsController implements CSVUtilsInterface {
         }
     }
 
-    // END -- Replenish Request CSV
+    @Override
+    public Boolean CheckPatientApptDoctorCSV(String filePath, String patientID, String doctorID) { 
+        ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
+        String line;
+        String csvSplitBy = ",";
+        boolean isFirstLine = true;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                if(isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                // Use comma as separator
+                String[] values = line.split(csvSplitBy);
+                if (doctorID == values[1] && values[2] == patientID) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
 }

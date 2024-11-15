@@ -59,4 +59,6 @@ public interface CSVUtilsInterface {
 
     void updateDiagnosisandTreatmentCSV(String filepath, String patientID, String diagnosis, String treatment);
 
+    Boolean CheckPatientApptDoctorCSV(String filePath, String patientID, String doctorID);
+
 }
