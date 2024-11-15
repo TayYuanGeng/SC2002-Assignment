@@ -31,6 +31,7 @@ public class AppointmentController {
     
     // Update doctor unavailability in CSV (Doctor)
     public static void updateDoctorUnavailability(String dateTime, String doctorID) {
+        unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         for (Unavailability unavail : unavailabilities){
             if (unavail.getDateTime().equals(dateTime) && unavail.getDoctorID().equals(doctorID)){
                 System.out.println("Duplicate records!");
@@ -109,6 +110,8 @@ public class AppointmentController {
         System.out.println("Time slots you are not available: ");
         boolean hasUnavailability = false;
         
+        unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
+
         for (Unavailability unavail : unavailabilities) {
             if (unavail.getDoctorID().equals(doctorID)) {
                 System.out.println(unavail.getDateTime());
