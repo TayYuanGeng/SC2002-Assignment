@@ -9,13 +9,6 @@ import models.Appointment.AppointmentStatus;
 
 public class AppointmentController {
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
-    private String patientID;
-    private String doctorID;
-    private AppointmentStatus appointmentStatus;
-    private AppOutcome outcome;
-    private String appointmentDateTime;
-    private static final String STAFF_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Staff_List.csv";
-    private static final String PATIENT_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Patient_List.csv";
     private static final String UNAVAIL_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Unavailability.csv";
     private static final String APPTREQ_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptRequest.csv";
     private static final String APPTOUTCOME_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv";
@@ -47,6 +40,7 @@ public class AppointmentController {
 
     // Show doctor unavailability in CSV (Patient)
     public static void showDoctorUnavailability(String doctorFilter, String dateFilter, boolean checkingAvail) {
+        unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         if (doctorFilter.isEmpty() && !dateFilter.isEmpty()) {
             System.out.println("Doctors not available on the given date: ");
         } else if (!doctorFilter.isEmpty() && dateFilter.isEmpty()) {
@@ -125,6 +119,7 @@ public class AppointmentController {
 
     // Show appointment requests from CSV (Doctor)
     public static List<Appointment> showAppointmentRequests(String doctorID) {
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         System.out.println("Pending bookings from patient:");
         List<Appointment> pendingAppointments = new ArrayList<>();
         boolean hasPendingAppointments = false;
@@ -189,6 +184,7 @@ public class AppointmentController {
     // Mark appointment as completed and update outcome (Doctor)
     public static void completeAppointment(String doctorID, String patientID, String dateTime){
         // Find the appointment to complete
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         Appointment appointmentToComplete = null;
         
         for (Appointment appt : appointments) {
@@ -294,6 +290,7 @@ public class AppointmentController {
 
     // Show upcoming appointment from CSV (Doctor)
     public static void showUpcomingAppointment(String doctorID){
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         boolean hasUpcomingAppt = false;
         System.out.println("Upcoming appointments:");
         for (Appointment appt : appointments){
@@ -309,6 +306,7 @@ public class AppointmentController {
 
     // Cancel appointment requests in CSV (Doctor)
     public static void cancelAppointmentRequests(String doctorID, String dateTime) {
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         for (Appointment appt : appointments) {
             if (appt.getDoctorID().equals(doctorID) && appt.getAppointmentDateTime().equals(dateTime) && appt.getAppointmentStatus().equals(AppointmentStatus.CONFIRMED)){
                 appt.setAppointmentStatus(AppointmentStatus.CANCELLED);
@@ -323,6 +321,7 @@ public class AppointmentController {
 
     // Check if slot is available for booking
     public static boolean isSlotAvailable(String dateTime, String doctorID) {
+        unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         for (Unavailability unavail : unavailabilities) {
             if (unavail.getDoctorID().equals(doctorID) && unavail.getDateTime().equals(dateTime)) {
                 return false;
@@ -344,7 +343,7 @@ public class AppointmentController {
             System.out.println("Doctor name not found.");
             return;
         }
-
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         for (Appointment appt : appointments) {
             if (appt.getAppointmentDateTime().equals(dateTime) && appt.getPatientID().equals(patientID)) {
                 System.out.println("You already have an appointment at this time.");
@@ -372,6 +371,8 @@ public class AppointmentController {
 
     // Reschedule Appointment (Patient)
     public static void rescheduleAppointment(String patientID, String dateTime, String newDateTime) {
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
+        unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         Appointment appointmentToUpdate = appointments.stream()
             .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
             .findFirst()
@@ -412,6 +413,7 @@ public class AppointmentController {
     
     // Cancel Appointment (Patient)
     public static void cancelAppointment(String patientID, String dateTime){
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         // Find the appointment to cancel
         Appointment appointmentToCancel = appointments.stream()
         .filter(appt -> appt.getPatientID().equals(patientID) && appt.getAppointmentDateTime().equals(dateTime))
@@ -442,6 +444,7 @@ public class AppointmentController {
 
     // Show appointment status (Patient)
     public static void showPatientAppointment(String patientID){
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         boolean hasAppt = false;
         System.out.println("Upcoming appointments:");
         for (Appointment appt : appointments){
@@ -457,6 +460,8 @@ public class AppointmentController {
     
     // Update medication status dispensed (Pharmacist)
     public static void setPrescriptionStatus(String patientID){
+        appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
+        appOutcomes = csvUtils.DataInitApptOutcome(MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv");
         for (Appointment appointment : appointments) {
             if (appointment.getPatientID().equals(patientID) && appointment.getAppointmentStatus() == AppointmentStatus.COMPLETED) {
                 for (AppOutcome appOutcome : appOutcomes){
