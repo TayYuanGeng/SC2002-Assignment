@@ -60,7 +60,6 @@ public class ReplenishmentRequest {
 		int maxid = 0;
 		for(ReplenishmentRequest req : repReqList) {
 			int uid = Integer.valueOf(req.getRequestID());
-			System.out.println(uid);
 			if(uid>maxid) {
 				maxid = uid;
 			}

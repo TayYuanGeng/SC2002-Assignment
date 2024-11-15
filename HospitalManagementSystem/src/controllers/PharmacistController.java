@@ -44,7 +44,20 @@ public class PharmacistController {
                         break;
                     case 4:
                         System.out.println("Enter medicine name: ");
-                        SubmitReplenishmentRequest(REPLENISH_REQUEST_CSV_FILE, new ReplenishmentRequest(sc.nextLine()));
+                        String medicineName = sc.nextLine();
+                        // Validate medicine name
+                        Boolean medFound = false;
+                        for (Medicine m: pharm.GetMedicineList()) {
+                            if (m.getName().equals(medicineName)) {
+                                medFound = true;
+                            }
+                        }
+                        if (medFound) {
+                            SubmitReplenishmentRequest(REPLENISH_REQUEST_CSV_FILE, new ReplenishmentRequest(medicineName));
+                        }
+                        else {
+                            System.out.println("No such medicine!");
+                        }
                         break;
                     case 5:
                         MainMenuController.LoginPage();
