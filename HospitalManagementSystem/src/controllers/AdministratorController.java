@@ -19,16 +19,42 @@ import controllers.PasswordUtilsController;
 
 
 
+/**
+ * This is the Administrator Controller that handles all the logic for the
+ * Administrator account's possible actions. It includes methods for managing
+ * staff, appointments, inventory, and replenishment requests.
+ */
 public class AdministratorController {
-	static CSVUtilsInterface csvUtils = new CSVUtilsController();
+	/** Interface for CSV utilities to handle file operations */
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
+
+    /** Scanner object for user input */
     static Scanner sc = new Scanner(System.in);
-    static ArrayList<Staff> staffList = new ArrayList<Staff>();
+
+    /** List of staff members */
+    static ArrayList<Staff> staffList = new ArrayList<>();
+
+    /** List of appointments */
     static List<Appointment> apptList = new ArrayList<>();
-    static ArrayList<Medicine> medList = new ArrayList<Medicine>();
-    static ArrayList<ReplenishmentRequest> repReqList = new ArrayList<ReplenishmentRequest>();
+
+    /** List of medicines */
+    static ArrayList<Medicine> medList = new ArrayList<>();
+
+    /** List of replenishment requests */
+    static ArrayList<ReplenishmentRequest> repReqList = new ArrayList<>();
+
+    /** Interface for password utilities */
     static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
+
+    /** Variable to store the sorting criteria */
     static int sortBy = 0;
     
+    /**
+     * Main page that prints the User's name and directs them to the AdminPage() function.
+     *
+     * @param loggedInUser the logged-in user account
+     * @throws Exception if an error occurs during execution
+     */
     public static void main(Account loggedInUser) throws Exception {
             // You now have access to the logged-in user here
             System.out.println("Welcome, " + loggedInUser.getName());
@@ -37,6 +63,11 @@ public class AdministratorController {
             AdminPage();
     }
 
+    /**
+     * Displays the Administrator Menu and provides access to various functionalities.
+     *
+     * @throws Exception if an error occurs during execution
+     */
     public static void AdminPage() throws Exception{
         System.out.println("========================================");
         System.out.println("Welcome to Administrator Menu");
@@ -86,12 +117,16 @@ public class AdministratorController {
     
     
     
+    /**
+     * Displays and manages staff-related actions such as adding, removing, or editing staff.
+     */
     private static void manageStaff() {
     	int choice = 0;
         do{
             try {
+            	//Clear Staff List
             	staffList.clear();
-            	//readData("src\\data\\Staff_List.csv",1);
+            	// populate the staff list
             	staffList = csvUtils.StaffDataInit(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staffList);
             	displayStaff();
                 System.out.println("========================================");
@@ -108,16 +143,16 @@ public class AdministratorController {
                     	//Display staff list sorted by choice
                         sortStaffDisplay();
                         break;
-                    case 2:
+                    case 2: // add a new staff
                     	addStaffDisplay();
                         break;
-                    case 3:
+                    case 3:// remove a current staff
                     	removeStaffDisplay();
                     	break;
-                    case 4:
+                    case 4:// edit a current staff details
                     	editStaffDisplay();
                     	break;
-                    case 5:
+                    case 5://return to default admin page
                     	AdminPage();
                     	break;
                     default:
@@ -133,6 +168,9 @@ public class AdministratorController {
         
     }
 
+    /**
+     * Displays the staff list with sorting based on the selected criteria.
+     */
     private static void displayStaff() {
     	switch(sortBy) {
     		case 1:
@@ -161,6 +199,9 @@ public class AdministratorController {
     	}
     }
     	
+    /**
+     * Allows sorting of staff by different attributes such as ID, Name, Role, etc.
+     */
     private static void sortStaffDisplay() {
     	do{
             try {
@@ -184,6 +225,15 @@ public class AdministratorController {
         }while(true);
     }
     
+    
+    /**
+     * Displays a menu to add a new staff member. This method collects input
+     * for the staff's name, role, gender, and age through a series of prompts
+     * and validation steps. After confirming the details, it calls the `addStaff`
+     * method to save the new staff member to the system.
+     *
+     * @throws Exception if the user provides invalid input or an error occurs during execution
+     */
     private static void addStaffDisplay() {
     	String name = "";
     	String role = "";
@@ -285,7 +335,18 @@ public class AdministratorController {
 		System.out.println("Staff Successfully added");
     }
     
-	public static int addStaff(String name, String role, String gender, int age) {
+    /**
+     * Adds a new staff member to the system. This method generates a unique ID for
+     * the staff member based on their role, creates a `Staff` object with the provided
+     * details, and saves it to the staff database (CSV file).
+     *
+     * @param name   the name of the staff member
+     * @param role   the role of the staff member (e.g., "Doctor", "Pharmacist", "Administrator")
+     * @param gender the gender of the staff member
+     * @param age    the age of the staff member
+     * @return 1 if the staff member was successfully added
+     */
+    public static int addStaff(String name, String role, String gender, int age) {
 		
 		String uid = generateID(role);
 		Staff newStaff = new Staff(uid,name,passwordUtils.hashPassword("Password"),role);
@@ -295,85 +356,143 @@ public class AdministratorController {
 		return 1;
     }
 
-	private static String generateID(String role) {
-		staffList = csvUtils.StaffDataInit(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staffList);
-		int maxid = 0;
-		for(Staff staff : staffList) {
-			if(staff.getRole().equals(role)) {
-				int uid = Integer.parseInt(staff.getID().substring(1));
-				System.out.println(uid);
-				if(uid>maxid) {
-					maxid = uid;
-				}
-			}
-		}
-		switch(role) {
-			case "Doctor":
-				return String.format("D%03d", maxid+1);
-			case "Pharmacist":
-				return String.format("P%03d", maxid+1);
-			case "Administrator":
-				return String.format("A%03d", maxid+1);
-			default:
-				System.out.println("Nothing Found");
-				return "";
-		}
-	}
     
-    private static void removeStaffDisplay() {
-    	int choice =0;
-    	System.out.println("Please enter the staff ID you would like to remove: ");
-    	String removeId = sc.nextLine();
-    	for(Staff staff:staffList) {
-    		if(staff.getID().equals(removeId)) {
-    			System.out.println(String.format("Would you like to remove %s %s from the Staff List",staff.getID(),staff.getName()));
-    			System.out.println("(1) Yes (2) No");
-    			choice = sc.nextInt();
-    			sc.nextLine();
-    			if(choice == 1) {
-    				csvUtils.removeStaffInCSV(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staff);
-        			break;
-    			}
-    		}
-    	}
-    	
+    /**
+     * Generates a unique ID for a new staff member based on their role. The ID
+     * is created by checking the existing staff list, finding the highest current
+     * ID for the specified role, and incrementing it.
+     *
+     * <p>ID Format:</p>
+     * <ul>
+     *   <li>Doctor: "D###" (e.g., "D001")</li>
+     *   <li>Pharmacist: "P###" (e.g., "P001")</li>
+     *   <li>Administrator: "A###" (e.g., "A001")</li>
+     * </ul>
+     *
+     * @param role the role of the staff member (e.g., "Doctor", "Pharmacist", "Administrator")
+     * @return a unique ID in the format corresponding to the role, or an empty string if the role is invalid
+     */
+    private static String generateID(String role) {
+        // Initialize the staff list by reading from the CSV file
+        staffList = csvUtils.StaffDataInit(MainMenuController.CSV_FILE_PATH + "Staff_List.csv", staffList);
+
+        // Track the maximum ID for the given role
+        int maxid = 0;
+
+        // Iterate through the staff list to find the highest ID for the specified role
+        for (Staff staff : staffList) {
+            if (staff.getRole().equals(role)) {
+                int uid = Integer.parseInt(staff.getID().substring(1)); // Extract numeric part of the ID
+                System.out.println(uid); // Debug: Print the current ID
+                if (uid > maxid) {
+                    maxid = uid; // Update the maximum ID
+                }
+            }
+        }
+
+        // Generate the new ID based on the role and the maximum ID found
+        switch (role) {
+            case "Doctor":
+                return String.format("D%03d", maxid + 1);
+            case "Pharmacist":
+                return String.format("P%03d", maxid + 1);
+            case "Administrator":
+                return String.format("A%03d", maxid + 1);
+            default:
+                System.out.println("Nothing Found"); // Debug: Invalid role
+                return ""; // Return an empty string for invalid roles
+        }
     }
     
+    
+    /**
+     * Displays a prompt to remove a staff member from the system. This method asks
+     * the user to enter a staff ID, verifies its existence in the staff list, and
+     * confirms the removal action with the user. If confirmed, the staff member is
+     * removed from the system (CSV file).
+     */
+    private static void removeStaffDisplay() {
+        int choice = 0;
+
+        // Prompt the user to enter the ID of the staff member to remove
+        System.out.println("Please enter the staff ID you would like to remove: ");
+        String removeId = sc.nextLine();
+
+        // Iterate through the staff list to find the staff member with the entered ID
+        for (Staff staff : staffList) {
+            if (staff.getID().equals(removeId)) {
+                // Display the found staff member's details and confirm removal
+                System.out.println(String.format("Would you like to remove %s %s from the Staff List", staff.getID(), staff.getName()));
+                System.out.println("(1) Yes (2) No");
+                choice = sc.nextInt();
+                sc.nextLine();
+
+                if (choice == 1) {
+                    // Remove the staff member from the CSV file
+                    csvUtils.removeStaffInCSV(MainMenuController.CSV_FILE_PATH + "Staff_List.csv", staff);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Allows the user to edit the details of an existing staff member. The method prompts
+     * the user to enter the staff ID, verifies if the staff exists, and provides a menu
+     * to edit various attributes (Name, Password, Role, Gender, or Age). After making changes,
+     * the updated staff details are saved to the system (CSV file).
+     *
+     * <p>Menu options:</p>
+     * <ul>
+     *   <li>(1) Edit Name</li>
+     *   <li>(2) Edit Password</li>
+     *   <li>(3) Edit Role</li>
+     *   <li>(4) Edit Gender</li>
+     *   <li>(5) Edit Age</li>
+     *   <li>(6) Exit without making changes</li>
+     * </ul>
+     *
+     * <p>Updates are saved to the staff CSV file after each change.</p>
+     */
     private static void editStaffDisplay() {
     	int choice =0;
     	String input = "";
+    	// Prompt the user to enter the ID of the staff they want to edit
     	System.out.println("Please enter the staff ID you would like to Edit: ");
     	String removeId = sc.nextLine();
+    	// for every staff in the staff list
     	for(Staff staff:staffList) {
+    		//if their id is the same as the one entered
     		if(staff.getID().equals(removeId)) {
     			do {
     				try {
+    					//Prompt the user what they want to edit from the current staff information
     					System.out.println(String.format("What would you like to edit from %s %s",staff.getID(),staff.getName()));
     	    			System.out.println("(1) Name \n(2) Password \n(3) Role \n(4) Gender \n(5) Age \n(6) Don't edit");
     	    			choice = sc.nextInt();
     	    			sc.nextLine();
     					switch(choice) {
-        					case 1:
+        					case 1:// User selected to edit name
         						System.out.println("Please enter the new Name:");
         						input = sc.nextLine();
         						staff.setName(input);
         						break;
-        					case 2:
+        					case 2://User selected to edit password
         						System.out.println("Please enter the new Password:");
         						input = sc.nextLine();
         						staff.setPassword(input);
         						break;
-        					case 3:
+        					case 3: //User selected to edit role
         						System.out.println("Please enter the new Role:");
         						input = sc.nextLine();
         						staff.setRole(input);
         						break;
-        					case 4:
+        					case 4: //User selected to edit Gender
         						System.out.println("Please enter the new Gender:");
         						input = sc.nextLine();
         						staff.setGender(input);
         						break;
-        					case 5:
+        					case 5: //User selected to edit Age
         						System.out.println("Please enter the new Age:");
         						int age = sc.nextInt();
         						sc.next();
@@ -381,12 +500,16 @@ public class AdministratorController {
         						break;
         					case 6:
         					default:
+        						//If option selected not present inform user wrong option
         						System.out.println("Invalid input. Please enter a valid option");
     					}
     					if(choice>0 && choice <6) {
+    						//If user chose to edit the details
+    						//Update the staff details in the csv
     						csvUtils.updateStaffInCSV(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staff);
     						break;
     					}else if(choice == 6){
+    						//if user chose not to edit leave the menu
     						break;
     					}
     				}catch (Exception e) {
@@ -398,13 +521,29 @@ public class AdministratorController {
     	}
     }
     
+    /**
+     * Displays a list of all appointments. This method retrieves the appointment
+     * data from the CSV file, initializes the `apptList`, and prints the details
+     * of each appointment in a formatted table. For completed appointments, the
+     * appointment outcome is also displayed.
+     *
+     * <p>Details printed:</p>
+     * <ul>
+     *   <li>DoctorID: The ID of the doctor handling the appointment</li>
+     *   <li>PatientID: The ID of the patient</li>
+     *   <li>Appointment Status: The current status of the appointment (e.g., PENDING, COMPLETED)</li>
+     *   <li>Date and Time: The scheduled date and time of the appointment</li>
+     *   <li>Appointment Outcome: The outcome of the appointment (only displayed for COMPLETED appointments)</li>
+     * </ul>
+     *
+     * <p>If the appointment status is not "COMPLETED", the "Appointment Outcome" column is left blank.</p>
+     */
     private static void displayAppt() {
-    	//readData("src\\data\\ApptRequest.csv",2); //retrieve appointment details from csv
     	apptList = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH+"ApptRequest.csv");
     	System.out.printf("%-10s%-11s%-20s%-18s%-19s%n","DoctorID","PatientID","Appointment Status","Date and Time","Appointment Outcome"); 
     	
     	for (Appointment appt : apptList) { // for every appointment in appointment list
-    		//Appointment appt = (Appointment) obj;
+
     		//print out Doctor and Patient ID , Appointment Status and the Appointment DateTime
     		System.out.printf("%-10s%-11s%-20s%-18s",appt.getDoctorID(), appt.getPatientID(), appt.getAppointmentStatus(), appt.getAppointmentDateTime()); 
     		// If Appointment Status is completed 
@@ -418,6 +557,29 @@ public class AdministratorController {
     	
     }
     
+    /**
+     * Manages the inventory of medicines. This method provides the user with a menu
+     * to perform various inventory management tasks, including sorting the medicine list,
+     * adding new medicines, removing existing ones, and editing medicine details.
+     *
+     * <p>List of Options for user to choose:</p>
+     * <ul>
+     *   <li>(1) Sort Medicine List: Sort the medicine list based on selected criteria</li>
+     *   <li>(2) Add Medicine: Add a new medicine to the inventory</li>
+     *   <li>(3) Remove Medicine: Remove an existing medicine from the inventory</li>
+     *   <li>(4) Edit Medicine: Edit the details of a medicine</li>
+     *   <li>(5) Return to Admin Menu: Return to the main Administrator menu</li>
+     * </ul>
+     *
+     * <p>The method uses the following steps:</p>
+     * <ol>
+     *   <li>Clears and reinitializes the medicine list by reading from the CSV file</li>
+     *   <li>Displays the current inventory using {@code displayMedicine()}</li>
+     *   <li>Prompts the user for their choice and executes the corresponding action</li>
+     * </ol>
+     *
+     * @throws Exception if an error occurs during menu operations or invalid input is provided
+     */
     private static void manageInv() {
     	int choice = 0;
         do{
@@ -463,50 +625,110 @@ public class AdministratorController {
         }while(true);
     }
     
+    /**
+     * Prompts the user to select an attribute for sorting the medicine list.
+     * The user can choose from three options: Name, Stock Level, or Low Level Alert.
+     * Once a valid input is provided, the selected sort criterion is stored in
+     * the {@code sortBy} variable for subsequent operations.
+     *
+     * <p>Sorting Options:</p>
+     * <ul>
+     *   <li>(1) Name: Sort medicines alphabetically by their name</li>
+     *   <li>(2) Stock Level: Sort medicines by their current stock level</li>
+     *   <li>(3) Low Level Alert: Sort medicines by their low stock alert threshold</li>
+     * </ul>
+     *
+     * <p>The method validates user input and ensures only valid options (1-3) are accepted.
+     * If an invalid input is provided, the user is prompted again until a valid choice is made.</p>
+     */
     private static void sortMedsDisplay() {
     	do{
             try {
+            	//Display ways of sorting the medicine
 		    	System.out.println("Please select which attribute to sort by: ");
 		    	System.out.println("(1) Name");
 		    	System.out.println("(2) Stock Level");
 		    	System.out.println("(3) Low Level Alert");
-
+		    	
 		    	int choice = sc.nextInt();
-		    	if(choice > 0 && choice<4) {
+		    	if(choice > 0 && choice<4) {//If user selected options listed update the display list option
 		    		sortBy = choice;
 		    		break;
 		    	}
-		    	System.out.println("Invalid input. Please enter a valid option ");
+		    	System.out.println("Invalid input. Please enter a valid option "); // else print invalid option
             }
             catch (Exception e) {
-            System.out.println("Invalid input. Please enter a valid option ");
+            System.out.println("Invalid input. Please enter a valid option ");// if error request for another use input
             sc.next();
         }
         }while(true);
     }
     
+    
+    /**
+     * Displays the list of medicines in the inventory, sorted based on the selected
+     * attribute. The sorting criterion is determined by the {@code sortBy} variable,
+     * which is set in the {@code sortMedsDisplay()} method.
+     *
+     * <p>Sorting Options:</p>
+     * <ul>
+     *   <li>(1) Name: Sorts medicines alphabetically by their name.</li>
+     *   <li>(2) Stock Level: Sorts medicines by their current stock level in ascending order.</li>
+     *   <li>(3) Low Level Alert: Sorts medicines by their low stock alert threshold in ascending order.</li>
+     * </ul>
+     *
+     * <p>The table of medicines includes the following details:</p>
+     * <ul>
+     *   <li>Name: The name of the medicine.</li>
+     *   <li>Stock Level: The maximum stock level of the medicine.</li>
+     *   <li>Low Level Alert: The low stock alert threshold for the medicine.</li>
+     *   <li>Current Amount: The current stock amount of the medicine.</li>
+     * </ul>
+     *
+     * <p>Each medicine in the list is displayed in a formatted list.</p>
+     */
     private static void displayMedicine() {
+    	//based on the sortBy variable determine which way to sort the medicine list medList
     	switch(sortBy) {
-    		case 1:
+    		case 1: // sort by name
     			Collections.sort(medList, Comparator.comparing(medicine->medicine.getName().toLowerCase()));
     			break;
-    		case 2:
+    		case 2: // sort by Current amount of medicine
     			Collections.sort(medList, Comparator.comparing(medicine->medicine.getCurrentAmount()));
     			break;
-    		case 3:
+    		case 3: // sort by their low level stock amount
     			Collections.sort(medList, Comparator.comparing(medicine->medicine.getLowLvlStockAmt()));
     			break;
     		default:
     			break;
     	}
+    	//Print the header for the lists
     	System.out.printf("%-20s%-15s%-20s%-20s\n","Name","Stock Level","Low Level Alert","Current Amount");
-
+    	// for every medicine in medlist print out their name, amount to stock to, low level alert and current amount
     	for(Medicine medicine:medList) {
         	System.out.printf("%-20s%-15s%-20s%-20s\n",medicine.getName(),medicine.getStockAmt(),medicine.getLowLvlStockAmt(),medicine.getCurrentAmount());
         	
     	}
     }
     
+    /**
+     * Displays a menu to add a new medicine to the inventory. The method collects
+     * details about the medicine such as its name, stock level, low-level alert threshold,
+     * and current amount. The user is given the opportunity to confirm or edit the details
+     * before saving the medicine to the inventory.
+     *
+     * <p>Menu options for editing details:</p>
+     * <ul>
+     *   <li>(1) Confirm: Save the entered medicine details to the inventory.</li>
+     *   <li>(2) Edit Name: Modify the name of the medicine.</li>
+     *   <li>(3) Edit Stock Level: Modify the maximum stock level.</li>
+     *   <li>(4) Edit Low Level Alert: Modify the low-level alert threshold.</li>
+     *   <li>(5) Edit Current Amount: Modify the current stock amount.</li>
+     * </ul>
+     *
+     * <p>After confirmation, the new medicine is saved to the CSV file using
+     * {@code csvUtils.saveMedToCSV()}.</p>
+     */
     private static void addMedDisplay() {
     	String name = "";
     	int stockAmt = 0;
@@ -515,11 +737,12 @@ public class AdministratorController {
     	int choice = 0;
     	do{
             try {
+            	//based on the user's choice, request input for different Medicine's attribute
             	switch(choice) {
-            		case 0:
+            		case 0:// starting case, input all details
                     	System.out.println("Please enter the Medicine's name: ");
                     	name = sc.nextLine();
-                    	System.out.println("Please enter the Medicine's Stock Level: ");
+                    	System.out.println("Please enter the Medicine's Level to stock to: ");
                     	stockAmt = sc.nextInt();
                     	sc.nextLine();
                     	System.out.println("Please enter the Medicine's Low Level Alert: ");
@@ -528,48 +751,53 @@ public class AdministratorController {
                     	System.out.println("Please enter the Medicine's Current Amount: ");
                     	currentAmt = sc.nextInt();
                     	sc.nextLine();
-                    	choice= 99;
+                    	choice= 99; // set choice to done case
                     	break;
-            		case 1:
+            		case 1: // dont want to edit so break
             			break;
-            		case 2:
+            			
+            		case 2:// want to edit medicine name 
             			System.out.println("Please enter the Medicine's name: ");
                     	name = sc.nextLine();
-                    	choice = 99;
+                    	choice = 99; // set choice to done case
                     	break;
-            		case 3:
-            			System.out.println("Please enter the Medicine's Stock Level: ");
+                    	
+            		case 3://want to edit stock level the amount to stock to
+            			System.out.println("Please enter the Medicine's Level to stock to: ");
                     	stockAmt = sc.nextInt();
                     	sc.nextLine();
-                    	choice= 99;
+                    	choice= 99;// set choice to done case
                     	break;
-            		case 4:
+                    	
+            		case 4://want to edit Low level alert
             			System.out.println("Please enter the Medicine's Low Level Alert: ");
                     	lowlvl = sc.nextInt();
                     	sc.nextLine();
-                    	choice = 99;
+                    	choice = 99;// set choice to done case
                     	break;
-            		case 5:
+                    	
+            		case 5:// want to edit current amount
             			System.out.println("Please enter the Medicine's Current Amount: ");
             			currentAmt = sc.nextInt();
                     	sc.nextLine();
-                    	choice= 99;
+                    	choice= 99;// set choice to done case
                     	break;
-            		case 99:
+                    	
+            		case 99://Done case prompt user for confirmation or if they want to re-edit everything
             			System.out.println("Please confirm the Medicine's details:");
                     	System.out.println(name + " " + String.valueOf(stockAmt) + " " + String.valueOf(lowlvl)+ " " + String.valueOf(currentAmt));
                     	System.out.println("(1) Confirm (2) Edit name (3) Edit Stock Level (4) Edit Low Level Alert (5) Edit Current Amount");
                     	choice = sc.nextInt();
                     	sc.nextLine();
                     	break;
-                    default:
+                    default:// default case invalid option try again
                     	System.out.println("Invalid Option Please choose one of the options: ");
                     	choice = sc.nextInt();
                     	
             	}
             	
             	if(choice ==1)
-            		break;
+            		break; // if User confirmed break the while loop
             }
             catch (Exception e) {
                     System.out.println("Invalid input. Please enter the correct values ");
@@ -577,22 +805,48 @@ public class AdministratorController {
             	}
             	
             }while(true);
+    	//create new medicine obj called med
     	Medicine med = new Medicine(name,stockAmt,lowlvl,currentAmt);
+    	// add the new medicine object to the CSV
     	csvUtils.saveMedToCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv", med);
 		System.out.println("Medicine Successfully added");
     }
     
+    /**
+     * Displays a prompt to remove a medicine from the inventory. The user is asked to
+     * provide the name of the medicine to be removed. If the medicine exists in the list,
+     * the user is prompted to confirm the removal. If confirmed, the medicine is deleted
+     * from the inventory CSV file.
+     *
+     * <p>Sequence of method:</p>
+     * <ol>
+     *   <li>Prompt the user to enter the name of the medicine to remove.</li>
+     *   <li>Check if the entered name matches any medicine in the list.</li>
+     *   <li>If a match is found, display the medicine details and ask for confirmation:
+     *       <ul>
+     *           <li>(1) Yes: Remove the medicine.</li>
+     *           <li>(2) No: Cancel the operation.</li>
+     *       </ul>
+     *   </li>
+     *   <li>Update the CSV file if the medicine is removed.</li>
+     * </ol>
+     */
     private static void removeMedDisplay() {
     	int choice =0;
+    	//Prompt user for the name of medicine to remove
     	System.out.println("Please enter the Medicine Name you would like to remove: ");
     	String removeName = sc.nextLine();
+    	//For every medicine in medicine List
     	for(Medicine med:medList) {
+    		//if the medicine name the user entered is found 
     		if(med.getName().equals(removeName)) {
+    			//confirm the medicine with the user
     			System.out.println(String.format("Would you like to remove %s %s from the Medicine List",med.getName(),med.getCurrentAmount()));
     			System.out.println("(1) Yes (2) No");
     			choice = sc.nextInt();
     			sc.nextLine();
     			if(choice == 1) {
+    				//if user is sure remove the medicine
     				csvUtils.removeMedInCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv",med);
         			break;
     			}
@@ -601,33 +855,55 @@ public class AdministratorController {
     	
     }
     
+    /**
+     * Allows the user to edit the details of an existing medicine in the inventory.
+     * The method prompts the user to enter the name of the medicine to edit, verifies
+     * its existence in the list, and provides a menu of editable attributes:
+     * Name, Stock Level, and Low Level Alert.
+     *
+     * <p>Choice for the user to edit:</p>
+     * <ul>
+     *   <li>(1) Edit Name: Update the name of the medicine.</li>
+     *   <li>(2) Edit Stock Level: Update the maximum stock level of the medicine.</li>
+     *   <li>(3) Edit Low Level Alert: Update the low stock alert threshold for the medicine.</li>
+     *   <li>(4) Don't edit: Exit without making any changes.</li>
+     * </ul>
+     *
+     * <p>After editing, the updated details are saved to the CSV file using 
+     * {@code csvUtils.updateMedInCSV()}.</p>
+     */
     private static void editMedDisplay() {
     	int choice =0;
     	String input = "";
+    	//Prompt user for name of medicine that they want to edit
     	System.out.println("Please enter the Medicine name you would like to edit: ");
     	String removeName = sc.nextLine();
+    	// for every medicine in the medicine list
     	for(Medicine med:medList) {
+    		//if the name the user entered is found
     		if(med.getName().equals(removeName)) {
     			do {
     				try {
+    					//Prompt the user for which details they want to edit
     					System.out.println(String.format("What would you like to edit from %s %s",med.getName(),med.getStockAmt()));
     	    			System.out.println("(1) Name \n(2) Stock Level \n(3) Low Level Alert \n(4) Don't edit");
     	    			choice = sc.nextInt();
     	    			sc.nextLine();
+    	    			
     					switch(choice) {
-        					case 1:
+        					case 1: // User selected to edit medicine name
         						System.out.println("Please enter the new Name:");
         						input = sc.nextLine();
         						med.setName(input);
         						break;
-        					case 2:
-        						System.out.println("Please enter the new Stock Level:");
+        					case 2:// User selected to edit medicine stock to level
+        						System.out.println("Please enter the new Level to stock to:");
         						int stockAmt = sc.nextInt();
         						sc.nextLine();
         						med.setStockAmt(stockAmt);
         						break;
-        					case 3:
-        						System.out.println("Please enter the new Role:");
+        					case 3:// user selected to edit Low Level Alert
+        						System.out.println("Please enter the new Low Level Alert:");
         						int lowstockAmt = sc.nextInt();
         						sc.nextLine();
         						med.setLowLvlStockAmt(lowstockAmt);
@@ -638,9 +914,11 @@ public class AdministratorController {
         						System.out.println("Invalid input. Please enter a valid option");
     					}
     					if(choice>0 && choice <4) {
+    						//if user updated any of the details update the medicine csv file
     						csvUtils.updateMedInCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv",med);
     						break;
     					}else if(choice == 4){
+    						// if they dont want to edit, leave the menu
     						break;
     					}
     				}catch (Exception e) {
@@ -652,16 +930,37 @@ public class AdministratorController {
     	}
     }
     
+
+    /**
+     * Manages the replenishment requests for medicines. This method retrieves the
+     * replenishment request data and the medicine inventory data from their respective
+     * CSV files, displays the current list of pending requests, and provides options
+     * to approve requests or return to the Administrator menu.
+     *
+     * <p>Options for user:</p>
+     * <ul>
+     *   <li>(1) Approve Requests: Navigate to the approval menu to process pending requests.</li>
+     *   <li>(2) Return to Admin Menu: Exit the replenishment request management and return to the main Administrator menu.</li>
+     * </ul>
+     *
+     * <p>Sequence of the program:</p>
+     * <ol>
+     *   <li>Clearing and reinitializing the replenishment request list and the medicine inventory list.</li>
+     *   <li>Displaying the current list of replenishment requests using {@code displayRepReq()}.</li>
+     *   <li>Prompting the user to choose an action based on the menu options.</li>
+     * </ol>
+     *
+     * @throws Exception if an error occurs during menu execution or invalid input is provided.
+     */
     private static void manageRepReq() {
     	int choice = 0;
         do{
             try {
             	repReqList.clear();
             	medList.clear();
-            	// readData("src\\data\\ReplenishRequest_List.csv",4);
             	repReqList = csvUtils.ReadReplenishRequestCSV(MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv");
-            	//readData("src\\data\\Medicine_List.csv",3);
             	medList = csvUtils.MedicineDataInit(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv");
+            	//display the replenishment requests
             	displayRepReq();
                 System.out.println("========================================");
                 System.out.println("(1) Approve Requests");
@@ -671,10 +970,11 @@ public class AdministratorController {
                 sc.nextLine();
                 switch (choice) {
                     case 1:
-                    	//Display staff list sorted by choice
+                    	//Display pending request list sorted by choice
                         approveReqDisplay();
                         break;
                     case 2:
+                    	// leave back to admin page
                     	AdminPage();
                     	break;
                     default:
@@ -689,11 +989,34 @@ public class AdministratorController {
         }while(true);
     }
     
+    /**
+     * Displays the list of replenishment requests along with relevant details from the
+     * medicine inventory. For each replenishment request, the method cross-references
+     * the medicine inventory to display the current stock amount and the low-level alert
+     * threshold.
+     *
+     * <p>The displayed table includes the following columns:</p>
+     * <ul>
+     *   <li>ID: The unique ID of the replenishment request.</li>
+     *   <li>Medicine Name: The name of the medicine for the request.</li>
+     *   <li>Status: The current status of the request (e.g., PENDING, COMPLETED).</li>
+     *   <li>Current Amount: The current stock amount of the medicine in inventory.</li>
+     *   <li>Low Level Alert: The low stock alert threshold for the medicine.</li>
+     * </ul>
+     *
+     * <p>Only medicines that exist in both the replenishment request list and the inventory
+     * are displayed.</p>
+     */
     private static void displayRepReq() {
+    	//print the headers for details of replenishment request
     	System.out.printf("%-5s%-20s%-15s%-16s%-18s\n","ID","Medicine Name","Status", "Current Amount" , "Low Level Alert");
+    	//for every replenishment request in the list
     	for(ReplenishmentRequest req:repReqList) {
+    		//for every medicine in medicinelist
     		for(Medicine med:medList) {
+    			//if the medicine name is equal to the replenishment request name
     			if(med.getName().equals(req.getName())) {
+    				//display the replenishment request id, medicine name, replenishment status, current amount of the medicine, and the low level stock amount
     				System.out.printf("%-5s%-20s%-15s%-16s%-18s\n",req.getRequestID(),req.getName(),req.getReplenishmentStatus(),med.getCurrentAmount(),med.getLowLvlStockAmt());
     			}
     		}
@@ -701,31 +1024,70 @@ public class AdministratorController {
     	}
     }
     
+    /**
+     * Displays and processes pending replenishment requests. For each pending request,
+     * the method cross-references the medicine inventory and allows the user to approve,
+     * deny, or postpone the request. Approved requests update the current stock amount
+     * in the inventory, while denied requests update the request's status.
+     *
+     * <p>The displayed table includes the following details:</p>
+     * <ul>
+     *   <li>ID: The unique ID of the replenishment request.</li>
+     *   <li>Medicine Name: The name of the medicine for the request.</li>
+     *   <li>Status: The current status of the request (e.g., PENDING, COMPLETED).</li>
+     *   <li>Current Amount: The current stock amount of the medicine in inventory.</li>
+     *   <li>Low Level Alert: The low stock alert threshold for the medicine.</li>
+     *   <li>Total after Replenishment: The stock amount after the replenishment request is fulfilled.</li>
+     * </ul>
+     *
+     * <p>User Options:</p>
+     * <ul>
+     *   <li>(1) Approve: Marks the request as COMPLETED and updates the current stock amount to the maximum stock level.</li>
+     *   <li>(2) Deny/Cancel: Marks the request as CANCELLED and updates the request status in the system.</li>
+     *   <li>(3) Maybe Later: Skips the request without making changes.</li>
+     * </ul>
+     *
+     * <p>All changes to requests and inventory are saved to their respective CSV files.</p>
+     */
     private static void approveReqDisplay() {
     	int choice = 0;
+    	//Print out the headers for the request
     	System.out.printf("%-5s%-20s%-15s%-16s%-18s%-18s\n","ID","Medicine Name","Status", "Current Amount" , "Low Level Alert", "Total after Replenishment");
+    	//for every request in replenishment request list
     	for(ReplenishmentRequest req:repReqList) {
+    		//for every medicine in medicinelist
     		for(Medicine med:medList) {
+    			//if the request name is the same as the medicine name and the replenishment request status is PENDING
     			if(med.getName().equals(req.getName()) && req.getReplenishmentStatus().equals(ReplenishmentRequest.ReplenishmentStatus.PENDING)) {
+    				//Prompt the user if they want to approve, deny or decide later for the request
     				System.out.printf("%-5s%-20s%-15s%-16s%-18s%-18s\n",req.getRequestID(),req.getName(),req.getReplenishmentStatus(),med.getCurrentAmount(),med.getLowLvlStockAmt(),med.getStockAmt());
     				System.out.println("(1) Approve (2) Deny/Cancel (3) Maybe Later");
     				choice = sc.nextInt();
     				sc.nextLine();
     				switch(choice) {
-    					case 1: 
+    					case 1: //if user approves the request
+    						// set replnishmetn status to completed
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.COMPLETED);
+    						//set the current amount to the amount to stock level
     						med.setCurrentAmt(med.getStockAmt());
+    						//update the replenishment request in csv
     						csvUtils.updateRepReqInCSV(MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv", req);
+    						//update the medicine in csv
     						csvUtils.updateMedInCSV(MainMenuController.CSV_FILE_PATH+"Medicine_List.csv", med);
     						System.out.println("Stock for " + med.getName()+" has been replenished to "+ med.getCurrentAmount() + "/" + med.getStockAmt());
     						break;
     					case 2:
+    						//user chose to cancel replenishment request
+    						//set request to CANCELLED
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.CANCELLED);
+    						//update replenishment request status in csv
     						csvUtils.updateRepReqInCSV(MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv", req);
     						System.out.println("Replenishment Request for "+ med.getName() +" has been denied");
     						break;
     					case 3:
+    						//user chose to decide next time so continue on with the list
     						continue;
+    						
     				}
     				
     			}
