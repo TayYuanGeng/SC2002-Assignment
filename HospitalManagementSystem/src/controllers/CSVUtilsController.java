@@ -733,7 +733,6 @@ public class CSVUtilsController implements CSVUtilsInterface {
 
     @Override
     public Boolean CheckPatientApptDoctorCSV(String filePath, String patientID, String doctorID) { 
-        ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
         String line;
         String csvSplitBy = ",";
         boolean isFirstLine = true;
@@ -746,7 +745,8 @@ public class CSVUtilsController implements CSVUtilsInterface {
                 }
                 // Use comma as separator
                 String[] values = line.split(csvSplitBy);
-                if (doctorID == values[1] && values[2] == patientID) {
+
+                if (doctorID.equals(values[1]) && patientID.equals(values[2])) {
                     return true;
                 }
             }
