@@ -60,23 +60,24 @@ public class DoctorController {
                         case 2:
                             System.out.println("Enter PatientID: ");
                             String patientID2 = sc.nextLine();
-                            System.out.println("Enter diagnosis: ");
-                            String diagnosis = sc.nextLine();
-                            System.out.println("Enter treatment: ");
-                            String treatment = sc.nextLine();
                             // Check if Patient is assigned to Doctor
                             Boolean isAssigned1 = csvUtils.CheckPatientApptDoctorCSV(APPT_REQUEST_CSV_FILE, patientID2, docter.getID());
                             if (isAssigned1) {
+                                Patient patientRetrieved = GetPatient(patients, patientID2);
+                                System.out.println("Enter diagnosis: ");
+                                String diagnosis = sc.nextLine();
+                                System.out.println("Enter treatment: ");
+                                String treatment = sc.nextLine();
+                                UpdateDiagnosisAndTreatment(patientRetrieved, diagnosis, treatment);
+                            }
+                            else {
                                 Patient patientRetrieved = GetPatient(patients, patientID2);
                                 if (patientRetrieved == null) { // Cannot Find patient inn CSV
                                     System.out.println("Patient does not exist!");
                                 }
                                 else {
-                                    UpdateDiagnosisAndTreatment(patientRetrieved, diagnosis, treatment);
+                                    System.out.println("Patient not assigned to you!");
                                 }
-                            }
-                            else {
-                                System.out.println("Patient not assigned to you!");
                             }
                             break;
                         case 3:
