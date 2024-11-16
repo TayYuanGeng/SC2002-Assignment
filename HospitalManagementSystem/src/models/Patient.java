@@ -6,11 +6,34 @@ import interfaces.*;
  * functionality for managing personal information and interacting with medical records.
  */
 public class Patient extends Account {
+    /**
+     * The date of birth of the patient.
+     */
     private String DOB;
+
+    /**
+     * The gender of the patient.
+     */
     private String gender;
+
+    /**
+     * The blood type of the patient.
+     */
     private String bloodType;
+
+    /**
+     * The email address of the patient.
+     */
     private String email;
+
+    /**
+     * The phone number of the patient.
+     */
     private int phoneNumber;
+
+    /**
+     * The medical record service for interacting with medical records.
+     */
     private IMedicalRecordService recordService;
 
 	/**

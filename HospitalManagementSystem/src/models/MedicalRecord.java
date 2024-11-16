@@ -7,14 +7,45 @@ import java.util.HashMap;
  * a history of diagnoses and treatments.
  */
 public class MedicalRecord {
+    /**
+     * The unique identifier for the patient.
+     */
     private String patientID;
+
+    /**
+     * The name of the patient.
+     */
     private String name;
+
+    /**
+     * The date of birth of the patient in the format YYYY-MM-DD.
+     */
     private String dateofBirth;
+
+    /**
+     * The gender of the patient (e.g., Male, Female, Other).
+     */
     private String gender;
+
+    /**
+     * The email address of the patient.
+     */
     private String email;
+
+    /**
+     * The phone number of the patient.
+     */
     private String phone;
+
+    /**
+     * The blood type of the patient (e.g., A+, B-, O+).
+     */
     private String bloodType;
-    private Map<String,String> diagnosisAndTreatment;
+
+    /**
+     * A map containing diagnoses as keys and their corresponding treatments as values.
+     */
+    private Map<String, String> diagnosisAndTreatment;
     
 
     /**
