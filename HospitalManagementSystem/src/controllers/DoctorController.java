@@ -23,11 +23,30 @@ import models.*;
  * 8. Logout
  */
 public class DoctorController {           
+    /**
+     * Represents the currently logged-in doctor interacting with the system.
+     */
     static Doctor docter;
-    static ArrayList<Patient> patients = new ArrayList<Patient>();
-    static final String APPT_REQUEST_CSV_FILE = MainMenuController.CSV_FILE_PATH+"ApptRequest.csv";
-    static final String PATIENT_CSV_FILE = MainMenuController.CSV_FILE_PATH+"Patient_List.csv";
 
+    /**
+     * A list of all patients in the system, populated from the patient CSV file.
+     */
+    static ArrayList<Patient> patients = new ArrayList<Patient>();
+
+    /**
+     * The file path to the CSV file storing appointment requests.
+     */
+    static final String APPT_REQUEST_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptRequest.csv";
+
+    /**
+     * The file path to the CSV file storing the list of patients.
+     */
+    static final String PATIENT_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Patient_List.csv";
+
+    /**
+     * A utility class for handling CSV file operations, such as reading patient data
+     * or verifying assignments between doctors and patients.
+     */
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
     /**
      * Starts the doctor interface, displaying a welcome message and 
