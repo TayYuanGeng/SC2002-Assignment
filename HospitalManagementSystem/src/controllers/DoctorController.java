@@ -10,6 +10,18 @@ import java.util.Scanner;
 import interfaces.CSVUtilsInterface;
 import models.*;
 
+/**
+ * The DoctorController class manages the interaction between a logged-in Doctor
+ * and the system, comprising the logic for handling the following features available to the Doctor:
+ * 1. View Patient Medical Records
+ * 2. Update Patient Medical Records
+ * 3. View Personal Schedule
+ * 4. Set Availability for Appointments
+ * 5. Accept or Decline Appointment Requests
+ * 6. View Upcoming Appointments
+ * 7. Record Appointment Outcome
+ * 8. Logout
+ */
 public class DoctorController {           
     static Doctor docter;
     static ArrayList<Patient> patients = new ArrayList<Patient>();
@@ -17,7 +29,13 @@ public class DoctorController {
     static final String PATIENT_CSV_FILE = MainMenuController.CSV_FILE_PATH+"Patient_List.csv";
 
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
-
+    /**
+     * Starts the doctor interface, displaying a welcome message and 
+     * displaying the doctor menu.
+     *
+     * @param loggedInUser The account of the logged-in user (doctor).
+     * @throws Exception If an error occurs while loading or interacting with doctor data.
+     */
     public static void main(Account loggedInUser) throws Exception {
             // Get patient list from CSV
             patients = csvUtils.PatientDataInit(PATIENT_CSV_FILE, patients);
@@ -125,35 +143,76 @@ public class DoctorController {
             } while(true);
     }
 
+    /**
+     * Displays medical record of specific patient.
+     *
+     * @param p Patient object of which to view its medical record.
+     */
     public static void ViewPatientMedicalRecord(Patient p) {
         p.getMedicalRecordService().getMedicalRecord(p.getID());
     }
 
+    /**
+     * Updates diagnosis and treatment of specific patient.
+     *
+     * @param p Patient object of which to update its diagnosis and treatment.
+     * @param diagnosis Diagnosis text.
+     * @param treatment Treatment text.
+     */
     public static void UpdateDiagnosisAndTreatment(Patient p, String diagnosis, String treatment) {
         p.getMedicalRecordService().updateDiagnosisandTreatment(p.getID(), diagnosis, treatment);
     }
-
+    
+    /**
+     * Displays all unavailable time slots.
+     */
     public static void viewSchedule() {
         AppointmentController.showDoctorSchedule(docter.getID());
     }
-
+    /**
+     * Add Unavailable DateTime.
+     * 
+     * @param date DateTime to set as unavailable.
+     */
     public static void setAvailability(String date) {
         AppointmentController.updateDoctorUnavailability(date, docter.getID());
     }
 
+    /**
+     * Accecpt or Decline specific appointment of a patient.
+     * 
+     * @param date DateTime of Appointment.
+     * @param patientID ID of Patient with appointment.
+     * @param response Accept or Decline appointment.
+     */
     public static void acceptDeclineAppt(String date, String patientID, boolean response) {
         AppointmentController.respondToRequest(docter.getID(), patientID, date, response);    
     }
 
+    /**
+     * Displays upcoming appointments.
+     */
     public static void ShowUpcomingAppointments() {
         AppointmentController.showUpcomingAppointment(docter.getID());
     }
 
+    /**
+     * Record application outcome of specific appointment of patient.
+     * 
+     * @param patientID ID of Patient with appointment.
+     * @param date DateTime of Appointment.
+     */
     public static void RecordAppointmentOutcome(String patientID, String date) {
         AppointmentController.completeAppointment(docter.getID(), patientID, date);
     }
 
-    //Helper
+    /**
+     * Get specific patient object.
+     * 
+     * @param patientList List of patients.
+     * @param patientID ID of specific Patient.
+     * @return Retrieved Patient object based on patientID.
+     */
     public static Patient GetPatient(ArrayList<Patient> patientList, String patientID) {
         for (Patient p: patientList) {
             if (patientID.equals(p.getID())) {
