@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"HospitalManagementSystem","l":"models"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"HospitalManagementSystem","l":"controllers"},{"m":"HospitalManagementSystem","l":"interfaces"},{"m":"HospitalManagementSystem","l":"models"}];updateSearchResults();

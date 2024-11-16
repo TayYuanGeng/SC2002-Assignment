@@ -1,2 +1,4 @@
 module:HospitalManagementSystem
+controllers
+interfaces
 models

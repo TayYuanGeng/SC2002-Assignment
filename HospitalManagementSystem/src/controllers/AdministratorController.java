@@ -318,7 +318,7 @@ public class AdministratorController {
                     	break;
                     default:
                     	System.out.println("Invalid Option Please choose one of the options: ");
-                    	choice = sc.nextInt();
+                    	
                     	
             	}
             	
@@ -792,7 +792,7 @@ public class AdministratorController {
                     	break;
                     default:// default case invalid option try again
                     	System.out.println("Invalid Option Please choose one of the options: ");
-                    	choice = sc.nextInt();
+                    	sc.nextLine();
                     	
             	}
             	
