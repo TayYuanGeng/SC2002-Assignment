@@ -13,19 +13,51 @@ import models.Appointment.AppointmentStatus;
  * as well as managing unavailability and outcomes.
  */
 public class AppointmentController {
-    static CSVUtilsInterface csvUtils = new CSVUtilsController();
-    private static final String UNAVAIL_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Unavailability.csv";
-    private static final String APPTREQ_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptRequest.csv";
-    private static final String APPTOUTCOME_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv";
-    private static Map<String, String> patientIdToNameMap = csvUtils.DataInitPatient(MainMenuController.CSV_FILE_PATH + "Patient_List.csv");
-    private static Map<String, String> doctorIdToNameMap = csvUtils.DataInitStaff(MainMenuController.CSV_FILE_PATH + "Staff_List.csv");
-    private static List<Appointment> appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
-    private static List<Unavailability> unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
-    private static List<AppOutcome> appOutcomes = csvUtils.DataInitApptOutcome(MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv");
 
-    public static void main(String[] args){
-        completeAppointment("D001", "P1002", "12-03-2025 13:00");
-    }
+    /**
+     * Interface for handling CSV operations such as reading and writing data.
+     */
+    static CSVUtilsInterface csvUtils = new CSVUtilsController();
+
+    /**
+     * File path for the unavailability data (doctor's unavailability schedule).
+     */
+    private static final String UNAVAIL_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Unavailability.csv";
+
+    /**
+     * File path for the appointment request data.
+     */
+    private static final String APPTREQ_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptRequest.csv";
+
+    /**
+     * File path for the appointment outcome data.
+     */
+    private static final String APPTOUTCOME_CSV_FILE = MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv";
+
+    /**
+     * Map to store patient IDs and their corresponding names, initialized from the Patient_List CSV.
+     */
+    private static Map<String, String> patientIdToNameMap = csvUtils.DataInitPatient(MainMenuController.CSV_FILE_PATH + "Patient_List.csv");
+    
+    /**
+     * Map to store doctor IDs and their corresponding names, initialized from the Staff_List CSV.
+     */
+    private static Map<String, String> doctorIdToNameMap = csvUtils.DataInitStaff(MainMenuController.CSV_FILE_PATH + "Staff_List.csv");
+    
+    /**
+     * List of appointment requests, initialized from the ApptRequest CSV.
+     */
+    private static List<Appointment> appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
+    
+    /**
+     * List of unavailability records, initialized from the Unavailability CSV.
+     */
+    private static List<Unavailability> unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
+    
+    /**
+     * List of appointment outcomes, initialized from the ApptOutcome CSV.
+     */
+    private static List<AppOutcome> appOutcomes = csvUtils.DataInitApptOutcome(MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv");
     
     /**
      * Updates the doctor's unavailability for a specified date and time.

@@ -7,11 +7,35 @@ import java.util.List;
  * Represents the outcome of an appointment.
  */
 public class AppOutcome {
+
+    /**
+     * The date and time of the appointment outcome.
+     */
     private String dateTime;
+
+    /**
+     * The ID of the patient associated with the appointment outcome.
+     */
     private String patientID;
+
+    /**
+     * The type of service provided during the appointment (e.g., consultation, procedure).
+     */
     private String serviceType;
+
+    /**
+     * A list of medications prescribed during the appointment.
+     */
     private List<String> prescribedMedications = new ArrayList<>();
+
+    /**
+     * Notes from the consultation, providing additional details about the appointment.
+     */
     private String consultationNotes;
+
+    /**
+     * The status of the prescription, defaults to "Pending".
+     */
     private String prescriptionStatus = "Pending";
 
     /**

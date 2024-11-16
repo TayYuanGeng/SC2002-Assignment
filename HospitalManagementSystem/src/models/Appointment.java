@@ -7,13 +7,36 @@ import java.time.format.DateTimeFormatter;
  * Represents an appointment in the hospital management system.
  */
 public class Appointment {
+    
+    /**
+     * The unique ID of the patient associated with this appointment.
+     */
     private String patientID;
+
+    /**
+     * The unique ID of the doctor associated with this appointment.
+     */
     private String doctorID;
+
+    /**
+     * The current status of the appointment.
+     * Can be one of the following: PENDING, CONFIRMED, CANCELLED, COMPLETED.
+     */
     private AppointmentStatus appointmentStatus;
+
+    /**
+     * The outcome details of the appointment, if available.
+     */
     private AppOutcome outcome;
+
+    /**
+     * The date and time of the appointment in "dd-MM-yyyy HH:mm" format.
+     */
     private String appointmentDateTime;
+    
     /**
      * Formatter for date and time in the format "dd-MM-yyyy HH:mm".
+     * Used to parse and format the appointment date and time.
      */
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
@@ -21,10 +44,10 @@ public class Appointment {
      * Enum representing the status of an appointment.
      */
     public enum AppointmentStatus {
-        PENDING, /**< Appointment is pending confirmation. */
-        CONFIRMED, /**< Appointment is confirmed. */
-        CANCELLED, /**< Appointment is cancelled. */
-        COMPLETED, /**< Appointment is completed. */
+        PENDING, /** Appointment is pending confirmation. */
+        CONFIRMED, /** Appointment is confirmed. */
+        CANCELLED, /** Appointment is cancelled. */
+        COMPLETED, /** Appointment is completed. */
     }
 
     /**
