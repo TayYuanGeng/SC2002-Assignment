@@ -6,8 +6,24 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import models.*;
 
+/**
+ * The PharmacistController class manages the interaction between a logged-in patient
+ * and the system, comprising the logic for handling the following features available to the pharmacist:
+ * 1. View Appointment Outcome
+ * 2. Update Prescription Status
+ * 3. View Medicine Inventory
+ * 4. Submit Replenishment Request
+ * 5. Logout
+ */
 public class PharmacistController {
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
+     /**
+     * Starts the pharmacist interface, displaying a welcome message and 
+     * displaying the pharmacist menu.
+     *
+     * @param loggedInUser The account of the logged-in user (pharmacist).
+     * @throws Exception If an error occurs while loading or interacting with pharmacist data.
+     */
     public static void main(Account loggedInUser) throws Exception {
         final String REPLENISH_REQUEST_CSV_FILE = MainMenuController.CSV_FILE_PATH+"ReplenishRequest_List.csv";
         final String MEDICINE_CSV_FILE = MainMenuController.CSV_FILE_PATH+"Medicine_List.csv";
@@ -74,14 +90,29 @@ public class PharmacistController {
         } while(true);
     }
 
+    /**
+     * Calls method in AppointmentController to display appointment outcome of specific patient.
+     *
+     * @param patientID ID of Patient to view appointment outcome of.
+     */
     public static void ViewAppointmentOutcome(String patientID) {
         AppointmentController.readApptOutcome(patientID);
     }
 
+    /**
+     * Calls method in AppointmentController to update prescription status to dispensed of specific patient.
+     *
+     * @param patientID ID of Patient to dispense medication.
+     */
     public static void DispensePrescription(String patientID) {
         AppointmentController.setPrescriptionStatus(patientID);
     }
 
+    /**
+     * Displays Name, Current Stock, Initial Stock, Low Level Stock of Medicine available.
+     *
+     * @param medicineList List of medicine available.
+     */
     public static void ViewMedicalInventory(ArrayList<Medicine> medicineList) {
         if (medicineList.size() != 0) {
             // Header
@@ -100,6 +131,12 @@ public class PharmacistController {
         }
     }
 
+    /**
+     * Calls method in csvUtils to save replenishment request to be submitted.
+     *
+     * @param filepath File path where replenish requests reside.
+     * @param r Replenishment request to be submitted.
+     */
     public static void SubmitReplenishmentRequest(String filepath, ReplenishmentRequest r) {
         if (csvUtils.saveReplenishReqToCSV(filepath, r)) {
             System.out.println("Replenish request submitted!");
