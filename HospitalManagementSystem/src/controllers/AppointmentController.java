@@ -7,6 +7,11 @@ import java.util.*;
 import models.*;
 import models.Appointment.AppointmentStatus;
 
+/**
+ * Controller class to manage appointments, doctor unavailability, and appointment outcomes.
+ * This class provides methods for scheduling, responding to, and completing appointments,
+ * as well as managing unavailability and outcomes.
+ */
 public class AppointmentController {
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
     private static final String UNAVAIL_CSV_FILE = MainMenuController.CSV_FILE_PATH + "Unavailability.csv";
@@ -22,7 +27,12 @@ public class AppointmentController {
         completeAppointment("D001", "P1002", "12-03-2025 13:00");
     }
     
-    // Update doctor unavailability in CSV (Doctor)
+    /**
+     * Updates the doctor's unavailability for a specified date and time.
+     *
+     * @param dateTime the date and time of unavailability in the format "dd-MM-yyyy HH:mm"
+     * @param doctorID the ID of the doctor whose unavailability is being updated
+     */
     public static void updateDoctorUnavailability(String dateTime, String doctorID) {
         unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         for (Unavailability unavail : unavailabilities){
@@ -38,7 +48,14 @@ public class AppointmentController {
         }
     }
 
-    // Show doctor unavailability in CSV (Patient)
+    /**
+     * Displays the doctor's unavailability based on filters for doctor and/or date.
+     * Optionally, shows available time slots for a specific date and doctor.
+     *
+     * @param doctorFilter   filter to match a specific doctor's name (case-insensitive)
+     * @param dateFilter     filter to match a specific date in the format "dd-MM-yyyy"
+     * @param checkingAvail  true if showing available slots; false if showing unavailable slots
+     */
     public static void showDoctorUnavailability(String doctorFilter, String dateFilter, boolean checkingAvail) {
         unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         if (doctorFilter.isEmpty() && !dateFilter.isEmpty()) {
@@ -99,7 +116,11 @@ public class AppointmentController {
         }
     }
 
-    // Show doctor unavailability in CSV (Doctor)
+    /**
+     * Displays the schedule of unavailable time slots for a specific doctor.
+     *
+     * @param doctorID the ID of the doctor whose schedule is being shown
+     */
     public static void showDoctorSchedule(String doctorID){
         System.out.println("Time slots you are not available: ");
         boolean hasUnavailability = false;
@@ -117,7 +138,13 @@ public class AppointmentController {
         }
     }
 
-    // Show appointment requests from CSV (Doctor)
+    /**
+     * Retrieves and displays appointment requests for a specified doctor.
+     * Only appointments with a status of PENDING are shown.
+     *
+     * @param doctorID the ID of the doctor for whom appointment requests are being retrieved
+     * @return a list of pending appointments for the doctor
+     */
     public static List<Appointment> showAppointmentRequests(String doctorID) {
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         System.out.println("Pending bookings from patient:");
@@ -137,7 +164,14 @@ public class AppointmentController {
         return pendingAppointments;
     }
 
-    // Accepts or declines a request (Doctor)
+    /**
+     * Responds to an appointment request by accepting or declining it.
+     *
+     * @param doctorID  the ID of the doctor responding to the request
+     * @param patientID the ID of the patient making the request
+     * @param dateTime  the requested date and time of the appointment in "dd-MM-yyyy HH:mm"
+     * @param accept    true to accept the request, false to decline
+     */
     public static void respondToRequest(String doctorID, String patientID, String dateTime, boolean accept) {
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
@@ -181,7 +215,14 @@ public class AppointmentController {
         System.out.println("No matching appointment found.");
     }
 
-    // Mark appointment as completed and update outcome (Doctor)
+    /**
+     * Marks an appointment as completed and records its outcome, including service type,
+     * consultation notes, and prescribed medications.
+     *
+     * @param doctorID  the ID of the doctor completing the appointment
+     * @param patientID the ID of the patient for whom the appointment is being completed
+     * @param dateTime  the date and time of the appointment in "dd-MM-yyyy HH:mm"
+     */
     public static void completeAppointment(String doctorID, String patientID, String dateTime){
         // Find the appointment to complete
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
@@ -243,7 +284,11 @@ public class AppointmentController {
         System.out.println("Appointment marked as completed and outcome recorded.");
     }
 
-    // Read appointment outcome
+    /**
+     * Reads and displays appointment outcomes for a specified patient.
+     *
+     * @param patientID the ID of the patient whose appointment outcomes are being retrieved
+     */
     public static void readApptOutcome(String patientID) {
         String line;
         String csvSplitBy = ",";
@@ -288,7 +333,11 @@ public class AppointmentController {
         System.out.println("No Appointment Outcome yet!");
     }    
 
-    // Show upcoming appointment from CSV (Doctor)
+    /**
+     * Displays upcoming appointments for a specific doctor.
+     * 
+     * @param doctorID The unique identifier of the doctor.
+     */
     public static void showUpcomingAppointment(String doctorID){
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         boolean hasUpcomingAppt = false;
@@ -304,7 +353,12 @@ public class AppointmentController {
         }
     }
 
-    // Cancel appointment requests in CSV (Doctor)
+    /**
+     * Cancels a confirmed appointment request for a specific doctor at a given time.
+     * 
+     * @param doctorID The unique identifier of the doctor.
+     * @param dateTime The time of the appointment to cancel.
+     */
     public static void cancelAppointmentRequests(String doctorID, String dateTime) {
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         for (Appointment appt : appointments) {
@@ -319,7 +373,13 @@ public class AppointmentController {
         csvUtils.writeToCSV(UNAVAIL_CSV_FILE, unavailabilities);
     }
 
-    // Check if slot is available for booking
+    /**
+     * Checks if a specific time slot is available for booking for a given doctor.
+     * 
+     * @param dateTime The desired appointment time.
+     * @param doctorID The unique identifier of the doctor.
+     * @return True if the slot is available, false otherwise.
+     */
     public static boolean isSlotAvailable(String dateTime, String doctorID) {
         unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
         for (Unavailability unavail : unavailabilities) {
@@ -330,7 +390,13 @@ public class AppointmentController {
         return true;
     }
 
-    // Schedule Appointment (Patient)
+    /**
+     * Schedules a new appointment for a patient with a specified doctor.
+     * 
+     * @param dateTime  The desired appointment time.
+     * @param patientID The unique identifier of the patient.
+     * @param doctorName The name of the doctor.
+     */
     public static void scheduleAppointment(String dateTime, String patientID, String doctorName){
         String doctorID = doctorIdToNameMap.entrySet()
                 .stream()
@@ -369,7 +435,13 @@ public class AppointmentController {
         }
     }
 
-    // Reschedule Appointment (Patient)
+    /**
+     * Reschedules an existing appointment to a new time.
+     * 
+     * @param patientID The unique identifier of the patient.
+     * @param dateTime  The current appointment time.
+     * @param newDateTime The new appointment time.
+     */
     public static void rescheduleAppointment(String patientID, String dateTime, String newDateTime) {
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         unavailabilities = csvUtils.DataInitUnavail(MainMenuController.CSV_FILE_PATH + "Unavailability.csv");
@@ -411,7 +483,12 @@ public class AppointmentController {
         }
     }
     
-    // Cancel Appointment (Patient)
+    /**
+     * Cancels an existing appointment for a patient at a specific time.
+     * 
+     * @param patientID The unique identifier of the patient.
+     * @param dateTime  The time of the appointment to cancel.
+     */
     public static void cancelAppointment(String patientID, String dateTime){
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         // Find the appointment to cancel
@@ -442,7 +519,11 @@ public class AppointmentController {
         System.out.println("Appointment cancelled successfully! The time slot has been made available.");
     }
 
-    // Show appointment status (Patient)
+    /**
+     * Displays all upcoming appointments for a specific patient.
+     * 
+     * @param patientID The unique identifier of the patient.
+     */
     public static void showPatientAppointment(String patientID){
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         boolean hasAppt = false;
@@ -458,7 +539,11 @@ public class AppointmentController {
         }
     }
     
-    // Update medication status dispensed (Pharmacist)
+    /**
+     * Updates the prescription status of medications for a patient whose appointment is completed.
+     * 
+     * @param patientID The unique identifier of the patient.
+     */
     public static void setPrescriptionStatus(String patientID){
         appointments = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH + "ApptRequest.csv");
         appOutcomes = csvUtils.DataInitApptOutcome(MainMenuController.CSV_FILE_PATH + "ApptOutcome.csv");
