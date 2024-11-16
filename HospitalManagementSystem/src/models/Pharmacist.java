@@ -14,7 +14,13 @@ import interfaces.CSVUtilsInterface;
  * Pharmacist class which inherits from Staff class.
  */
 public class Pharmacist extends Staff {
+	
+    /**
+     * Array List of Medicine
+     */
     private ArrayList<Medicine> medicineList = new ArrayList<Medicine>();
+    
+    /** Interface for CSV utilities to handle file operations */
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
     
     /**

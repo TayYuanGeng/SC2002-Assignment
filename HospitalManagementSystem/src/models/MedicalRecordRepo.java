@@ -8,7 +8,12 @@ import interfaces.CSVUtilsInterface;
  * Provides methods to load, save, and update medical records from a CSV file.
  */
 public class MedicalRecordRepo {
+	
+    /**
+     * String to hold the filepath of the medical record
+     */
     private String filepath;
+    /** Interface for CSV utilities to handle file operations */
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
 
     /**

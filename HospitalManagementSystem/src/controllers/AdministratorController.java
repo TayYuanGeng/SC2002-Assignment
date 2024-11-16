@@ -234,7 +234,7 @@ public class AdministratorController {
      *
      * @throws Exception if the user provides invalid input or an error occurs during execution
      */
-    private static void addStaffDisplay() {
+    private static void addStaffDisplay() throws Exception {
     	String name = "";
     	String role = "";
     	String gender = "";
@@ -361,13 +361,7 @@ public class AdministratorController {
      * Generates a unique ID for a new staff member based on their role. The ID
      * is created by checking the existing staff list, finding the highest current
      * ID for the specified role, and incrementing it.
-     *
-     * <p>ID Format:</p>
-     * <ul>
-     *   <li>Doctor: "D###" (e.g., "D001")</li>
-     *   <li>Pharmacist: "P###" (e.g., "P001")</li>
-     *   <li>Administrator: "A###" (e.g., "A001")</li>
-     * </ul>
+
      *
      * @param role the role of the staff member (e.g., "Doctor", "Pharmacist", "Administrator")
      * @return a unique ID in the format corresponding to the role, or an empty string if the role is invalid
@@ -441,18 +435,7 @@ public class AdministratorController {
      * the user to enter the staff ID, verifies if the staff exists, and provides a menu
      * to edit various attributes (Name, Password, Role, Gender, or Age). After making changes,
      * the updated staff details are saved to the system (CSV file).
-     *
-     * <p>Menu options:</p>
-     * <ul>
-     *   <li>(1) Edit Name</li>
-     *   <li>(2) Edit Password</li>
-     *   <li>(3) Edit Role</li>
-     *   <li>(4) Edit Gender</li>
-     *   <li>(5) Edit Age</li>
-     *   <li>(6) Exit without making changes</li>
-     * </ul>
-     *
-     * <p>Updates are saved to the staff CSV file after each change.</p>
+
      */
     private static void editStaffDisplay() {
     	int choice =0;
@@ -526,17 +509,7 @@ public class AdministratorController {
      * data from the CSV file, initializes the `apptList`, and prints the details
      * of each appointment in a formatted table. For completed appointments, the
      * appointment outcome is also displayed.
-     *
-     * <p>Details printed:</p>
-     * <ul>
-     *   <li>DoctorID: The ID of the doctor handling the appointment</li>
-     *   <li>PatientID: The ID of the patient</li>
-     *   <li>Appointment Status: The current status of the appointment (e.g., PENDING, COMPLETED)</li>
-     *   <li>Date and Time: The scheduled date and time of the appointment</li>
-     *   <li>Appointment Outcome: The outcome of the appointment (only displayed for COMPLETED appointments)</li>
-     * </ul>
-     *
-     * <p>If the appointment status is not "COMPLETED", the "Appointment Outcome" column is left blank.</p>
+
      */
     private static void displayAppt() {
     	apptList = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH+"ApptRequest.csv");
@@ -561,26 +534,11 @@ public class AdministratorController {
      * Manages the inventory of medicines. This method provides the user with a menu
      * to perform various inventory management tasks, including sorting the medicine list,
      * adding new medicines, removing existing ones, and editing medicine details.
-     *
-     * <p>List of Options for user to choose:</p>
-     * <ul>
-     *   <li>(1) Sort Medicine List: Sort the medicine list based on selected criteria</li>
-     *   <li>(2) Add Medicine: Add a new medicine to the inventory</li>
-     *   <li>(3) Remove Medicine: Remove an existing medicine from the inventory</li>
-     *   <li>(4) Edit Medicine: Edit the details of a medicine</li>
-     *   <li>(5) Return to Admin Menu: Return to the main Administrator menu</li>
-     * </ul>
-     *
-     * <p>The method uses the following steps:</p>
-     * <ol>
-     *   <li>Clears and reinitializes the medicine list by reading from the CSV file</li>
-     *   <li>Displays the current inventory using {@code displayMedicine()}</li>
-     *   <li>Prompts the user for their choice and executes the corresponding action</li>
-     * </ol>
+
      *
      * @throws Exception if an error occurs during menu operations or invalid input is provided
      */
-    private static void manageInv() {
+    private static void manageInv() throws Exception{
     	int choice = 0;
         do{
             try {
@@ -630,16 +588,7 @@ public class AdministratorController {
      * The user can choose from three options: Name, Stock Level, or Low Level Alert.
      * Once a valid input is provided, the selected sort criterion is stored in
      * the {@code sortBy} variable for subsequent operations.
-     *
-     * <p>Sorting Options:</p>
-     * <ul>
-     *   <li>(1) Name: Sort medicines alphabetically by their name</li>
-     *   <li>(2) Stock Level: Sort medicines by their current stock level</li>
-     *   <li>(3) Low Level Alert: Sort medicines by their low stock alert threshold</li>
-     * </ul>
-     *
-     * <p>The method validates user input and ensures only valid options (1-3) are accepted.
-     * If an invalid input is provided, the user is prompted again until a valid choice is made.</p>
+
      */
     private static void sortMedsDisplay() {
     	do{
@@ -669,23 +618,7 @@ public class AdministratorController {
      * Displays the list of medicines in the inventory, sorted based on the selected
      * attribute. The sorting criterion is determined by the {@code sortBy} variable,
      * which is set in the {@code sortMedsDisplay()} method.
-     *
-     * <p>Sorting Options:</p>
-     * <ul>
-     *   <li>(1) Name: Sorts medicines alphabetically by their name.</li>
-     *   <li>(2) Stock Level: Sorts medicines by their current stock level in ascending order.</li>
-     *   <li>(3) Low Level Alert: Sorts medicines by their low stock alert threshold in ascending order.</li>
-     * </ul>
-     *
-     * <p>The table of medicines includes the following details:</p>
-     * <ul>
-     *   <li>Name: The name of the medicine.</li>
-     *   <li>Stock Level: The maximum stock level of the medicine.</li>
-     *   <li>Low Level Alert: The low stock alert threshold for the medicine.</li>
-     *   <li>Current Amount: The current stock amount of the medicine.</li>
-     * </ul>
-     *
-     * <p>Each medicine in the list is displayed in a formatted list.</p>
+
      */
     private static void displayMedicine() {
     	//based on the sortBy variable determine which way to sort the medicine list medList
@@ -716,18 +649,6 @@ public class AdministratorController {
      * details about the medicine such as its name, stock level, low-level alert threshold,
      * and current amount. The user is given the opportunity to confirm or edit the details
      * before saving the medicine to the inventory.
-     *
-     * <p>Menu options for editing details:</p>
-     * <ul>
-     *   <li>(1) Confirm: Save the entered medicine details to the inventory.</li>
-     *   <li>(2) Edit Name: Modify the name of the medicine.</li>
-     *   <li>(3) Edit Stock Level: Modify the maximum stock level.</li>
-     *   <li>(4) Edit Low Level Alert: Modify the low-level alert threshold.</li>
-     *   <li>(5) Edit Current Amount: Modify the current stock amount.</li>
-     * </ul>
-     *
-     * <p>After confirmation, the new medicine is saved to the CSV file using
-     * {@code csvUtils.saveMedToCSV()}.</p>
      */
     private static void addMedDisplay() {
     	String name = "";
@@ -817,19 +738,6 @@ public class AdministratorController {
      * provide the name of the medicine to be removed. If the medicine exists in the list,
      * the user is prompted to confirm the removal. If confirmed, the medicine is deleted
      * from the inventory CSV file.
-     *
-     * <p>Sequence of method:</p>
-     * <ol>
-     *   <li>Prompt the user to enter the name of the medicine to remove.</li>
-     *   <li>Check if the entered name matches any medicine in the list.</li>
-     *   <li>If a match is found, display the medicine details and ask for confirmation:
-     *       <ul>
-     *           <li>(1) Yes: Remove the medicine.</li>
-     *           <li>(2) No: Cancel the operation.</li>
-     *       </ul>
-     *   </li>
-     *   <li>Update the CSV file if the medicine is removed.</li>
-     * </ol>
      */
     private static void removeMedDisplay() {
     	int choice =0;
@@ -860,17 +768,6 @@ public class AdministratorController {
      * The method prompts the user to enter the name of the medicine to edit, verifies
      * its existence in the list, and provides a menu of editable attributes:
      * Name, Stock Level, and Low Level Alert.
-     *
-     * <p>Choice for the user to edit:</p>
-     * <ul>
-     *   <li>(1) Edit Name: Update the name of the medicine.</li>
-     *   <li>(2) Edit Stock Level: Update the maximum stock level of the medicine.</li>
-     *   <li>(3) Edit Low Level Alert: Update the low stock alert threshold for the medicine.</li>
-     *   <li>(4) Don't edit: Exit without making any changes.</li>
-     * </ul>
-     *
-     * <p>After editing, the updated details are saved to the CSV file using 
-     * {@code csvUtils.updateMedInCSV()}.</p>
      */
     private static void editMedDisplay() {
     	int choice =0;
@@ -937,22 +834,9 @@ public class AdministratorController {
      * CSV files, displays the current list of pending requests, and provides options
      * to approve requests or return to the Administrator menu.
      *
-     * <p>Options for user:</p>
-     * <ul>
-     *   <li>(1) Approve Requests: Navigate to the approval menu to process pending requests.</li>
-     *   <li>(2) Return to Admin Menu: Exit the replenishment request management and return to the main Administrator menu.</li>
-     * </ul>
-     *
-     * <p>Sequence of the program:</p>
-     * <ol>
-     *   <li>Clearing and reinitializing the replenishment request list and the medicine inventory list.</li>
-     *   <li>Displaying the current list of replenishment requests using {@code displayRepReq()}.</li>
-     *   <li>Prompting the user to choose an action based on the menu options.</li>
-     * </ol>
-     *
      * @throws Exception if an error occurs during menu execution or invalid input is provided.
      */
-    private static void manageRepReq() {
+    private static void manageRepReq() throws Exception {
     	int choice = 0;
         do{
             try {
@@ -994,18 +878,6 @@ public class AdministratorController {
      * medicine inventory. For each replenishment request, the method cross-references
      * the medicine inventory to display the current stock amount and the low-level alert
      * threshold.
-     *
-     * <p>The displayed table includes the following columns:</p>
-     * <ul>
-     *   <li>ID: The unique ID of the replenishment request.</li>
-     *   <li>Medicine Name: The name of the medicine for the request.</li>
-     *   <li>Status: The current status of the request (e.g., PENDING, COMPLETED).</li>
-     *   <li>Current Amount: The current stock amount of the medicine in inventory.</li>
-     *   <li>Low Level Alert: The low stock alert threshold for the medicine.</li>
-     * </ul>
-     *
-     * <p>Only medicines that exist in both the replenishment request list and the inventory
-     * are displayed.</p>
      */
     private static void displayRepReq() {
     	//print the headers for details of replenishment request
@@ -1029,25 +901,6 @@ public class AdministratorController {
      * the method cross-references the medicine inventory and allows the user to approve,
      * deny, or postpone the request. Approved requests update the current stock amount
      * in the inventory, while denied requests update the request's status.
-     *
-     * <p>The displayed table includes the following details:</p>
-     * <ul>
-     *   <li>ID: The unique ID of the replenishment request.</li>
-     *   <li>Medicine Name: The name of the medicine for the request.</li>
-     *   <li>Status: The current status of the request (e.g., PENDING, COMPLETED).</li>
-     *   <li>Current Amount: The current stock amount of the medicine in inventory.</li>
-     *   <li>Low Level Alert: The low stock alert threshold for the medicine.</li>
-     *   <li>Total after Replenishment: The stock amount after the replenishment request is fulfilled.</li>
-     * </ul>
-     *
-     * <p>User Options:</p>
-     * <ul>
-     *   <li>(1) Approve: Marks the request as COMPLETED and updates the current stock amount to the maximum stock level.</li>
-     *   <li>(2) Deny/Cancel: Marks the request as CANCELLED and updates the request status in the system.</li>
-     *   <li>(3) Maybe Later: Skips the request without making changes.</li>
-     * </ul>
-     *
-     * <p>All changes to requests and inventory are saved to their respective CSV files.</p>
      */
     private static void approveReqDisplay() {
     	int choice = 0;
@@ -1066,7 +919,7 @@ public class AdministratorController {
     				sc.nextLine();
     				switch(choice) {
     					case 1: //if user approves the request
-    						// set replnishmetn status to completed
+    						// set replenishment status to completed
     						req.setReplenishmentStatus(ReplenishmentRequest.ReplenishmentStatus.COMPLETED);
     						//set the current amount to the amount to stock level
     						med.setCurrentAmt(med.getStockAmt());

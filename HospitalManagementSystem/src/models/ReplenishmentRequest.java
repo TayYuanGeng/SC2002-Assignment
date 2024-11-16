@@ -41,7 +41,6 @@ public class ReplenishmentRequest {
 
     /**
      * Default constructor. Initializes a replenishment request with default values.
-     * <p>No unique ID or medicine name is assigned by default.</p>
      */
     public ReplenishmentRequest() {
     }

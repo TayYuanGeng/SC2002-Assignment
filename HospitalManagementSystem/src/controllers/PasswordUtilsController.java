@@ -63,7 +63,7 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
      * The password must:
      * - Be 8 to 16 characters long.
      * - Contain at least one uppercase letter.
-     * - Contain at least one special character (e.g., !@#$%^&*).
+     * - Contain at least one special character (e.g., !@#$%^&amp;*).
      * - Not match the default password "Password".
      *
      * @param password The password to be validated.

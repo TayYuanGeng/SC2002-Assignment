@@ -11,6 +11,10 @@ import interfaces.*;
  * and checking doctor availability.
  */
 public class PatientController {
+	
+    /**
+     * Scanner for user input
+     */
     static Scanner sc = new Scanner(System.in);
 
     /**

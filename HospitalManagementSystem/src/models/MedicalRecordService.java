@@ -9,6 +9,9 @@ import interfaces.IMedicalRecordService;
  */
 public class MedicalRecordService implements IMedicalRecordService {
     
+    /**
+     *Medical Record Repo file
+     */
     private MedicalRecordRepo recordRepo;
 
     /**

@@ -16,6 +16,7 @@ import models.*;
  * 5. Logout
  */
 public class PharmacistController {
+	/** Interface for CSV utilities to handle file operations */
     static CSVUtilsInterface csvUtils = new CSVUtilsController();
      /**
      * Starts the pharmacist interface, displaying a welcome message and 
