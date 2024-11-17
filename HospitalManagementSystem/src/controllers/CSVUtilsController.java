@@ -170,16 +170,16 @@ public class CSVUtilsController implements CSVUtilsInterface {
                     continue;
                 }
                 String[] values = line.split(csvSplitBy);
-                // Example: Print the values
-                for (String value : values) {
-                    System.out.print(value + " ");
-                }
+                // Print the values
+                // for (String value : values) {
+                //     System.out.print(value + " ");
+                // }
                 Staff staff = new Staff(values[0], values[1], values[2], values[3]);
                 staff.setGender(values[4]);
                 staff.setAge(Integer.parseInt(values[5]));
                 staffList.add(staff);
 
-                System.out.println();
+                // System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -243,9 +243,9 @@ public class CSVUtilsController implements CSVUtilsInterface {
                 String[] values = line.split(csvSplitBy);
                 
                 // Example: Print the values
-                for (String value : values) {
-                    System.out.print(value + " ");
-                }
+                // for (String value : values) {
+                //     System.out.print(value + " ");
+                // }
                 MedicalRecordRepo recordRepo = new MedicalRecordRepo(filePath);
                 MedicalRecordService medicalRR = new MedicalRecordService(recordRepo);
                 patientList.add(new Patient(values[0], values[8],values[1],"Patient", medicalRR));
@@ -255,7 +255,7 @@ public class CSVUtilsController implements CSVUtilsInterface {
                 patientList.get(patientList.size()-1).setEmail(values[5]);
                 patientList.get(patientList.size()-1).setphoneNumber(Integer.parseInt(values[6]));
 
-                System.out.println();
+                // System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
