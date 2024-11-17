@@ -63,6 +63,7 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
      * The password must:
      * - Be 8 to 16 characters long.
      * - Contain at least one uppercase letter.
+     * - Contain at least one number.
      * - Contain at least one special character (e.g., !@#$%^&amp;*).
      * - Not match the default password "Password".
      *
@@ -74,7 +75,7 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
         if (passwordUtils.hashPassword(password).equals(passwordUtils.hashPassword("Password"))) {
             return false;
         }
-        String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,16}$";
+        String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\\d)[A-Za-z0-9!@#$%^&*]{8,16}$";
         return Pattern.matches(regex, password);
     }
 
@@ -127,6 +128,7 @@ public class PasswordUtilsController implements PasswordUtilsInterface {
                                    Invalid Password. Please try again!
                                    Password cannot be "Password".
                                    Password must be 8 to 16 characters long.
+                                   Contains at least one number.
                                    Contains at least one uppercase letter.
                                    Contains at least one special character (such as !@#$%^&*, etc.)"""
                 );
