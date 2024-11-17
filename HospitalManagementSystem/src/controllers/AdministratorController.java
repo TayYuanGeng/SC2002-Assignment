@@ -240,32 +240,40 @@ public class AdministratorController {
             try {
             	switch(choice) {
             		case 0:
-                    	System.out.println("Please enter the Staff's name: ");
-                    	name = sc.nextLine();
-                    	System.out.println("Please choose the Staff's role: ");
-            			System.out.println("(1) Doctor ");
-            			System.out.println("(2) Pharmacist ");
-            			System.out.println("(3) Administrator");
-            			choice = sc.nextInt();
-            			switch(choice) {
-            				case 1:
-            					role = "Doctor";
-            					break;
-            				case 2:
-            					role = "Pharmacist";
-            					break;
-            				case 3:
-            					role = "Administrator";
-            					break;
+            			if(name.equals("")) {
+            				System.out.println("Please enter the Staff's name: ");
+                        	name = sc.nextLine();
             			}
-            			sc.nextLine();
-                    	System.out.println("Please enter the Staff's Gender: ");
-                    	gender = sc.nextLine();
-                    	System.out.println("Please enter the Staff's Age: ");
-                    	age = sc.nextInt();
+                    	if(role.equals("")) {
+	                    	System.out.println("Please choose the Staff's role: ");
+	            			System.out.println("(1) Doctor ");
+	            			System.out.println("(2) Pharmacist ");
+	            			System.out.println("(3) Administrator");
+	            			choice = sc.nextInt();
+	            			switch(choice) {
+	            				case 1:
+	            					role = "Doctor";
+	            					break;
+	            				case 2:
+	            					role = "Pharmacist";
+	            					break;
+	            				case 3:
+	            					role = "Administrator";
+	            					break;
+	            			}
+	            			choice = 0;
+	            			sc.nextLine();
+            			}
+                    	if(gender.equals("")) {
+                    		System.out.println("Please enter the Staff's Gender: ");
+                        	gender = sc.nextLine();
+                    	}
+                    	if(age==0) {
+                    		System.out.println("Please enter the Staff's Age: ");
+                    		age = sc.nextInt();
+                    		sc.nextLine();
+                    	}
                     	choice= 99;
-                    	sc.nextLine();
-                    	
                     	break;
             		case 1:
             			break;
@@ -314,8 +322,6 @@ public class AdministratorController {
                     	break;
                     default:
                     	System.out.println("Invalid Option Please choose one of the options: ");
-                    	
-                    	
             	}
             	
             	if(choice ==1)
@@ -417,6 +423,9 @@ public class AdministratorController {
                 }
             }
         }
+        if(choice == 0) {
+        	System.out.println("Staff not found.");
+        }
     }
 
     /**
@@ -453,9 +462,24 @@ public class AdministratorController {
         						staff.setPassword(input);
         						break;
         					case 3: //User selected to edit role
-        						System.out.println("Please enter the new Role:");
-        						input = sc.nextLine();
-        						staff.setRole(input);
+        						System.out.println("Please choose the Staff's role: ");
+                    			System.out.println("(1) Doctor ");
+                    			System.out.println("(2) Pharmacist ");
+                    			System.out.println("(3) Administrator");
+                    			choice = sc.nextInt();
+                    			switch(choice) {
+                    				case 1:
+                    					staff.setRole("Doctor");
+                    					break;
+                    				case 2:
+                    					staff.setRole("Pharmacist");
+                    					break;
+                    				case 3:
+                    					staff.setRole("Administrator");
+                    					break;
+                    			}
+                            	sc.nextLine();
+                            	choice = 3;
         						break;
         					case 4: //User selected to edit Gender
         						System.out.println("Please enter the new Gender:");
@@ -477,6 +501,7 @@ public class AdministratorController {
     						//If user chose to edit the details
     						//Update the staff details in the csv
     						csvUtils.updateStaffInCSV(MainMenuController.CSV_FILE_PATH+"Staff_List.csv",staff);
+    						System.out.println("Staff updated.");
     						break;
     					}else if(choice == 6){
     						//if user chose not to edit leave the menu
@@ -487,7 +512,11 @@ public class AdministratorController {
         	            sc.next();
         	            }
     			}while(true);
+    			
     		}
+    	}
+    	if(choice == 0) {
+    		System.out.println("Staff not found.");
     	}
     }
     
@@ -506,7 +535,7 @@ public class AdministratorController {
     		// If Appointment Status is completed 
     		if(appt.getAppointmentStatus()==Appointment.AppointmentStatus.valueOf("COMPLETED"))
     			//print Appointment Outcome
-    			System.out.printf("%-19s%n",appt.getOutcome());
+    			System.out.printf("%-19s%n",appt.getOutcome().getConsultationNotes());
     		else
     			//Print next line
     			System.out.println();
@@ -629,7 +658,7 @@ public class AdministratorController {
     private static void addMedDisplay() {
     	String name = "";
     	int stockAmt = 0;
-    	int lowlvl =0;
+    	int lowlvl = 0;
     	int currentAmt = 0;
     	int choice = 0;
     	do{
@@ -637,18 +666,26 @@ public class AdministratorController {
             	//based on the user's choice, request input for different Medicine's attribute
             	switch(choice) {
             		case 0:// starting case, input all details
-                    	System.out.println("Please enter the Medicine's name: ");
-                    	name = sc.nextLine();
-                    	System.out.println("Please enter the Medicine's Level to stock to: ");
-                    	stockAmt = sc.nextInt();
-                    	sc.nextLine();
-                    	System.out.println("Please enter the Medicine's Low Level Alert: ");
-                    	lowlvl = sc.nextInt();
-                    	sc.nextLine();
-                    	System.out.println("Please enter the Medicine's Current Amount: ");
-                    	currentAmt = sc.nextInt();
-                    	sc.nextLine();
-                    	choice= 99; // set choice to done case
+            			if(name.equals("")) {
+            				System.out.println("Please enter the Medicine's name: ");
+            				name = sc.nextLine();
+            			}
+            			if(stockAmt == 0) {
+	                    	System.out.println("Please enter the Medicine's Level to stock to: ");
+	                    	stockAmt = sc.nextInt();
+	                    	sc.nextLine();
+            			}
+            			if(lowlvl == 0) {
+            				System.out.println("Please enter the Medicine's Low Level Alert: ");
+                        	lowlvl = sc.nextInt();
+                        	sc.nextLine();
+            			}
+            			if(currentAmt == 0) {
+	                    	System.out.println("Please enter the Medicine's Current Amount: ");
+	                    	currentAmt = sc.nextInt();
+	                    	sc.nextLine();
+	                    	choice= 99; // set choice to done case
+            			}
                     	break;
             		case 1: // dont want to edit so break
             			break;
@@ -735,6 +772,9 @@ public class AdministratorController {
     			}
     		}
     	}
+    	if(choice == 0) {
+    		System.out.println("Medicine not found.");
+    	}
     	
     }
     
@@ -798,6 +838,9 @@ public class AdministratorController {
         	            }
     			}while(true);
     		}
+    	}
+    	if(choice==0) {
+    		System.out.println("Medicine not found.");
     	}
     }
     

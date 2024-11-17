@@ -45,7 +45,7 @@ public class MainMenuController {
      * Path to the CSV files for staff and patient data.
      * Update this to the appropriate path for your environment.
      */
-    public static final String CSV_FILE_PATH = "data\\";
+    public static final String CSV_FILE_PATH = "src\\data\\";
 
     /**
      * Main entry point for the application.
