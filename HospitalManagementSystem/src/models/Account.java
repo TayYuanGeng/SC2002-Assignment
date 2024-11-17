@@ -4,8 +4,8 @@ import controllers.PasswordUtilsController;
 import interfaces.PasswordUtilsInterface;
 
 /**
- * Represents an abstract account in the system. This class serves as the
- * base class for specific types of accounts (e.g., Administrator, Staff).
+ * Represents an abstract Account in the system. This class is the
+ * base class for different types of accounts (e.g., Administrator, Staff).
  * It provides common attributes and methods for managing account details
  * such as user ID, name, password, and role.
  */
@@ -44,8 +44,8 @@ public abstract class Account {
      *
      * @param uID  the unique user ID for the account
      * @param name the name associated with the account
-     * @param pass the password for the account (stored as plain text)
-     * @param r    the role of the account (e.g., "Administrator")
+     * @param pass the password for the account 
+     * @param r    the role of the account 
      */
     public Account(String uID, String name, String pass, String r) {
         this.userID = uID;
@@ -56,7 +56,6 @@ public abstract class Account {
 
     /**
      * Abstract method to display the menu associated with the account type.
-     * Subclasses must implement this method.
      */
     public abstract void displayMenu();
 

@@ -44,7 +44,7 @@ public class Appointment {
      * Enum representing the status of an appointment.
      */
     public enum AppointmentStatus {
-        PENDING, /** Appointment is pending confirmation. */
+        PENDING, 	/** Appointment is pending confirmation. */
         CONFIRMED, /** Appointment is confirmed. */
         CANCELLED, /** Appointment is cancelled. */
         COMPLETED, /** Appointment is completed. */

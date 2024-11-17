@@ -20,7 +20,7 @@ public class Administrator extends Staff {
     }
 
     /**
-     * Parameterized constructor. Initializes an Administrator account with the specified details.
+     * Constructor with parameter to initializes an Administrator account with the parameters.
      *
      * @param uID  the unique user ID for the administrator
      * @param name the name of the administrator

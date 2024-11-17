@@ -20,9 +20,7 @@ import controllers.PasswordUtilsController;
 
 
 /**
- * This is the Administrator Controller that handles all the logic for the
- * Administrator account's possible actions. It includes methods for managing
- * staff, appointments, inventory, and replenishment requests.
+ * This is the Administrator Controller controls all the logic behind the possible actions for Administrator Users
  */
 public class AdministratorController {
 	/** Interface for CSV utilities to handle file operations */
@@ -46,11 +44,11 @@ public class AdministratorController {
     /** Interface for password utilities */
     static PasswordUtilsInterface passwordUtils = new PasswordUtilsController();
 
-    /** Variable to store the sorting criteria */
+    /** Variable that sets how the displays should be sorted */
     static int sortBy = 0;
     
     /**
-     * Main page that prints the User's name and directs them to the AdminPage() function.
+     * Main page that displays as a user logs in that will display their name and route them to AdminPage()
      *
      * @param loggedInUser the logged-in user account
      * @throws Exception if an error occurs during execution
@@ -64,7 +62,7 @@ public class AdministratorController {
     }
 
     /**
-     * Displays the Administrator Menu and provides access to various functionalities.
+     * Displays the Administrator Menu that has actions an administrator can use
      *
      * @throws Exception if an error occurs during execution
      */
@@ -118,7 +116,7 @@ public class AdministratorController {
     
     
     /**
-     * Displays and manages staff-related actions such as adding, removing, or editing staff.
+     * Displays the possible actions for staff management for Administrator
      */
     private static void manageStaff() {
     	int choice = 0;
@@ -169,7 +167,7 @@ public class AdministratorController {
     }
 
     /**
-     * Displays the staff list with sorting based on the selected criteria.
+     * Displays the staff list based on the variable {@code sortBy}
      */
     private static void displayStaff() {
     	switch(sortBy) {
@@ -200,7 +198,7 @@ public class AdministratorController {
     }
     	
     /**
-     * Allows sorting of staff by different attributes such as ID, Name, Role, etc.
+     * displays attributes and prompts the user for which attribute to sortby 
      */
     private static void sortStaffDisplay() {
     	do{
@@ -227,11 +225,9 @@ public class AdministratorController {
     
     
     /**
-     * Displays a menu to add a new staff member. This method collects input
-     * for the staff's name, role, gender, and age through a series of prompts
-     * and validation steps. After confirming the details, it calls the `addStaff`
-     * method to save the new staff member to the system.
-     *
+     * Displays a menu prompting the user for details of the new staff to add 
+     * Confirming with the user at the end while still allowing them to 
+     * go back and edit the details if needed
      * @throws Exception if the user provides invalid input or an error occurs during execution
      */
     private static void addStaffDisplay() throws Exception {
@@ -336,12 +332,9 @@ public class AdministratorController {
     }
     
     /**
-     * Adds a new staff member to the system. This method generates a unique ID for
-     * the staff member based on their role, creates a `Staff` object with the provided
-     * details, and saves it to the staff database (CSV file).
-     *
+     * Adds the staff member with the details provided in the method parameters into the csv file 
      * @param name   the name of the staff member
-     * @param role   the role of the staff member (e.g., "Doctor", "Pharmacist", "Administrator")
+     * @param role   the role of the staff member 
      * @param gender the gender of the staff member
      * @param age    the age of the staff member
      * @return 1 if the staff member was successfully added
@@ -358,12 +351,10 @@ public class AdministratorController {
 
     
     /**
-     * Generates a unique ID for a new staff member based on their role. The ID
-     * is created by checking the existing staff list, finding the highest current
-     * ID for the specified role, and incrementing it.
-
+     *Generates a unique ID for staff member based on their role by checking the existing list for unused IDs, 
+     *Pxxx for Pharmacists, Dxxx for Doctors and Axxx for Administrators
      *
-     * @param role the role of the staff member (e.g., "Doctor", "Pharmacist", "Administrator")
+     * @param role the role of the staff member 
      * @return a unique ID in the format corresponding to the role, or an empty string if the role is invalid
      */
     private static String generateID(String role) {
@@ -400,10 +391,8 @@ public class AdministratorController {
     
     
     /**
-     * Displays a prompt to remove a staff member from the system. This method asks
-     * the user to enter a staff ID, verifies its existence in the staff list, and
-     * confirms the removal action with the user. If confirmed, the staff member is
-     * removed from the system (CSV file).
+     * Prompts the user for the staffID that the user wants to remove,
+     * confirms with the user after and if confirmed, the staffID entered is removed from csv
      */
     private static void removeStaffDisplay() {
         int choice = 0;
@@ -431,11 +420,9 @@ public class AdministratorController {
     }
 
     /**
-     * Allows the user to edit the details of an existing staff member. The method prompts
-     * the user to enter the staff ID, verifies if the staff exists, and provides a menu
-     * to edit various attributes (Name, Password, Role, Gender, or Age). After making changes,
-     * the updated staff details are saved to the system (CSV file).
-
+     * Prompts the user for the StaffID of the staff they want to edit.
+     * After the staffID they entered is found confirm with the user if that is the staff they want to edit.
+	 * If confirmed prompt the user for which details they want to edit then confirm again before updating the staff in csv with the new Details.
      */
     private static void editStaffDisplay() {
     	int choice =0;
@@ -505,11 +492,8 @@ public class AdministratorController {
     }
     
     /**
-     * Displays a list of all appointments. This method retrieves the appointment
-     * data from the CSV file, initializes the `apptList`, and prints the details
-     * of each appointment in a formatted table. For completed appointments, the
-     * appointment outcome is also displayed.
-
+     * Displays all the appointments loaded from the CSV file,
+     * if the appointment status is Completed print retrieve their apptoutcome and print it
      */
     private static void displayAppt() {
     	apptList = csvUtils.DataInitApptReq(MainMenuController.CSV_FILE_PATH+"ApptRequest.csv");
@@ -531,10 +515,8 @@ public class AdministratorController {
     }
     
     /**
-     * Manages the inventory of medicines. This method provides the user with a menu
-     * to perform various inventory management tasks, including sorting the medicine list,
-     * adding new medicines, removing existing ones, and editing medicine details.
-
+     * Prints the list of actions the user can do with their Medicine inventory
+	 * and prompt them for which action they want to take.
      *
      * @throws Exception if an error occurs during menu operations or invalid input is provided
      */
@@ -584,11 +566,8 @@ public class AdministratorController {
     }
     
     /**
-     * Prompts the user to select an attribute for sorting the medicine list.
-     * The user can choose from three options: Name, Stock Level, or Low Level Alert.
-     * Once a valid input is provided, the selected sort criterion is stored in
-     * the {@code sortBy} variable for subsequent operations.
-
+     * Prompt the user for which attribute they want to sort the Medicine List by
+     * then updates the {@code sortBy} variable to display the Medicine according to their selection.
      */
     private static void sortMedsDisplay() {
     	do{
@@ -615,9 +594,8 @@ public class AdministratorController {
     
     
     /**
-     * Displays the list of medicines in the inventory, sorted based on the selected
-     * attribute. The sorting criterion is determined by the {@code sortBy} variable,
-     * which is set in the {@code sortMedsDisplay()} method.
+     * Prints the Medicine List based on the {@code sortBy}.
+     * Providing the Name, Stock to Level, Low Level Alert and Current amount of the medicines
 
      */
     private static void displayMedicine() {
@@ -645,10 +623,8 @@ public class AdministratorController {
     }
     
     /**
-     * Displays a menu to add a new medicine to the inventory. The method collects
-     * details about the medicine such as its name, stock level, low-level alert threshold,
-     * and current amount. The user is given the opportunity to confirm or edit the details
-     * before saving the medicine to the inventory.
+     * Display menu prompting the user to enter the attributes of the medicine and confirming with them after.
+     * Providing them an option to edit any of the attributes before adding the medicine into the CSV.
      */
     private static void addMedDisplay() {
     	String name = "";
@@ -734,10 +710,9 @@ public class AdministratorController {
     }
     
     /**
-     * Displays a prompt to remove a medicine from the inventory. The user is asked to
-     * provide the name of the medicine to be removed. If the medicine exists in the list,
-     * the user is prompted to confirm the removal. If confirmed, the medicine is deleted
-     * from the inventory CSV file.
+     * Prompts the user for the name of the medicine they want to remove.
+     * From the Medicine List csv find the medicine, if found confirm with the user if they want to remove it.
+     * Remove the Medicine if the user confirmed it.
      */
     private static void removeMedDisplay() {
     	int choice =0;
@@ -764,10 +739,9 @@ public class AdministratorController {
     }
     
     /**
-     * Allows the user to edit the details of an existing medicine in the inventory.
-     * The method prompts the user to enter the name of the medicine to edit, verifies
-     * its existence in the list, and provides a menu of editable attributes:
-     * Name, Stock Level, and Low Level Alert.
+     * Prompts the user to enter the name of the Medicine they want to edit.
+     * For every medicine in the list if the medicine is found prompt the user which attribute they would like to edit
+     * Update the csv with the new Details of the medicine edited.
      */
     private static void editMedDisplay() {
     	int choice =0;
@@ -829,10 +803,8 @@ public class AdministratorController {
     
 
     /**
-     * Manages the replenishment requests for medicines. This method retrieves the
-     * replenishment request data and the medicine inventory data from their respective
-     * CSV files, displays the current list of pending requests, and provides options
-     * to approve requests or return to the Administrator menu.
+     * Prompts the user if they would like to approve any replenishment requests.
+     * Redirects them to the approve page if they would like to or back to the main menu
      *
      * @throws Exception if an error occurs during menu execution or invalid input is provided.
      */
@@ -874,10 +846,8 @@ public class AdministratorController {
     }
     
     /**
-     * Displays the list of replenishment requests along with relevant details from the
-     * medicine inventory. For each replenishment request, the method cross-references
-     * the medicine inventory to display the current stock amount and the low-level alert
-     * threshold.
+     * Displays the list of replenishment requests.
+     * Providing the ID of request, Medicine Name, Status of request, current amount of Medicine and Low Level Alert of Medicine.
      */
     private static void displayRepReq() {
     	//print the headers for details of replenishment request
@@ -897,10 +867,10 @@ public class AdministratorController {
     }
     
     /**
-     * Displays and processes pending replenishment requests. For each pending request,
-     * the method cross-references the medicine inventory and allows the user to approve,
-     * deny, or postpone the request. Approved requests update the current stock amount
-     * in the inventory, while denied requests update the request's status.
+     * Displays the List of replenishment requests that have status PENDING.
+     * Prompt the user if they would like to Approve, Deny or ignore the request for now.
+     * If approved update replenishment request and Medicine csv file with the new stock value and change the replenishment request status to COMPLETED.
+     * If denied/cancelled change the replenishment request status to CANCELLED and update CSV
      */
     private static void approveReqDisplay() {
     	int choice = 0;
