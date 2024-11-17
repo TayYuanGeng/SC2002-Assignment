@@ -170,10 +170,16 @@ public class CSVUtilsController implements CSVUtilsInterface {
                     continue;
                 }
                 String[] values = line.split(csvSplitBy);
+                // Example: Print the values
+                for (String value : values) {
+                    System.out.print(value + " ");
+                }
                 Staff staff = new Staff(values[0], values[1], values[2], values[3]);
                 staff.setGender(values[4]);
                 staff.setAge(Integer.parseInt(values[5]));
                 staffList.add(staff);
+
+                System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
